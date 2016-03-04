@@ -66,7 +66,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         if let postDetailViewController = storyboard?.instantiateViewControllerWithIdentifier("PostDetail") as! PostDetailViewController? {
-            postDetailViewController.objectId = posts[indexPath.row].objectId!
+            postDetailViewController.postObjectId = posts[indexPath.row].objectId!
             navigationItem.title = nil
             self.navigationController?.pushViewController(postDetailViewController, animated: true)
         }

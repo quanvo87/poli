@@ -31,7 +31,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Post Text" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ouo-sz-dMa">
-                                                    <rect key="frame" x="8" y="8" width="71" height="21"/>
+                                                    <rect key="frame" x="8" y="8" width="145" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
@@ -49,6 +49,7 @@
                                             <constraints>
                                                 <constraint firstItem="ouo-sz-dMa" firstAttribute="top" secondItem="XA1-1l-R03" secondAttribute="topMargin" id="CY7-6D-h7k"/>
                                                 <constraint firstItem="ouo-sz-dMa" firstAttribute="leading" secondItem="XA1-1l-R03" secondAttribute="leadingMargin" id="L5L-rY-ykl"/>
+                                                <constraint firstItem="uUS-Zm-YxJ" firstAttribute="leading" secondItem="ouo-sz-dMa" secondAttribute="trailing" constant="8" id="Qop-xQ-oQY"/>
                                                 <constraint firstItem="uUS-Zm-YxJ" firstAttribute="trailing" secondItem="XA1-1l-R03" secondAttribute="trailingMargin" id="buX-ub-kOw"/>
                                                 <constraint firstItem="uUS-Zm-YxJ" firstAttribute="baseline" secondItem="ouo-sz-dMa" secondAttribute="firstBaseline" id="x1Y-Mi-F3y"/>
                                             </constraints>
@@ -117,6 +118,41 @@
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="OSV-gR-h7n" userLabel="Comments Table View">
                                 <rect key="frame" x="16" y="107" width="288" height="453"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="CommentsTableViewCell" id="fmE-5M-1DN" customClass="CommentsTableViewCell" customModule="poli" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="28" width="288" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="fmE-5M-1DN" id="bXj-1Y-5GL">
+                                            <rect key="frame" x="0.0" y="0.0" width="288" height="43"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Time Stamp" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aCL-ga-Sfs">
+                                                    <rect key="frame" x="120" y="0.0" width="168" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="252" verticalHuggingPriority="251" text="Comment Text" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YwE-8t-n1L">
+                                                    <rect key="frame" x="0.0" y="0.0" width="112" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="YwE-8t-n1L" firstAttribute="leading" secondItem="bXj-1Y-5GL" secondAttribute="leadingMargin" constant="-8" id="8MX-xJ-Tw9"/>
+                                                <constraint firstItem="YwE-8t-n1L" firstAttribute="top" secondItem="bXj-1Y-5GL" secondAttribute="topMargin" constant="-8" id="Jrl-7l-73J"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="aCL-ga-Sfs" secondAttribute="trailing" constant="-8" id="eXo-Ol-eZ9"/>
+                                                <constraint firstItem="aCL-ga-Sfs" firstAttribute="top" secondItem="bXj-1Y-5GL" secondAttribute="topMargin" constant="-8" id="kNl-Bk-Agf"/>
+                                                <constraint firstItem="aCL-ga-Sfs" firstAttribute="leading" secondItem="YwE-8t-n1L" secondAttribute="trailing" constant="8" id="o0W-KZ-X8L"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="commentsTextLabel" destination="YwE-8t-n1L" id="VYv-hA-aB5"/>
+                                            <outlet property="timeStampLabel" destination="aCL-ga-Sfs" id="2FN-yE-Oqh"/>
+                                        </connections>
+                                    </tableViewCell>
+                                </prototypes>
                             </tableView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -138,6 +174,7 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="commentsTableView" destination="OSV-gR-h7n" id="MfN-jZ-q4L"/>
                         <outlet property="newCommentTextField" destination="NrJ-8G-zi9" id="yZv-fL-Ur3"/>
                         <outlet property="postTextLabel" destination="TSh-1D-tth" id="9EE-JW-WMD"/>
                         <outlet property="timeStampLabel" destination="qz3-kd-7BN" id="PGw-2j-94I"/>

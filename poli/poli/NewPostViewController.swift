@@ -34,27 +34,29 @@ class NewPostViewController: UIViewController {
         let userObjectId = user?.objectId
         
         if postText == "" {
-            messageLabel.text = "Posts cannot be blank!"
-            return
-        }
+            messageLabel.text = "Posts cannot be blank"
         
-        let post = PFObject(className:"Post")
-        post["creator"] = userObjectId
-        post["text"] = postText
-        post.saveInBackgroundWithBlock {
-            (success: Bool, error: NSError?) -> Void in
-            if (success) {
-                
-                let alert: UIAlertController = UIAlertController(title: "Success", message: "Post successful!", preferredStyle: .Alert)
-                let okButton: UIAlertAction = UIAlertAction(title: "Ok", style: .Default) { action -> Void in
-                    self.tabBarController?.selectedIndex = 0
-                    self.postTextView.text = ""
+        } else {
+            
+            let post = PFObject(className:"Post")
+            post["creator"] = userObjectId
+            post["text"] = postText
+            
+            post.saveInBackgroundWithBlock {
+                (success: Bool, error: NSError?) -> Void in
+                if (success) {
+                    
+                    let alert: UIAlertController = UIAlertController(title: "Success", message: "Post successful!", preferredStyle: .Alert)
+                    let okButton: UIAlertAction = UIAlertAction(title: "Ok", style: .Default) { action -> Void in
+                        self.tabBarController?.selectedIndex = 0
+                        self.postTextView.text = ""
+                    }
+                    alert.addAction(okButton)
+                    self.presentViewController(alert, animated: true, completion: nil)
+                    
+                } else {
+                    self.messageLabel.text = "Post was unsuccessful. Please try again."
                 }
-                alert.addAction(okButton)
-                self.presentViewController(alert, animated: true, completion: nil)
-                
-            } else {
-                self.messageLabel.text = "Post was unsuccessful. Please try again."
             }
         }
     }
