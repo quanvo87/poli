@@ -18,11 +18,10 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         
         self.homeTableView.delegate = self
         self.homeTableView.dataSource = self
-        
-        self.navigationController?.navigationBarHidden = true
     }
     
     override func viewWillAppear(animated: Bool) {
+        navigationItem.title = "poli"
         getPosts()
     }
     
@@ -67,7 +66,8 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         if let postDetailViewController = storyboard?.instantiateViewControllerWithIdentifier("PostDetail") as! PostDetailViewController? {
-//            postDetailViewController.post = posts[indexPath.row]
+            postDetailViewController.objectId = posts[indexPath.row].objectId!
+            navigationItem.title = nil
             self.navigationController?.pushViewController(postDetailViewController, animated: true)
         }
     }
