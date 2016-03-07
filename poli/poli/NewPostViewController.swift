@@ -15,6 +15,7 @@ class NewPostViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationItem.title = "New Post"
     }
     
     override func didReceiveMemoryWarning() {

@@ -83,7 +83,7 @@ class PostDetailViewController: UIViewController, UITableViewDataSource, UITable
         let userObjectId = user?.objectId
         
         if newCommentText == "" {
-            let alert: UIAlertController = UIAlertController(title: "Blank comment", message: "Comments cannot be blank", preferredStyle: .Alert)
+            let alert: UIAlertController = UIAlertController(title: "", message: "Comments cannot be blank", preferredStyle: .Alert)
             let okButton: UIAlertAction = UIAlertAction(title: "Ok", style: .Default) { action -> Void in
             }
             alert.addAction(okButton)
@@ -101,6 +101,7 @@ class PostDetailViewController: UIViewController, UITableViewDataSource, UITable
                 if (success) {
                     
                     self.newCommentTextField.text = ""
+                    self.getComments()
                 
                     
                 } else {
