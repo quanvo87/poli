@@ -67,22 +67,8 @@ class LogInViewController: UIViewController {
     }
     
     @IBAction func tapSignUp(sender: AnyObject) {
-        
-//        let mainStoryboard = UIStoryboard(name: "Storyboard", bundle: NSBundle.mainBundle())
-//        let vc = mainStoryboard.instantiateViewControllerWithIdentifier("Sign Up") as! SignUpViewController
-//        self.presentViewController(vc, animated: true, completion: nil)
-        
-//        
-//        let signUpViewController = SignUpViewController()
-//        self.presentViewController(signUpViewController, animated: true, completion: nil)
-        
-//        if let signUpViewController = SignUpViewController() {
-//            self.presentViewController(signUpViewController, animated: true, completion: nil)
-//        }
-//        
         if let signUpViewController = storyboard?.instantiateViewControllerWithIdentifier("Sign Up") as! SignUpViewController? {
-            navigationItem.title = nil
-            self.navigationController?.pushViewController(signUpViewController, animated: true)
+            self.presentViewController(signUpViewController, animated: true, completion: nil)
         }
     }
     

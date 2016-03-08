@@ -72,6 +72,10 @@ class SignUpViewController: UIViewController {
         PFUser.logOut()
     }
     
+    @IBAction func tapCancel(sender: AnyObject) {
+        dismissViewControllerAnimated(true, completion: nil)
+    }
+    
     func textFieldShouldReturn(textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
