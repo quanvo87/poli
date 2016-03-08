@@ -8,7 +8,7 @@
 
 import UIKit
 
-class NewPostViewController: UIViewController {
+class NewPostViewController: UIViewController, UIPopoverPresentationControllerDelegate {
     
     @IBOutlet weak var messageLabel: UILabel!
     @IBOutlet weak var postTextView: UITextView!
