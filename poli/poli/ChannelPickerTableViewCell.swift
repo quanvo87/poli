@@ -10,7 +10,6 @@ import UIKit
 
 class ChannelPickerTableViewCell: UITableViewCell {
 
-    
     @IBOutlet weak var channelNameLabel: UILabel!
     
     override func awakeFromNib() {

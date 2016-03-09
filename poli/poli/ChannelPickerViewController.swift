@@ -19,6 +19,7 @@ class ChannelPickerViewController: UIViewController, UITableViewDataSource, UITa
         
         channelsTableView.dataSource = self
         channelsTableView.delegate = self
+        channelsTableView.reloadData()
         automaticallyAdjustsScrollViewInsets = false
         
         getChannels()

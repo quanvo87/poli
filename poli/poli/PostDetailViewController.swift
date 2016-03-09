@@ -57,13 +57,19 @@ class PostDetailViewController: UIViewController, UITableViewDataSource, UITable
     @IBAction func tapComment(sender: AnyObject) {
         
         let newCommentText = newCommentTextField.text
-        let user = PFUser.currentUser()
-        let userObjectId = user?.objectId
         
-        if newCommentText != "" {
+        if newCommentText == "" {
+            
+            let alert: UIAlertController = UIAlertController(title: "", message: "Comments cannot be blank.", preferredStyle: .Alert)
+            let alertButton: UIAlertAction = UIAlertAction(title: "OK", style: .Default) { action -> Void in
+            }
+            alert.addAction(alertButton)
+            self.presentViewController(alert, animated: true, completion: nil)
+            
+        } else {
             
             let comment = PFObject(className:"Comment")
-            comment["creator"] = userObjectId
+            comment["creator"] = PFUser.currentUser()?.objectId
             comment["text"] = newCommentText
             comment["post"] = post.objectId
             
