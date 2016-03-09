@@ -17,8 +17,6 @@ class LogInViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        navigationItem.title = "poli"
-        
         messageLabel.text = ""
     }
     
@@ -35,33 +33,27 @@ class LogInViewController: UIViewController {
         
         if email == "" || password == "" {
             self.messageLabel.text = "Please enter a valid username and password"
-            return
-        }
         
-        PFUser.logInWithUsernameInBackground(email!, password:password!) {
-            (user: PFUser?, error: NSError?) -> Void in
+        } else {
             
-            if error != nil {
-                self.messageLabel.text = "Log in failed. Please try again."
+            PFUser.logInWithUsernameInBackground(email!, password:password!) {
+                (user: PFUser?, error: NSError?) -> Void in
                 
-            } else if user!["emailVerified"] as! Bool == true {
-                
-                self.messageLabel.text = ""
-                
-                let alert: UIAlertController = UIAlertController(title: "Logged In", message: "Welcome!", preferredStyle: .Alert)
-                let okButton: UIAlertAction = UIAlertAction(title: "OK!", style: .Default) { action -> Void in
+                if error != nil {
+                    self.messageLabel.text = "Log in failed. Please try again."
+                    
+                } else if user!["emailVerified"] as! Bool == true {
+                    
+                    self.messageLabel.text = ""
+                    let storyboard = UIStoryboard(name: "Main", bundle: nil)
+                    let tabBarController = storyboard.instantiateViewControllerWithIdentifier("Tab Bar") as! UITabBarController
+                    let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+                    appDelegate.window?.rootViewController = tabBarController
+                    
+                } else {
+                    PFUser.logOut()
+                    self.messageLabel.text = "Please verify e-mail to log in"
                 }
-                alert.addAction(okButton)
-                self.presentViewController(alert, animated: true, completion: nil)
-                
-                let storyboard = UIStoryboard(name: "Main", bundle: nil)
-                let tabBarController = storyboard.instantiateViewControllerWithIdentifier("Tab Bar") as! UITabBarController
-                let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-                appDelegate.window?.rootViewController = tabBarController
-                
-            } else {
-                PFUser.logOut()
-                self.messageLabel.text = "Please verify e-mail to log in."
             }
         }
     }

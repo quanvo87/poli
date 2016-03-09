@@ -18,6 +18,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         
         homeTableView.delegate = self
         homeTableView.dataSource = self
+        automaticallyAdjustsScrollViewInsets = false
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -49,8 +50,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
-        let cellIdentifier = "HomeTableViewCell"
-        let cell = tableView.dequeueReusableCellWithIdentifier(cellIdentifier, forIndexPath: indexPath) as! HomeTableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("Post", forIndexPath: indexPath) as! HomeTableViewCell
         let post = posts[indexPath.row]
         
         let createdAt = post.createdAt as NSDate?
@@ -66,7 +66,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         if let postDetailViewController = storyboard?.instantiateViewControllerWithIdentifier("Post Detail") as! PostDetailViewController? {
-            postDetailViewController.postObjectId = posts[indexPath.row].objectId!
+            postDetailViewController.post = posts[indexPath.row]
             navigationItem.title = nil
             self.navigationController?.pushViewController(postDetailViewController, animated: true)
         }

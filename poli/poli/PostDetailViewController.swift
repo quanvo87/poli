@@ -15,65 +15,43 @@ class PostDetailViewController: UIViewController, UITableViewDataSource, UITable
     @IBOutlet weak var newCommentTextField: UITextField!
     @IBOutlet weak var commentsTableView: UITableView!
     
-    var postObjectId = ""
-    var post:[PFObject] = []
+    var post = PFObject(className: "Post")
     var comments:[PFObject] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        postTextLabel.text = ""
-        timeStampLabel.text = ""
+        postTextLabel.text = post["text"] as? String
+        
+        let createdAt = post.createdAt as NSDate?
+        let dateFormatter = NSDateFormatter()
+        dateFormatter.timeStyle = .ShortStyle
+        let createdAtString = dateFormatter.stringFromDate(createdAt!)
+        timeStampLabel.text = createdAtString
         
         commentsTableView.dataSource = self
         commentsTableView.delegate = self
         
-        getPost()
         getComments()
-    }
-    
-    func getPost() {
-        let query = PFQuery(className:"Post")
-        query.whereKey("objectId", equalTo:postObjectId)
-        query.findObjectsInBackgroundWithBlock {
-            (objects: [PFObject]?, error: NSError?) -> Void in
-            if error == nil {
-                
-                self.post = objects!
-                
-                self.postTextLabel.text = self.post[0]["text"] as? String
-                
-                let createdAt = self.post[0].createdAt as NSDate?
-                let dateFormatter = NSDateFormatter()
-                dateFormatter.timeStyle = .ShortStyle
-                let createdAtString = dateFormatter.stringFromDate(createdAt!)
-                self.timeStampLabel.text = createdAtString
-                
-            } else {
-                print("Error: \(error!) \(error!.userInfo)")
-            }
-        }
-    }
-    
-    func getComments() {
-        let query = PFQuery(className:"Comment")
-        query.whereKey("post", equalTo:postObjectId)
-        query.orderByDescending("createdAt")
-        query.findObjectsInBackgroundWithBlock {
-            (objects: [PFObject]?, error: NSError?) -> Void in
-            if error == nil {
-                
-                self.comments = objects!
-                self.commentsTableView.reloadData()
-                
-            } else {
-                print("Error: \(error!) \(error!.userInfo)")
-            }
-        }
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
+    }
+    
+    func getComments() {
+        let query = PFQuery(className:"Comment")
+        query.whereKey("post", equalTo:post.objectId!)
+        query.orderByDescending("createdAt")
+        query.findObjectsInBackgroundWithBlock {
+            (objects: [PFObject]?, error: NSError?) -> Void in
+            if error == nil {
+                self.comments = objects!
+                self.commentsTableView.reloadData()
+            } else {
+                print("Error: \(error!) \(error!.userInfo)")
+            }
+        }
     }
     
     @IBAction func tapComment(sender: AnyObject) {
@@ -82,34 +60,18 @@ class PostDetailViewController: UIViewController, UITableViewDataSource, UITable
         let user = PFUser.currentUser()
         let userObjectId = user?.objectId
         
-        if newCommentText == "" {
-            let alert: UIAlertController = UIAlertController(title: "", message: "Comments cannot be blank", preferredStyle: .Alert)
-            let okButton: UIAlertAction = UIAlertAction(title: "Ok", style: .Default) { action -> Void in
-            }
-            alert.addAction(okButton)
-            self.presentViewController(alert, animated: true, completion: nil)
-            
-        } else {
+        if newCommentText != "" {
             
             let comment = PFObject(className:"Comment")
             comment["creator"] = userObjectId
             comment["text"] = newCommentText
-            comment["post"] = self.postObjectId
+            comment["post"] = post.objectId
             
             comment.saveInBackgroundWithBlock {
                 (success: Bool, error: NSError?) -> Void in
                 if (success) {
-                    
                     self.newCommentTextField.text = ""
                     self.getComments()
-                
-                    
-                } else {
-                    let alert: UIAlertController = UIAlertController(title: "Comment failed", message: "Unable to post comment. Please try again.", preferredStyle: .Alert)
-                    let okButton: UIAlertAction = UIAlertAction(title: "Ok", style: .Default) { action -> Void in
-                    }
-                    alert.addAction(okButton)
-                    self.presentViewController(alert, animated: true, completion: nil)
                 }
             }
         }
@@ -121,8 +83,7 @@ class PostDetailViewController: UIViewController, UITableViewDataSource, UITable
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
-        let cellIdentifier = "CommentsTableViewCell"
-        let cell = tableView.dequeueReusableCellWithIdentifier(cellIdentifier, forIndexPath: indexPath) as! CommentsTableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("Comment", forIndexPath: indexPath) as! CommentsTableViewCell
         let comment = comments[indexPath.row]
         
         let createdAt = comment.createdAt as NSDate?

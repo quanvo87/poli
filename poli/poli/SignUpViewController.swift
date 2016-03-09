@@ -56,7 +56,7 @@ class SignUpViewController: UIViewController {
                     
                     self.createNetwork("utexas.edu")
                     
-                    let alert: UIAlertController = UIAlertController(title: "Sign up successful!", message: "A verification e-mail has been sent to the provided address. Please confirm to log in!", preferredStyle: .Alert)
+                    let alert: UIAlertController = UIAlertController(title: nil, message: "Verification e-mail sent. Please verify to log in!", preferredStyle: .Alert)
                     let okButton: UIAlertAction = UIAlertAction(title: "OK!", style: .Default) { action -> Void in
                         self.dismissViewControllerAnimated(true, completion: nil)
                     }
@@ -93,26 +93,24 @@ class SignUpViewController: UIViewController {
                     let events = PFObject(className: "Channel")
                     let buySellTrade = PFObject(className: "Channel")
                     
-                    general["channelType"] = "default"
-                    funny["channelType"] = "default"
-                    events["channelType"] = "default"
-                    buySellTrade["channelType"] = "default"
+                    general["name"] = "General"
+                    funny["name"] = "Funny"
+                    events["name"] = "Events"
+                    buySellTrade["name"] = "Buy/Sell/Trade"
                     
-                    newNetwork["defaultChannels"] = [general, funny, events, buySellTrade]
+                    let channels = [general, funny, events, buySellTrade]
                     
-                    newNetwork.saveInBackgroundWithBlock {
-                        (success: Bool, error: NSError?) -> Void in
-                        if (success) {
-                        } else {
-                            print("Error creating new network")
-                        }
+                    for channel in channels {
+                        channel["network"] = network
+                        channel.saveInBackground()
                     }
+                    
+                    newNetwork.saveInBackground()
                 }
             } else {
                 print("Error: \(error!) \(error!.userInfo)")
             }
         }
-        
     }
     
     @IBAction func tapCancel(sender: AnyObject) {

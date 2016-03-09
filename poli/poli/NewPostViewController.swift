@@ -8,21 +8,30 @@
 
 import UIKit
 
-class NewPostViewController: UIViewController, UIPopoverPresentationControllerDelegate {
+class NewPostViewController: UIViewController, ChannelPickerViewControllerDelegate {
     
-    @IBOutlet weak var messageLabel: UILabel!
     @IBOutlet weak var postTextView: UITextView!
+    @IBOutlet weak var selectedChannelLabel: UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = "New Post"
+        selectedChannelLabel.text = ""
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
     
-    @IBAction func tapSelectChannel(sender: AnyObject) {
+    @IBAction func tapSelectChannel(sender: UIButton) {
+        if let channelPickerViewController = storyboard?.instantiateViewControllerWithIdentifier("Channel Picker") as! ChannelPickerViewController? {
+            channelPickerViewController.delegate = self
+            self.navigationController?.pushViewController(channelPickerViewController, animated: true)
+        }
+    }
+    
+    func getChannel(channel: String) {
+        self.selectedChannelLabel.text = channel
     }
     
     @IBAction func tapNewChannel(sender: AnyObject) {
@@ -34,10 +43,7 @@ class NewPostViewController: UIViewController, UIPopoverPresentationControllerDe
         let user = PFUser.currentUser()
         let userObjectId = user?.objectId
         
-        if postText == "" {
-            messageLabel.text = "Posts cannot be blank"
-        
-        } else {
+        if postText != "" {
             
             let post = PFObject(className:"Post")
             post["creator"] = userObjectId
@@ -46,17 +52,8 @@ class NewPostViewController: UIViewController, UIPopoverPresentationControllerDe
             post.saveInBackgroundWithBlock {
                 (success: Bool, error: NSError?) -> Void in
                 if (success) {
-                    
-                    let alert: UIAlertController = UIAlertController(title: "Success", message: "Post successful!", preferredStyle: .Alert)
-                    let okButton: UIAlertAction = UIAlertAction(title: "Ok", style: .Default) { action -> Void in
-                        self.tabBarController?.selectedIndex = 0
-                        self.postTextView.text = ""
-                    }
-                    alert.addAction(okButton)
-                    self.presentViewController(alert, animated: true, completion: nil)
-                    
-                } else {
-                    self.messageLabel.text = "Post was unsuccessful. Please try again."
+                    self.selectedChannelLabel.text = ""
+                    self.tabBarController?.selectedIndex = 0
                 }
             }
         }
