@@ -23,19 +23,19 @@
 		7F0F0D291C7D4775005011B6 /* ParseFacebookUtilsV4.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F0F0D231C7D4775005011B6 /* ParseFacebookUtilsV4.framework */; settings = {ASSET_TAGS = (); }; };
 		7F0F0D2A1C7D4775005011B6 /* ParseTwitterUtils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F0F0D241C7D4775005011B6 /* ParseTwitterUtils.framework */; settings = {ASSET_TAGS = (); }; };
 		7F0F0D2B1C7D4775005011B6 /* ParseUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F0F0D251C7D4775005011B6 /* ParseUI.framework */; settings = {ASSET_TAGS = (); }; };
-		7F14E28F1C8DE3EA00AF2BF3 /* ChannelsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F14E28E1C8DE3EA00AF2BF3 /* ChannelsViewController.swift */; settings = {ASSET_TAGS = (); }; };
 		7F14E2911C8DE41600AF2BF3 /* MeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F14E2901C8DE41600AF2BF3 /* MeViewController.swift */; settings = {ASSET_TAGS = (); }; };
 		7F226A8E1C8E8448006B3A15 /* ChannelPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F226A8D1C8E8448006B3A15 /* ChannelPickerViewController.swift */; settings = {ASSET_TAGS = (); }; };
 		7F45ECBC1C7E032A00580C00 /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F45ECBB1C7E032A00580C00 /* SignUpViewController.swift */; settings = {ASSET_TAGS = (); }; };
 		7F45ECBE1C7E18F200580C00 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F45ECBD1C7E18F200580C00 /* HomeViewController.swift */; settings = {ASSET_TAGS = (); }; };
 		7F5208E81C8FB6960090F433 /* ChannelPickerViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F5208E71C8FB6960090F433 /* ChannelPickerViewControllerDelegate.swift */; settings = {ASSET_TAGS = (); }; };
 		7F5208EC1C8FC1B90090F433 /* ChannelPickerTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F5208EB1C8FC1B90090F433 /* ChannelPickerTableViewCell.swift */; settings = {ASSET_TAGS = (); }; };
+		7F523DC21C9245F300761464 /* ChannelsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F523DC11C9245F300761464 /* ChannelsViewController.swift */; settings = {ASSET_TAGS = (); }; };
+		7F523DC41C924A7E00761464 /* ChannelsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F523DC31C924A7E00761464 /* ChannelsTableViewCell.swift */; settings = {ASSET_TAGS = (); }; };
 		7F540D881C88FEB6008B783D /* PostDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F540D871C88FEB6008B783D /* PostDetailViewController.swift */; settings = {ASSET_TAGS = (); }; };
 		7F540D8A1C8917ED008B783D /* CommentsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F540D891C8917ED008B783D /* CommentsTableViewCell.swift */; settings = {ASSET_TAGS = (); }; };
 		7F5691541C8490A40072D6B8 /* LogInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F5691531C8490A40072D6B8 /* LogInViewController.swift */; settings = {ASSET_TAGS = (); }; };
 		7FBDB2801C853AF200B98292 /* HomeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FBDB27F1C853AF200B98292 /* HomeTableViewCell.swift */; settings = {ASSET_TAGS = (); }; };
 		7FC2807C1C84A40F0072B218 /* NewPostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FC2807B1C84A40F0072B218 /* NewPostViewController.swift */; settings = {ASSET_TAGS = (); }; };
-		7FD0FD351C9090A20011596C /* Channels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FD0FD341C9090A20011596C /* Channels.swift */; settings = {ASSET_TAGS = (); }; };
 		7FDE86301C7E9EFF003D797D /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FDE862F1C7E9EFF003D797D /* SettingsViewController.swift */; settings = {ASSET_TAGS = (); }; };
 		7FEA8A271C7BE15900141D15 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FEA8A261C7BE15900141D15 /* AppDelegate.swift */; };
 		7FEA8A2E1C7BE15900141D15 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7FEA8A2C1C7BE15900141D15 /* Main.storyboard */; };
@@ -61,19 +61,19 @@
 		7F0F0D231C7D4775005011B6 /* ParseFacebookUtilsV4.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ParseFacebookUtilsV4.framework; sourceTree = "<group>"; };
 		7F0F0D241C7D4775005011B6 /* ParseTwitterUtils.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ParseTwitterUtils.framework; sourceTree = "<group>"; };
 		7F0F0D251C7D4775005011B6 /* ParseUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ParseUI.framework; sourceTree = "<group>"; };
-		7F14E28E1C8DE3EA00AF2BF3 /* ChannelsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChannelsViewController.swift; sourceTree = "<group>"; };
 		7F14E2901C8DE41600AF2BF3 /* MeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MeViewController.swift; sourceTree = "<group>"; };
 		7F226A8D1C8E8448006B3A15 /* ChannelPickerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChannelPickerViewController.swift; sourceTree = "<group>"; };
 		7F45ECBB1C7E032A00580C00 /* SignUpViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
 		7F45ECBD1C7E18F200580C00 /* HomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		7F5208E71C8FB6960090F433 /* ChannelPickerViewControllerDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChannelPickerViewControllerDelegate.swift; sourceTree = "<group>"; };
 		7F5208EB1C8FC1B90090F433 /* ChannelPickerTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChannelPickerTableViewCell.swift; sourceTree = "<group>"; };
+		7F523DC11C9245F300761464 /* ChannelsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChannelsViewController.swift; sourceTree = "<group>"; };
+		7F523DC31C924A7E00761464 /* ChannelsTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChannelsTableViewCell.swift; sourceTree = "<group>"; };
 		7F540D871C88FEB6008B783D /* PostDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostDetailViewController.swift; sourceTree = "<group>"; };
 		7F540D891C8917ED008B783D /* CommentsTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommentsTableViewCell.swift; sourceTree = "<group>"; };
 		7F5691531C8490A40072D6B8 /* LogInViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogInViewController.swift; sourceTree = "<group>"; };
 		7FBDB27F1C853AF200B98292 /* HomeTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeTableViewCell.swift; sourceTree = "<group>"; };
 		7FC2807B1C84A40F0072B218 /* NewPostViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewPostViewController.swift; sourceTree = "<group>"; };
-		7FD0FD341C9090A20011596C /* Channels.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Channels.swift; sourceTree = "<group>"; };
 		7FDE862F1C7E9EFF003D797D /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		7FEA8A231C7BE15900141D15 /* poli.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = poli.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7FEA8A261C7BE15900141D15 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -162,12 +162,12 @@
 				7FBDB27F1C853AF200B98292 /* HomeTableViewCell.swift */,
 				7F540D871C88FEB6008B783D /* PostDetailViewController.swift */,
 				7F540D891C8917ED008B783D /* CommentsTableViewCell.swift */,
-				7F14E28E1C8DE3EA00AF2BF3 /* ChannelsViewController.swift */,
+				7F523DC11C9245F300761464 /* ChannelsViewController.swift */,
+				7F523DC31C924A7E00761464 /* ChannelsTableViewCell.swift */,
 				7FC2807B1C84A40F0072B218 /* NewPostViewController.swift */,
 				7F5208E71C8FB6960090F433 /* ChannelPickerViewControllerDelegate.swift */,
 				7F226A8D1C8E8448006B3A15 /* ChannelPickerViewController.swift */,
 				7F5208EB1C8FC1B90090F433 /* ChannelPickerTableViewCell.swift */,
-				7FD0FD341C9090A20011596C /* Channels.swift */,
 				7F14E2901C8DE41600AF2BF3 /* MeViewController.swift */,
 				7FDE862F1C7E9EFF003D797D /* SettingsViewController.swift */,
 				7FEA8A2F1C7BE15900141D15 /* Assets.xcassets */,
@@ -249,16 +249,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7F14E28F1C8DE3EA00AF2BF3 /* ChannelsViewController.swift in Sources */,
 				7F14E2911C8DE41600AF2BF3 /* MeViewController.swift in Sources */,
 				7F45ECBE1C7E18F200580C00 /* HomeViewController.swift in Sources */,
 				7F540D881C88FEB6008B783D /* PostDetailViewController.swift in Sources */,
 				7F45ECBC1C7E032A00580C00 /* SignUpViewController.swift in Sources */,
 				7FBDB2801C853AF200B98292 /* HomeTableViewCell.swift in Sources */,
 				7FDE86301C7E9EFF003D797D /* SettingsViewController.swift in Sources */,
+				7F523DC41C924A7E00761464 /* ChannelsTableViewCell.swift in Sources */,
 				7F5208E81C8FB6960090F433 /* ChannelPickerViewControllerDelegate.swift in Sources */,
 				7FC2807C1C84A40F0072B218 /* NewPostViewController.swift in Sources */,
-				7FD0FD351C9090A20011596C /* Channels.swift in Sources */,
+				7F523DC21C9245F300761464 /* ChannelsViewController.swift in Sources */,
 				7F5691541C8490A40072D6B8 /* LogInViewController.swift in Sources */,
 				7F5208EC1C8FC1B90090F433 /* ChannelPickerTableViewCell.swift in Sources */,
 				7F540D8A1C8917ED008B783D /* CommentsTableViewCell.swift in Sources */,

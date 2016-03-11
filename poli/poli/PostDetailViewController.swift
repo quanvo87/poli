@@ -16,7 +16,7 @@ class PostDetailViewController: UIViewController, UITableViewDataSource, UITable
     @IBOutlet weak var commentsTableView: UITableView!
     
     var post = PFObject(className: "Post")
-    var comments:[PFObject] = []
+    var comments = [PFObject]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,6 +27,7 @@ class PostDetailViewController: UIViewController, UITableViewDataSource, UITable
         let dateFormatter = NSDateFormatter()
         dateFormatter.timeStyle = .ShortStyle
         let createdAtString = dateFormatter.stringFromDate(createdAt!)
+        
         timeStampLabel.text = createdAtString
         
         commentsTableView.dataSource = self
@@ -79,6 +80,9 @@ class PostDetailViewController: UIViewController, UITableViewDataSource, UITable
                     self.newCommentTextField.text = ""
                     self.getComments()
                 }
+                else {
+                    print(error)
+                }
             }
         }
     }
@@ -92,12 +96,13 @@ class PostDetailViewController: UIViewController, UITableViewDataSource, UITable
         let cell = tableView.dequeueReusableCellWithIdentifier("Comment", forIndexPath: indexPath) as! CommentsTableViewCell
         let comment = comments[indexPath.row]
         
+        cell.commentsTextLabel.text = comment["text"] as? String
+        
         let createdAt = comment.createdAt as NSDate?
         let dateFormatter = NSDateFormatter()
         dateFormatter.timeStyle = .ShortStyle
         let createdAtString = dateFormatter.stringFromDate(createdAt!)
         
-        cell.commentsTextLabel.text = comment["text"] as? String
         cell.timeStampLabel.text = createdAtString
         
         return cell

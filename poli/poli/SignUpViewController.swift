@@ -18,6 +18,7 @@ class SignUpViewController: UIViewController {
         super.viewDidLoad()
         
         messageLabel.text = ""
+        self.emailTextField.becomeFirstResponder()
     }
     
     override func didReceiveMemoryWarning() {
@@ -26,16 +27,17 @@ class SignUpViewController: UIViewController {
     
     @IBAction func tapSignUp(sender: AnyObject) {
         
+        let network = "utexas.edu"
         self.messageLabel.text = ""
         
         let email = emailTextField.text?.lowercaseString
         let password = passwordTextField.text
         
-        if email?.hasSuffix("utexas.edu") == false {
-            self.messageLabel.text = "Please enter an e-mail associated with a supported organization"
+        if email?.hasSuffix(network) == false {
+            self.messageLabel.text = "Please enter an e-mail associated with a supported organization."
             
         } else if password == "" {
-            self.messageLabel.text = "Please enter a password"
+            self.messageLabel.text = "Please enter a password."
             
         } else {
             
@@ -43,10 +45,12 @@ class SignUpViewController: UIViewController {
             user.username = emailTextField.text
             user.email = emailTextField.text
             user.password = passwordTextField.text
-            user["network"] = "utexas.edu"
+            user["network"] = network
             
             user.signUpInBackgroundWithBlock {
                 (succeeded: Bool, error: NSError?) -> Void in
+                
+                self.getNetworkChannels(network)
                 
                 self.logOut()
                 
@@ -54,7 +58,7 @@ class SignUpViewController: UIViewController {
                     
                     self.messageLabel.text = ""
                     
-                    self.createNetwork("utexas.edu")
+                    self.createNetwork(network)
                     
                     let alert: UIAlertController = UIAlertController(title: nil, message: "Verification e-mail sent. Please verify to log in!", preferredStyle: .Alert)
                     let okButton: UIAlertAction = UIAlertAction(title: "OK!", style: .Default) { action -> Void in
@@ -64,7 +68,12 @@ class SignUpViewController: UIViewController {
                     self.presentViewController(alert, animated: true, completion: nil)
                     
                 } else {
-                    self.messageLabel.text = "Sign up failed. Please try again."
+                    let alert: UIAlertController = UIAlertController(title: nil, message: "Unable to sign up. Please try again.", preferredStyle: .Alert)
+                    let okButton: UIAlertAction = UIAlertAction(title: "Ok", style: .Default) { action -> Void in
+                        self.dismissViewControllerAnimated(true, completion: nil)
+                    }
+                    alert.addAction(okButton)
+                    self.presentViewController(alert, animated: true, completion: nil)
                 }
             }
         }
@@ -109,6 +118,32 @@ class SignUpViewController: UIViewController {
                 }
             } else {
                 print("Error: \(error!) \(error!.userInfo)")
+            }
+        }
+    }
+    
+    func getNetworkChannels(network: String) {
+        
+        if let user = PFUser.currentUser() {
+            
+            let query = PFQuery(className:"Channel")
+            query.whereKey("network", equalTo:network)
+            query.findObjectsInBackgroundWithBlock {
+                (objects: [PFObject]?, error: NSError?) -> Void in
+                if error == nil {
+                    var channels = [String: Int]()
+                    channels.updateValue(1, forKey: "f")
+                    if let objects = objects {
+                        for object in objects {
+                            channels.updateValue(1, forKey: object["name"] as! String)
+                        }
+                    }
+                    user["channels"] = channels
+                    user.saveInBackground()
+                    
+                } else {
+                    print("Error: \(error!) \(error!.userInfo)")
+                }
             }
         }
     }

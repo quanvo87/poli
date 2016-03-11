@@ -15,8 +15,13 @@ class NewPostViewController: UIViewController, ChannelPickerViewControllerDelega
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         navigationItem.title = "New Post"
         selectedChannelLabel.text = ""
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        self.postTextView.becomeFirstResponder()
     }
     
     override func didReceiveMemoryWarning() {
@@ -56,7 +61,7 @@ class NewPostViewController: UIViewController, ChannelPickerViewControllerDelega
         let postText = postTextView.text
         let user = PFUser.currentUser()
         let userObjectId = user?.objectId
-        let channel = selectedChannelLabel.text
+        let channel = selectedChannelLabel.text?.capitalizedString
         
         if postText == "" {
             
@@ -84,10 +89,54 @@ class NewPostViewController: UIViewController, ChannelPickerViewControllerDelega
             post.saveInBackgroundWithBlock {
                 (success: Bool, error: NSError?) -> Void in
                 if (success) {
+                    
                     self.postTextView.text = ""
                     self.selectedChannelLabel.text = ""
+                    
+                    self.createNewChannel(channel!)
+                    self.addChannelToSelectedChannels(channel!)
+                    
                     self.tabBarController?.selectedIndex = 0
+                    
                 }
+                else {
+                    print(error)
+                }
+            }
+        }
+    }
+    
+    func createNewChannel(channel: String) {
+        
+        let query = PFQuery(className:"Channel")
+        query.whereKey("name", equalTo:channel)
+        query.findObjectsInBackgroundWithBlock {
+            (objects: [PFObject]?, error: NSError?) -> Void in
+            if error == nil {
+                if objects?.count == 0 {
+                    
+                    let newChannel = PFObject(className: "Channel")
+                    newChannel["name"] = channel
+                    newChannel["network"] = PFUser.currentUser()!["network"]
+                    newChannel.saveInBackground()
+                    
+                }
+            } else {
+                print("Error: \(error!) \(error!.userInfo)")
+            }
+        }
+    }
+    
+    func addChannelToSelectedChannels(channel: String) {
+        
+        if let user = PFUser.currentUser() {
+            
+            var channels = user["channels"] as! [String: Int]
+            
+            if channels[channel] == nil || channels[channel] == 0 {
+                channels.updateValue(1, forKey: channel)
+                user["channels"] = channels
+                user.saveInBackground()
             }
         }
     }

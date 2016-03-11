@@ -11,7 +11,7 @@ import UIKit
 class HomeViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     @IBOutlet weak var homeTableView: UITableView!
-    var posts:[PFObject] = []
+    var posts = [PFObject]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -53,12 +53,13 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         let cell = tableView.dequeueReusableCellWithIdentifier("Post", forIndexPath: indexPath) as! HomeTableViewCell
         let post = posts[indexPath.row]
         
+        cell.postTextLabel.text = post["text"] as? String
+        
         let createdAt = post.createdAt as NSDate?
         let dateFormatter = NSDateFormatter()
         dateFormatter.timeStyle = .ShortStyle
         let createdAtString = dateFormatter.stringFromDate(createdAt!)
         
-        cell.postTextLabel.text = post["text"] as? String
         cell.timeStampLabel.text = createdAtString
         
         return cell

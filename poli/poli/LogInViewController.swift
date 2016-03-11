@@ -18,6 +18,7 @@ class LogInViewController: UIViewController {
         super.viewDidLoad()
         
         messageLabel.text = ""
+        self.emailTextField.becomeFirstResponder()
     }
     
     override func didReceiveMemoryWarning() {
@@ -32,16 +33,15 @@ class LogInViewController: UIViewController {
         let password = passwordTextField.text
         
         if email == "" || password == "" {
-            self.messageLabel.text = "Please enter a valid username and password"
-        
+            self.messageLabel.text = "Please enter a valid username and password."
+            
         } else {
             
             PFUser.logInWithUsernameInBackground(email!, password:password!) {
                 (user: PFUser?, error: NSError?) -> Void in
                 
                 if error != nil {
-                    self.messageLabel.text = "Log in failed. Please try again."
-                    
+                    print(error)
                 } else if user!["emailVerified"] as! Bool == true {
                     
                     self.messageLabel.text = ""

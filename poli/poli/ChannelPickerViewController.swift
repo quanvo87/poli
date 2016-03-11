@@ -12,14 +12,13 @@ class ChannelPickerViewController: UIViewController, UITableViewDataSource, UITa
     
     @IBOutlet weak var channelsTableView: UITableView!
     var delegate: ChannelPickerViewControllerDelegate!
-    var channels:[PFObject] = []
+    var channels = [PFObject]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         channelsTableView.dataSource = self
         channelsTableView.delegate = self
-        channelsTableView.reloadData()
         automaticallyAdjustsScrollViewInsets = false
         
         getChannels()
@@ -32,7 +31,7 @@ class ChannelPickerViewController: UIViewController, UITableViewDataSource, UITa
     func getChannels() {
         let query = PFQuery(className:"Channel")
         query.whereKey("network", equalTo:PFUser.currentUser()!["network"])
-        query.orderByDescending("createdAt")
+        query.orderByAscending("createdAt")
         query.findObjectsInBackgroundWithBlock {
             (objects: [PFObject]?, error: NSError?) -> Void in
             if error == nil {
@@ -49,7 +48,7 @@ class ChannelPickerViewController: UIViewController, UITableViewDataSource, UITa
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("Channel", forIndexPath: indexPath) as! ChannelPickerTableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("Channel Picker Cell", forIndexPath: indexPath) as! ChannelPickerTableViewCell
         cell.channelNameLabel.text = channels[indexPath.row]["name"] as? String
         return cell
     }
