@@ -62,7 +62,7 @@ class PostDetailViewController: UIViewController, UITableViewDataSource, UITable
         if newCommentText == "" {
             
             let alert: UIAlertController = UIAlertController(title: "", message: "Comments cannot be blank.", preferredStyle: .Alert)
-            let alertButton: UIAlertAction = UIAlertAction(title: "OK", style: .Default) { action -> Void in
+            let alertButton: UIAlertAction = UIAlertAction(title: "Ok", style: .Default) { action -> Void in
             }
             alert.addAction(alertButton)
             self.presentViewController(alert, animated: true, completion: nil)

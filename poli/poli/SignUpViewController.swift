@@ -50,18 +50,18 @@ class SignUpViewController: UIViewController {
             user.signUpInBackgroundWithBlock {
                 (succeeded: Bool, error: NSError?) -> Void in
                 
-                self.getNetworkChannels(network)
-                
-                self.logOut()
+                let userId = (PFUser.currentUser()?.objectId)!
+
+                PFUser.logOut()
                 
                 if error == nil {
                     
+                    self.createNetwork(network, userId: userId)
+                    
                     self.messageLabel.text = ""
                     
-                    self.createNetwork(network)
-                    
                     let alert: UIAlertController = UIAlertController(title: nil, message: "Verification e-mail sent. Please verify to log in!", preferredStyle: .Alert)
-                    let okButton: UIAlertAction = UIAlertAction(title: "OK!", style: .Default) { action -> Void in
+                    let okButton: UIAlertAction = UIAlertAction(title: "Ok!", style: .Default) { action -> Void in
                         self.dismissViewControllerAnimated(true, completion: nil)
                     }
                     alert.addAction(okButton)
@@ -79,11 +79,7 @@ class SignUpViewController: UIViewController {
         }
     }
     
-    func logOut() {
-        PFUser.logOut()
-    }
-    
-    func createNetwork(network: String) {
+    func createNetwork(network: String, userId: String) {
         
         let query = PFQuery(className:"Network")
         query.whereKey("name", equalTo:network)
@@ -111,6 +107,7 @@ class SignUpViewController: UIViewController {
                     
                     for channel in channels {
                         channel["network"] = network
+                        channel["users"] = [userId]
                         channel.saveInBackground()
                     }
                     
@@ -118,32 +115,6 @@ class SignUpViewController: UIViewController {
                 }
             } else {
                 print("Error: \(error!) \(error!.userInfo)")
-            }
-        }
-    }
-    
-    func getNetworkChannels(network: String) {
-        
-        if let user = PFUser.currentUser() {
-            
-            let query = PFQuery(className:"Channel")
-            query.whereKey("network", equalTo:network)
-            query.findObjectsInBackgroundWithBlock {
-                (objects: [PFObject]?, error: NSError?) -> Void in
-                if error == nil {
-                    var channels = [String: Int]()
-                    channels.updateValue(1, forKey: "f")
-                    if let objects = objects {
-                        for object in objects {
-                            channels.updateValue(1, forKey: object["name"] as! String)
-                        }
-                    }
-                    user["channels"] = channels
-                    user.saveInBackground()
-                    
-                } else {
-                    print("Error: \(error!) \(error!.userInfo)")
-                }
             }
         }
     }
