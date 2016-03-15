@@ -11,81 +11,67 @@ import UIKit
 class ChannelsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     @IBOutlet weak var channelsTableView: UITableView!
-    var networkChannels = [PFObject]()
-    var userChannels = [String: Int]()
+    var userId = String()
+    var channels = [PFObject]()
     
     override func viewDidLoad() {
         
         super.viewDidLoad()
         
         navigationItem.title = "Channels"
+        
         channelsTableView.dataSource = self
         channelsTableView.delegate = self
+        
+        userId = (PFUser.currentUser()?.objectId as String?)!
     }
     
     override func viewDidAppear(animated: Bool) {
-        
-        getNetworkChannels()
-        getUserChannels()
+        getChannels()
     }
     
     override func viewWillDisappear(animated: Bool) {
-        saveChannels()
+        
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
     
-    func getNetworkChannels() {
+    func getChannels() {
         
         let query = PFQuery(className:"Channel")
         query.whereKey("network", equalTo:PFUser.currentUser()!["network"])
         query.orderByAscending("createdAt")
         query.findObjectsInBackgroundWithBlock {
             (objects: [PFObject]?, error: NSError?) -> Void in
-            self.networkChannels = objects!
+            self.channels = objects!
             self.channelsTableView.reloadData()
         }
     }
     
-    func getUserChannels() {
-        if let user = PFUser.currentUser() {
-            userChannels = user["channels"] as! [String: Int]
-        }
-    }
-    
-    func saveChannels() {
-        if let user = PFUser.currentUser() {
-            user["channels"] = userChannels
-            user.saveInBackground()
-        }
-    }
-    
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return networkChannels.count
+        return self.channels.count
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        
         let cell = tableView.dequeueReusableCellWithIdentifier("Channel Cell", forIndexPath: indexPath) as! ChannelsTableViewCell
-        cell.channelNameLabel.text = networkChannels[indexPath.row]["name"] as? String
+        let channel = self.channels[indexPath.row]
+        
+        cell.channelNameLabel.text = channel["name"] as? String
+        
+        let users = channel["users"] as! [String]
+
+        if users.contains(self.userId) {
+            cell.accessoryType = .Checkmark
+        }
+        
         return cell
     }
     
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath)
-    {
-        //        if let cell = tableView.cellForRowAtIndexPath(indexPath) {
-        //            if cell.accessoryType == .Checkmark
-        //            {
-        //                cell.accessoryType = .None
-        //                checked[indexPath.row] = false
-        //            }
-        //            else
-        //            {
-        //                cell.accessoryType = .Checkmark
-        //                checked[indexPath.row] = true
-        //            }
-        //        }
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        
     }
     
     @IBAction func tapSelectAll(sender: AnyObject) {
