@@ -15,9 +15,11 @@ class LogInViewController: UIViewController {
     @IBOutlet weak var messageLabel: UILabel!
     
     override func viewDidLoad() {
+        
         super.viewDidLoad()
         
         messageLabel.text = ""
+        
         self.emailTextField.becomeFirstResponder()
     }
     
@@ -40,9 +42,7 @@ class LogInViewController: UIViewController {
             PFUser.logInWithUsernameInBackground(email!, password:password!) {
                 (user: PFUser?, error: NSError?) -> Void in
                 
-                if error != nil {
-                    print(error)
-                } else if user!["emailVerified"] as! Bool == true {
+                if user!["emailVerified"] as! Bool == true {
                     
                     self.messageLabel.text = ""
                     let storyboard = UIStoryboard(name: "Main", bundle: nil)
@@ -51,6 +51,7 @@ class LogInViewController: UIViewController {
                     appDelegate.window?.rootViewController = tabBarController
                     
                 } else {
+                    
                     PFUser.logOut()
                     self.messageLabel.text = "Please verify e-mail to log in"
                 }

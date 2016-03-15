@@ -19,6 +19,7 @@ class PostDetailViewController: UIViewController, UITableViewDataSource, UITable
     var comments = [PFObject]()
     
     override func viewDidLoad() {
+        
         super.viewDidLoad()
         
         postTextLabel.text = post["text"] as? String
@@ -41,17 +42,14 @@ class PostDetailViewController: UIViewController, UITableViewDataSource, UITable
     }
     
     func getComments() {
+        
         let query = PFQuery(className:"Comment")
         query.whereKey("post", equalTo:post.objectId!)
         query.orderByDescending("createdAt")
         query.findObjectsInBackgroundWithBlock {
             (objects: [PFObject]?, error: NSError?) -> Void in
-            if error == nil {
-                self.comments = objects!
-                self.commentsTableView.reloadData()
-            } else {
-                print("Error: \(error!) \(error!.userInfo)")
-            }
+            self.comments = objects!
+            self.commentsTableView.reloadData()
         }
     }
     
@@ -73,16 +71,10 @@ class PostDetailViewController: UIViewController, UITableViewDataSource, UITable
             comment["creator"] = PFUser.currentUser()?.objectId
             comment["text"] = newCommentText
             comment["post"] = post.objectId
-            
             comment.saveInBackgroundWithBlock {
                 (success: Bool, error: NSError?) -> Void in
-                if (success) {
-                    self.newCommentTextField.text = ""
-                    self.getComments()
-                }
-                else {
-                    print(error)
-                }
+                self.newCommentTextField.text = ""
+                self.getComments()
             }
         }
     }

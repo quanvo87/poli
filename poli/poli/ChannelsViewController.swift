@@ -15,6 +15,7 @@ class ChannelsViewController: UIViewController, UITableViewDataSource, UITableVi
     var userChannels = [String: Int]()
     
     override func viewDidLoad() {
+        
         super.viewDidLoad()
         
         navigationItem.title = "Channels"
@@ -23,6 +24,7 @@ class ChannelsViewController: UIViewController, UITableViewDataSource, UITableVi
     }
     
     override func viewDidAppear(animated: Bool) {
+        
         getNetworkChannels()
         getUserChannels()
     }
@@ -36,17 +38,14 @@ class ChannelsViewController: UIViewController, UITableViewDataSource, UITableVi
     }
     
     func getNetworkChannels() {
+        
         let query = PFQuery(className:"Channel")
         query.whereKey("network", equalTo:PFUser.currentUser()!["network"])
         query.orderByAscending("createdAt")
         query.findObjectsInBackgroundWithBlock {
             (objects: [PFObject]?, error: NSError?) -> Void in
-            if error == nil {
-                self.networkChannels = objects!
-                self.channelsTableView.reloadData()
-            } else {
-                print("Error: \(error!) \(error!.userInfo)")
-            }
+            self.networkChannels = objects!
+            self.channelsTableView.reloadData()
         }
     }
     
@@ -75,18 +74,18 @@ class ChannelsViewController: UIViewController, UITableViewDataSource, UITableVi
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath)
     {
-//        if let cell = tableView.cellForRowAtIndexPath(indexPath) {
-//            if cell.accessoryType == .Checkmark
-//            {
-//                cell.accessoryType = .None
-//                checked[indexPath.row] = false
-//            }
-//            else
-//            {
-//                cell.accessoryType = .Checkmark
-//                checked[indexPath.row] = true
-//            }
-//        }    
+        //        if let cell = tableView.cellForRowAtIndexPath(indexPath) {
+        //            if cell.accessoryType == .Checkmark
+        //            {
+        //                cell.accessoryType = .None
+        //                checked[indexPath.row] = false
+        //            }
+        //            else
+        //            {
+        //                cell.accessoryType = .Checkmark
+        //                checked[indexPath.row] = true
+        //            }
+        //        }
     }
     
     @IBAction func tapSelectAll(sender: AnyObject) {
@@ -94,5 +93,4 @@ class ChannelsViewController: UIViewController, UITableViewDataSource, UITableVi
     
     @IBAction func tapUnselectAll(sender: AnyObject) {
     }
-    
 }

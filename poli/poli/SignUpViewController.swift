@@ -15,9 +15,11 @@ class SignUpViewController: UIViewController {
     @IBOutlet weak var messageLabel: UILabel!
     
     override func viewDidLoad() {
+        
         super.viewDidLoad()
         
         messageLabel.text = ""
+        
         self.emailTextField.becomeFirstResponder()
     }
     
@@ -46,12 +48,11 @@ class SignUpViewController: UIViewController {
             user.email = emailTextField.text
             user.password = passwordTextField.text
             user["network"] = network
-            
             user.signUpInBackgroundWithBlock {
                 (succeeded: Bool, error: NSError?) -> Void in
                 
                 let userId = (PFUser.currentUser()?.objectId)!
-
+                
                 PFUser.logOut()
                 
                 if error == nil {
@@ -68,6 +69,7 @@ class SignUpViewController: UIViewController {
                     self.presentViewController(alert, animated: true, completion: nil)
                     
                 } else {
+                    
                     let alert: UIAlertController = UIAlertController(title: nil, message: "Unable to sign up. Please try again.", preferredStyle: .Alert)
                     let okButton: UIAlertAction = UIAlertAction(title: "Ok", style: .Default) { action -> Void in
                         self.dismissViewControllerAnimated(true, completion: nil)
@@ -86,35 +88,31 @@ class SignUpViewController: UIViewController {
         query.findObjectsInBackgroundWithBlock {
             (objects: [PFObject]?, error: NSError?) -> Void in
             
-            if error == nil {
-                if objects?.count == 0 {
-                    
-                    let newNetwork = PFObject(className: "Network")
-                    
-                    newNetwork["name"] = network
-                    
-                    let general = PFObject(className: "Channel")
-                    let funny = PFObject(className: "Channel")
-                    let events = PFObject(className: "Channel")
-                    let buySellTrade = PFObject(className: "Channel")
-                    
-                    general["name"] = "General"
-                    funny["name"] = "Funny"
-                    events["name"] = "Events"
-                    buySellTrade["name"] = "Buy/Sell/Trade"
-                    
-                    let channels = [general, funny, events, buySellTrade]
-                    
-                    for channel in channels {
-                        channel["network"] = network
-                        channel["users"] = [userId]
-                        channel.saveInBackground()
-                    }
-                    
-                    newNetwork.saveInBackground()
+            if objects?.count == 0 {
+                
+                let newNetwork = PFObject(className: "Network")
+                
+                newNetwork["name"] = network
+                
+                let general = PFObject(className: "Channel")
+                let funny = PFObject(className: "Channel")
+                let events = PFObject(className: "Channel")
+                let buySellTrade = PFObject(className: "Channel")
+                
+                general["name"] = "General"
+                funny["name"] = "Funny"
+                events["name"] = "Events"
+                buySellTrade["name"] = "Buy/Sell/Trade"
+                
+                let channels = [general, funny, events, buySellTrade]
+                
+                for channel in channels {
+                    channel["network"] = network
+                    channel["users"] = [userId]
+                    channel.saveInBackground()
                 }
-            } else {
-                print("Error: \(error!) \(error!.userInfo)")
+                
+                newNetwork.saveInBackground()
             }
         }
     }

@@ -14,9 +14,11 @@ class NewPostViewController: UIViewController, ChannelPickerViewControllerDelega
     @IBOutlet weak var selectedChannelLabel: UILabel!
     
     override func viewDidLoad() {
+        
         super.viewDidLoad()
         
         navigationItem.title = "New Post"
+        
         selectedChannelLabel.text = ""
     }
     
@@ -29,6 +31,7 @@ class NewPostViewController: UIViewController, ChannelPickerViewControllerDelega
     }
     
     @IBAction func tapSelectChannel(sender: UIButton) {
+        
         if let channelPickerViewController = storyboard?.instantiateViewControllerWithIdentifier("Channel Picker") as! ChannelPickerViewController? {
             channelPickerViewController.delegate = self
             self.navigationController?.pushViewController(channelPickerViewController, animated: true)
@@ -59,8 +62,7 @@ class NewPostViewController: UIViewController, ChannelPickerViewControllerDelega
     @IBAction func tapPost(sender: AnyObject) {
         
         let postText = postTextView.text
-        let user = PFUser.currentUser()
-        let userObjectId = user?.objectId
+        let userObjectId = PFUser.currentUser()!.objectId
         let channel = selectedChannelLabel.text?.capitalizedString
         
         if postText == "" {
@@ -92,73 +94,58 @@ class NewPostViewController: UIViewController, ChannelPickerViewControllerDelega
             query.findObjectsInBackgroundWithBlock {
                 (objects: [PFObject]?, error: NSError?) -> Void in
                 
-                if error == nil {
+                let userId = (PFUser.currentUser()?.objectId)!
+                
+                if objects?.count == 0 {
                     
-                    let userId = (PFUser.currentUser()?.objectId)!
+                    let newChannel = PFObject(className: "Channel")
+                    newChannel["name"] = channel
+                    newChannel["network"] = network
+                    newChannel["users"] = [userId]
                     
-                    if objects?.count == 0 {
+                    newChannel.saveInBackgroundWithBlock {
+                        (success: Bool, error: NSError?) -> Void in
                         
-                        let newChannel = PFObject(className: "Channel")
-                        newChannel["name"] = channel
-                        newChannel["network"] = network
-                        newChannel["users"] = [userId]
-                        
-                        newChannel.saveInBackgroundWithBlock {
+                        post["channel"] = newChannel.objectId
+                        post.saveInBackgroundWithBlock {
                             (success: Bool, error: NSError?) -> Void in
-                            if (success) {
-                                
-                                post["channel"] = newChannel.objectId
-                                post.saveInBackgroundWithBlock {
-                                    (success: Bool, error: NSError?) -> Void in
-                                    if (success) {
-                                        
-                                        self.postTextView.text = ""
-                                        self.selectedChannelLabel.text = ""
-                                        
-                                        self.tabBarController?.selectedIndex = 0
-                                    }
-                                    else {
-                                        print(error)
-                                    }
-                                }
-                            }
-                            else {
-                                print(error)
-                            }
-                        }
-                        
-                    } else {
-                        
-                        let selectedChannel = objects?[0]
-                        selectedChannel?.addObject(userId, forKey: "users")
-                        
-                        selectedChannel!.saveInBackgroundWithBlock {
-                            (success: Bool, error: NSError?) -> Void in
-                            if (success) {
-                                
-                                post["channel"] = selectedChannel!.objectId
-                                post.saveInBackgroundWithBlock {
-                                    (success: Bool, error: NSError?) -> Void in
-                                    if (success) {
-                                        
-                                        self.postTextView.text = ""
-                                        self.selectedChannelLabel.text = ""
-                                        
-                                        self.tabBarController?.selectedIndex = 0
-                                    }
-                                    else {
-                                        print(error)
-                                    }
-                                }
-                            }
-                            else {
-                                print(error)
-                            }
+                            
+                            self.postTextView.text = ""
+                            self.selectedChannelLabel.text = ""
+                            self.tabBarController?.selectedIndex = 0
                         }
                     }
-                    
                 } else {
-                    print("Error: \(error!) \(error!.userInfo)")
+                    
+                    let selectedChannel = objects?[0]
+                    let selectedChannelUsers = selectedChannel!["users"] as! [String]
+                    
+                    if selectedChannelUsers.contains(userId) == false {
+                        
+                        selectedChannel?.addObject(userId, forKey: "users")
+                        selectedChannel!.saveInBackgroundWithBlock {
+                            (success: Bool, error: NSError?) -> Void in
+                            
+                            post["channel"] = selectedChannel!.objectId
+                            post.saveInBackgroundWithBlock {
+                                (success: Bool, error: NSError?) -> Void in
+                                
+                                self.postTextView.text = ""
+                                self.selectedChannelLabel.text = ""
+                                self.tabBarController?.selectedIndex = 0
+                            }
+                        }
+                    } else {
+                        
+                        post["channel"] = selectedChannel!.objectId
+                        post.saveInBackgroundWithBlock {
+                            (success: Bool, error: NSError?) -> Void in
+                            
+                            self.postTextView.text = ""
+                            self.selectedChannelLabel.text = ""
+                            self.tabBarController?.selectedIndex = 0
+                        }
+                    }
                 }
             }
         }

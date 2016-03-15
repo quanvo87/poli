@@ -14,6 +14,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     var posts = [PFObject]()
     
     override func viewDidLoad() {
+        
         super.viewDidLoad()
         
         homeTableView.delegate = self
@@ -22,7 +23,9 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     override func viewWillAppear(animated: Bool) {
+        
         navigationItem.title = "poli"
+        
         getPosts()
     }
     
@@ -31,15 +34,23 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     func getPosts() {
-        let query = PFQuery(className:"Post")
-        query.orderByDescending("createdAt")
-        query.findObjectsInBackgroundWithBlock {
+        
+        let user = PFUser.currentUser()
+        let network = user!["network"] as! String
+        let userId = user!.objectId as String?
+        
+        let channelQuery = PFQuery(className: "Channel")
+        channelQuery.whereKey("network", equalTo: network)
+        channelQuery.whereKey("users", equalTo: userId!)
+        
+        let postQuery = PFQuery(className: "Post")
+        postQuery.whereKey("channel", matchesKey: "objectId", inQuery: channelQuery)
+        postQuery.orderByDescending("createdAt")
+        postQuery.findObjectsInBackgroundWithBlock {
             (objects: [PFObject]?, error: NSError?) -> Void in
             if error == nil {
                 self.posts = objects!
                 self.homeTableView.reloadData()
-            } else {
-                print("Error: \(error!) \(error!.userInfo)")
             }
         }
     }

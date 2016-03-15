@@ -11,7 +11,9 @@ import UIKit
 class SettingsViewController: UIViewController {
 
     override func viewDidLoad() {
+        
         super.viewDidLoad()
+        
         navigationItem.title = "Settings"
     }
 
@@ -20,7 +22,9 @@ class SettingsViewController: UIViewController {
     }
     
     @IBAction func tapLogOut(sender: AnyObject) {
+        
         PFUser.logOut()
+        
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let logInViewController  = storyboard.instantiateViewControllerWithIdentifier("Log In") as! LogInViewController
         let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate

@@ -15,6 +15,7 @@ class ChannelPickerViewController: UIViewController, UITableViewDataSource, UITa
     var channels = [PFObject]()
     
     override func viewDidLoad() {
+        
         super.viewDidLoad()
         
         channelsTableView.dataSource = self
@@ -29,17 +30,14 @@ class ChannelPickerViewController: UIViewController, UITableViewDataSource, UITa
     }
     
     func getChannels() {
+        
         let query = PFQuery(className:"Channel")
         query.whereKey("network", equalTo:PFUser.currentUser()!["network"])
         query.orderByAscending("createdAt")
         query.findObjectsInBackgroundWithBlock {
             (objects: [PFObject]?, error: NSError?) -> Void in
-            if error == nil {
-                self.channels = objects!
-                self.channelsTableView.reloadData()
-            } else {
-                print("Error: \(error!) \(error!.userInfo)")
-            }
+            self.channels = objects!
+            self.channelsTableView.reloadData()
         }
     }
     
@@ -48,12 +46,14 @@ class ChannelPickerViewController: UIViewController, UITableViewDataSource, UITa
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        
         let cell = tableView.dequeueReusableCellWithIdentifier("Channel Picker Cell", forIndexPath: indexPath) as! ChannelPickerTableViewCell
         cell.channelNameLabel.text = channels[indexPath.row]["name"] as? String
         return cell
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        
         delegate.getChannel(channels[indexPath.row]["name"] as! String)
         navigationController?.popViewControllerAnimated(true)
     }
