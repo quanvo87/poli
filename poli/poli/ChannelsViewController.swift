@@ -62,7 +62,7 @@ class ChannelsViewController: UIViewController, UITableViewDataSource, UITableVi
         cell.channelNameLabel.text = channel["name"] as? String
         
         let users = channel["users"] as! [String]
-
+        
         if users.contains(self.userId) {
             cell.accessoryType = .Checkmark
         }
@@ -72,11 +72,71 @@ class ChannelsViewController: UIViewController, UITableViewDataSource, UITableVi
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
+        let channel = self.channels[indexPath.row]
+        var users = channel["users"] as! [String]
+        
+        if let cell = tableView.cellForRowAtIndexPath(indexPath) {
+            
+            if cell.accessoryType == .None {
+                users.append(self.userId)
+                cell.accessoryType = .Checkmark
+                
+            } else {
+                users.removeAtIndex(users.indexOf(self.userId)!)
+                cell.accessoryType = .None
+            }
+        }
+        channel["users"] = users
+        channel.saveInBackground()
     }
     
     @IBAction func tapSelectAll(sender: AnyObject) {
+        
+        for i in 0...channelsTableView.numberOfSections - 1 {
+            
+            for j in 0...channelsTableView.numberOfRowsInSection(i) - 1 {
+                
+                if let cell = channelsTableView.cellForRowAtIndexPath(NSIndexPath(forRow: j, inSection: i)) {
+                    
+                    if cell.accessoryType == .None {
+                        
+                        let channel = self.channels[j]
+                        var users = channel["users"] as! [String]
+                        
+                        users.append(self.userId)
+                        
+                        channel["users"] = users
+                        channel.saveInBackground()
+                        
+                        cell.accessoryType = .Checkmark
+                    }
+                }
+            }
+        }
     }
     
     @IBAction func tapUnselectAll(sender: AnyObject) {
+        
+        for i in 0...channelsTableView.numberOfSections - 1 {
+            
+            for j in 0...channelsTableView.numberOfRowsInSection(i) - 1 {
+                
+                if let cell = channelsTableView.cellForRowAtIndexPath(NSIndexPath(forRow: j, inSection: i)) {
+                    
+                    if cell.accessoryType == .Checkmark {
+                        
+                        let channel = self.channels[j]
+                        var users = channel["users"] as! [String]
+                        
+                        users.removeAtIndex(users.indexOf(self.userId)!)
+                        
+                        channel["users"] = users
+                        channel.saveInBackground()
+                        
+                        cell.accessoryType = .None
+                    }
+                }
+            }
+        }
     }
 }
