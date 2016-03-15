@@ -12,6 +12,7 @@ class PostDetailViewController: UIViewController, UITableViewDataSource, UITable
     
     @IBOutlet weak var postTextLabel: UILabel!
     @IBOutlet weak var timeStampLabel: UILabel!
+    @IBOutlet weak var channelLabel: UILabel!
     @IBOutlet weak var newCommentTextField: UITextField!
     @IBOutlet weak var commentsTableView: UITableView!
     
@@ -23,9 +24,11 @@ class PostDetailViewController: UIViewController, UITableViewDataSource, UITable
         super.viewDidLoad()
         
         postTextLabel.text = post["text"] as? String
+        channelLabel.text = post["channelName"] as? String
         
         let createdAt = post.createdAt as NSDate?
         let dateFormatter = NSDateFormatter()
+        dateFormatter.dateStyle = .ShortStyle
         dateFormatter.timeStyle = .ShortStyle
         let createdAtString = dateFormatter.stringFromDate(createdAt!)
         
@@ -68,6 +71,7 @@ class PostDetailViewController: UIViewController, UITableViewDataSource, UITable
         } else {
             
             let comment = PFObject(className:"Comment")
+            comment["class"] = "comment"
             comment["creator"] = PFUser.currentUser()?.objectId
             comment["text"] = newCommentText
             comment["post"] = post.objectId
@@ -80,7 +84,7 @@ class PostDetailViewController: UIViewController, UITableViewDataSource, UITable
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.comments.count
+        return comments.count
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
@@ -93,6 +97,7 @@ class PostDetailViewController: UIViewController, UITableViewDataSource, UITable
         let createdAt = comment.createdAt as NSDate?
         let dateFormatter = NSDateFormatter()
         dateFormatter.timeStyle = .ShortStyle
+        dateFormatter.dateStyle = .ShortStyle
         let createdAtString = dateFormatter.stringFromDate(createdAt!)
         
         cell.timeStampLabel.text = createdAtString

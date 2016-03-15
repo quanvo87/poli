@@ -48,15 +48,13 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         postQuery.orderByDescending("createdAt")
         postQuery.findObjectsInBackgroundWithBlock {
             (objects: [PFObject]?, error: NSError?) -> Void in
-            if error == nil {
                 self.posts = objects!
                 self.homeTableView.reloadData()
-            }
         }
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.posts.count
+        return posts.count
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
@@ -65,9 +63,11 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         let post = posts[indexPath.row]
         
         cell.postTextLabel.text = post["text"] as? String
+        cell.channelLabel.text = post["channelName"] as? String
         
         let createdAt = post.createdAt as NSDate?
         let dateFormatter = NSDateFormatter()
+        dateFormatter.dateStyle = .ShortStyle
         dateFormatter.timeStyle = .ShortStyle
         let createdAtString = dateFormatter.stringFromDate(createdAt!)
         
@@ -77,6 +77,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        
         if let postDetailViewController = storyboard?.instantiateViewControllerWithIdentifier("Post Detail") as! PostDetailViewController? {
             postDetailViewController.post = posts[indexPath.row]
             navigationItem.title = nil

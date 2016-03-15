@@ -30,10 +30,6 @@ class ChannelsViewController: UIViewController, UITableViewDataSource, UITableVi
         getChannels()
     }
     
-    override func viewWillDisappear(animated: Bool) {
-        
-    }
-    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
@@ -51,7 +47,7 @@ class ChannelsViewController: UIViewController, UITableViewDataSource, UITableVi
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.channels.count
+        return channels.count
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {

@@ -84,8 +84,10 @@ class NewPostViewController: UIViewController, ChannelPickerViewControllerDelega
         } else {
             
             let post = PFObject(className: "Post")
+            post["class"] = "post"
             post["creator"] = userObjectId
             post["text"] = postText
+            post["channelName"] = channel
             
             let network = PFUser.currentUser()!["network"] as! String
             let query = PFQuery(className: "Channel")
