@@ -42,18 +42,25 @@ class LogInViewController: UIViewController {
             PFUser.logInWithUsernameInBackground(email!, password:password!) {
                 (user: PFUser?, error: NSError?) -> Void in
                 
-                if user!["emailVerified"] as! Bool == true {
+                if error == nil {
                     
-                    self.messageLabel.text = ""
-                    let storyboard = UIStoryboard(name: "Main", bundle: nil)
-                    let tabBarController = storyboard.instantiateViewControllerWithIdentifier("Tab Bar") as! UITabBarController
-                    let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-                    appDelegate.window?.rootViewController = tabBarController
+                    if user!["emailVerified"] as! Bool == true {
+                        
+                        self.messageLabel.text = ""
+                        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+                        let tabBarController = storyboard.instantiateViewControllerWithIdentifier("Tab Bar") as! UITabBarController
+                        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+                        appDelegate.window?.rootViewController = tabBarController
+                        
+                    } else {
+                        
+                        PFUser.logOut()
+                        self.messageLabel.text = "Please verify e-mail to log in"
+                    }
+                }
                     
-                } else {
-                    
-                    PFUser.logOut()
-                    self.messageLabel.text = "Please verify e-mail to log in"
+                else {
+                    self.messageLabel.text = "Log in failed. Please try again."
                 }
             }
         }

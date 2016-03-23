@@ -57,7 +57,7 @@ class SignUpViewController: UIViewController {
                 
                 if error == nil {
                     
-                    self.createNetwork(network, userId: userId)
+                    self.joinNetworks(network, userId: userId)
                     
                     self.messageLabel.text = ""
                     
@@ -81,11 +81,11 @@ class SignUpViewController: UIViewController {
         }
     }
     
-    func createNetwork(network: String, userId: String) {
+    func joinNetworks(network: String, userId: String) {
         
-        let query = PFQuery(className:"Network")
-        query.whereKey("name", equalTo:network)
-        query.findObjectsInBackgroundWithBlock {
+        let networkQuery = PFQuery(className:"Network")
+        networkQuery.whereKey("name", equalTo:network)
+        networkQuery.findObjectsInBackgroundWithBlock {
             (objects: [PFObject]?, error: NSError?) -> Void in
             
             if objects?.count == 0 {
@@ -113,6 +113,23 @@ class SignUpViewController: UIViewController {
                 }
                 
                 newNetwork.saveInBackground()
+            }
+            
+            else {
+                
+                let channelsQuery = PFQuery(className: "Channel")
+                channelsQuery.whereKey("network", equalTo:network)
+                channelsQuery.findObjectsInBackgroundWithBlock {
+                    (objects :[PFObject]?, error: NSError?) -> Void in
+                    
+                    for channel in objects! {
+                        
+                        var users = channel["users"] as! [String]
+                        users.append(userId)
+                        channel["users"] = users
+                        channel.saveInBackground()
+                    }
+                }
             }
         }
     }

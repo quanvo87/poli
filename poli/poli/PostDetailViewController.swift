@@ -48,7 +48,7 @@ class PostDetailViewController: UIViewController, UITableViewDataSource, UITable
         
         let query = PFQuery(className:"Comment")
         query.whereKey("post", equalTo:post.objectId!)
-        query.orderByDescending("createdAt")
+        query.orderByAscending("createdAt")
         query.findObjectsInBackgroundWithBlock {
             (objects: [PFObject]?, error: NSError?) -> Void in
             self.comments = objects!
