@@ -28,6 +28,12 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         getPosts()
     }
     
+    override func viewWillDisappear(animated: Bool) {
+        
+        posts = []
+        homeTableView.reloadData()
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }

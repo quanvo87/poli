@@ -97,20 +97,17 @@ class ChannelsViewController: UIViewController, UITableViewDataSource, UITableVi
             
             if cell.accessoryType == .None {
                 
+                cell.accessoryType = .Checkmark
+                
                 let newUserChannel = PFObject(className: "UserChannel")
                 newUserChannel["user"] = self.userId
                 newUserChannel["name"] = channelName
                 
-                do {
-                    try newUserChannel.save()
-                }
-                catch {
-                    print(error)
-                }
-                
-                cell.accessoryType = .Checkmark
+                newUserChannel.saveInBackground()
                 
             } else {
+                
+                cell.accessoryType = .None
                 
                 let userChannelQuery = PFQuery(className: "UserChannel")
                 userChannelQuery.whereKey("user", equalTo: self.userId)
@@ -118,19 +115,11 @@ class ChannelsViewController: UIViewController, UITableViewDataSource, UITableVi
                 userChannelQuery.getFirstObjectInBackgroundWithBlock {
                     (object: PFObject?, error: NSError?) -> Void in
                     
-                    do {
-                        try object?.delete()
-                    }
-                    catch {
-                        print(error)
-                    }
-                    
-                    cell.accessoryType = .None
+                    object?.deleteInBackground()
                 }
             }
         }
     }
-    
     
     @IBAction func tapSelectAll(sender: AnyObject) {
         
@@ -149,14 +138,11 @@ class ChannelsViewController: UIViewController, UITableViewDataSource, UITableVi
                         newUserChannel["user"] = self.userId
                         newUserChannel["name"] = channelName
                         
-                        do {
-                            try newUserChannel.save()
+                        newUserChannel.saveInBackgroundWithBlock {
+                            (success: Bool, error: NSError?) -> Void in
+                            
+                            cell.accessoryType = .Checkmark
                         }
-                        catch {
-                            print(error)
-                        }
-                        
-                        cell.accessoryType = .Checkmark
                     }
                 }
             }
@@ -182,14 +168,11 @@ class ChannelsViewController: UIViewController, UITableViewDataSource, UITableVi
                         userChannelQuery.getFirstObjectInBackgroundWithBlock {
                             (object: PFObject?, error: NSError?) -> Void in
                             
-                            do {
-                                try object?.delete()
+                            object?.deleteInBackgroundWithBlock {
+                                (success: Bool, error: NSError?) -> Void in
+                                
+                                cell.accessoryType = .None
                             }
-                            catch {
-                                print(error)
-                            }
-                            
-                            cell.accessoryType = .None
                         }
                     }
                 }
