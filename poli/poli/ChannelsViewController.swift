@@ -11,7 +11,10 @@ import UIKit
 class ChannelsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     @IBOutlet weak var channelsTableView: UITableView!
+    var user = PFUser()
     var userId = String()
+    var network = String()
+    var userChannels = [String]()
     var channels = [PFObject]()
     
     override func viewDidLoad() {
@@ -23,10 +26,14 @@ class ChannelsViewController: UIViewController, UITableViewDataSource, UITableVi
         channelsTableView.dataSource = self
         channelsTableView.delegate = self
         
-        userId = (PFUser.currentUser()?.objectId as String?)!
+        user = PFUser.currentUser()!
+        userId = user.objectId!
+        network = user["network"] as! String
     }
     
     override func viewDidAppear(animated: Bool) {
+        
+        getUserChannels()
         getChannels()
     }
     
@@ -34,13 +41,31 @@ class ChannelsViewController: UIViewController, UITableViewDataSource, UITableVi
         super.didReceiveMemoryWarning()
     }
     
+    func getUserChannels() {
+        
+        var newUserChannels = [String]()
+        
+        let query = PFQuery(className: "UserChannel")
+        query.whereKey("user", equalTo: userId)
+        query.findObjectsInBackgroundWithBlock {
+            (objects: [PFObject]?, error: NSError?) -> Void in
+            
+            for object in objects! {
+                newUserChannels.append(object["name"] as! (String))
+            }
+            
+            self.userChannels = newUserChannels
+        }
+    }
+    
     func getChannels() {
         
-        let query = PFQuery(className:"Channel")
-        query.whereKey("network", equalTo:PFUser.currentUser()!["network"])
+        let query = PFQuery(className: "Channel")
+        query.whereKey("network", equalTo: network)
         query.orderByAscending("createdAt")
         query.findObjectsInBackgroundWithBlock {
             (objects: [PFObject]?, error: NSError?) -> Void in
+            
             self.channels = objects!
             self.channelsTableView.reloadData()
         }
@@ -54,12 +79,11 @@ class ChannelsViewController: UIViewController, UITableViewDataSource, UITableVi
         
         let cell = tableView.dequeueReusableCellWithIdentifier("Channel Cell", forIndexPath: indexPath) as! ChannelsTableViewCell
         let channel = self.channels[indexPath.row]
+        let channelName = channel["name"] as? String
         
-        cell.channelNameLabel.text = channel["name"] as? String
+        cell.channelNameLabel.text = channelName
         
-        let users = channel["users"] as! [String]
-        
-        if users.contains(self.userId) {
+        if userChannels.contains(channelName!) {
             cell.accessoryType = .Checkmark
         }
         
@@ -69,22 +93,46 @@ class ChannelsViewController: UIViewController, UITableViewDataSource, UITableVi
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
         let channel = self.channels[indexPath.row]
-        var users = channel["users"] as! [String]
+        let channelName = channel["name"] as? String
         
         if let cell = tableView.cellForRowAtIndexPath(indexPath) {
             
             if cell.accessoryType == .None {
-                users.append(self.userId)
+                
+                let newUserChannel = PFObject(className: "UserChannel")
+                newUserChannel["user"] = self.userId
+                newUserChannel["name"] = channelName
+                
+                do {
+                    try newUserChannel.save()
+                }
+                catch {
+                    print(error)
+                }
+                
                 cell.accessoryType = .Checkmark
                 
             } else {
-                users.removeAtIndex(users.indexOf(self.userId)!)
-                cell.accessoryType = .None
+                
+                let userChannelQuery = PFQuery(className: "UserChannel")
+                userChannelQuery.whereKey("user", equalTo: self.userId)
+                userChannelQuery.whereKey("name", equalTo: channelName!)
+                userChannelQuery.getFirstObjectInBackgroundWithBlock {
+                    (object: PFObject?, error: NSError?) -> Void in
+                    
+                    do {
+                        try object?.delete()
+                    }
+                    catch {
+                        print(error)
+                    }
+                    
+                    cell.accessoryType = .None
+                }
             }
         }
-        channel["users"] = users
-        channel.saveInBackground()
     }
+    
     
     @IBAction func tapSelectAll(sender: AnyObject) {
         
@@ -97,12 +145,18 @@ class ChannelsViewController: UIViewController, UITableViewDataSource, UITableVi
                     if cell.accessoryType == .None {
                         
                         let channel = self.channels[j]
-                        var users = channel["users"] as! [String]
+                        let channelName = channel["name"] as! String
                         
-                        users.append(self.userId)
+                        let newUserChannel = PFObject(className: "UserChannel")
+                        newUserChannel["user"] = self.userId
+                        newUserChannel["name"] = channelName
                         
-                        channel["users"] = users
-                        channel.saveInBackground()
+                        do {
+                            try newUserChannel.save()
+                        }
+                        catch {
+                            print(error)
+                        }
                         
                         cell.accessoryType = .Checkmark
                     }
@@ -122,14 +176,23 @@ class ChannelsViewController: UIViewController, UITableViewDataSource, UITableVi
                     if cell.accessoryType == .Checkmark {
                         
                         let channel = self.channels[j]
-                        var users = channel["users"] as! [String]
+                        let channelName = channel["name"] as! String
                         
-                        users.removeAtIndex(users.indexOf(self.userId)!)
-                        
-                        channel["users"] = users
-                        channel.saveInBackground()
-                        
-                        cell.accessoryType = .None
+                        let userChannelQuery = PFQuery(className: "UserChannel")
+                        userChannelQuery.whereKey("user", equalTo: self.userId)
+                        userChannelQuery.whereKey("name", equalTo: channelName)
+                        userChannelQuery.getFirstObjectInBackgroundWithBlock {
+                            (object: PFObject?, error: NSError?) -> Void in
+                            
+                            do {
+                                try object?.delete()
+                            }
+                            catch {
+                                print(error)
+                            }
+                            
+                            cell.accessoryType = .None
+                        }
                     }
                 }
             }

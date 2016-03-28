@@ -85,14 +85,21 @@ class SignUpViewController: UIViewController {
         
         let networkQuery = PFQuery(className:"Network")
         networkQuery.whereKey("name", equalTo:network)
-        networkQuery.findObjectsInBackgroundWithBlock {
-            (objects: [PFObject]?, error: NSError?) -> Void in
+        networkQuery.getFirstObjectInBackgroundWithBlock {
+            (object: PFObject?, error: NSError?) -> Void in
             
-            if objects?.count == 0 {
+            if object == nil {
                 
                 let newNetwork = PFObject(className: "Network")
                 
                 newNetwork["name"] = network
+                
+                do {
+                    try newNetwork.save()
+                }
+                catch {
+                    print(error)
+                }
                 
                 let general = PFObject(className: "Channel")
                 let funny = PFObject(className: "Channel")
@@ -108,31 +115,45 @@ class SignUpViewController: UIViewController {
                 
                 for channel in channels {
                     channel["network"] = network
-                    channel["users"] = [userId]
-                    channel.saveInBackground()
-                }
-                
-                newNetwork.saveInBackground()
-            }
-            
-            else {
-                
-                let channelsQuery = PFQuery(className: "Channel")
-                channelsQuery.whereKey("network", equalTo:network)
-                channelsQuery.findObjectsInBackgroundWithBlock {
-                    (objects :[PFObject]?, error: NSError?) -> Void in
-                    
-                    for channel in objects! {
-                        
-                        var users = channel["users"] as! [String]
-                        users.append(userId)
-                        channel["users"] = users
-                        channel.saveInBackground()
+                    do {
+                        try channel.save()
+                    }
+                    catch {
+                        print(error)
                     }
                 }
             }
+            
+            let general = PFObject(className: "UserChannel")
+            let funny = PFObject(className: "UserChannel")
+            let events = PFObject(className: "UserChannel")
+            let buySellTrade = PFObject(className: "UserChannel")
+            
+            general["name"] = "General"
+            funny["name"] = "Funny"
+            events["name"] = "Events"
+            buySellTrade["name"] = "Buy/Sell/Trade"
+            
+            let userChannels = [general, funny, events, buySellTrade]
+            
+            for userChannel in userChannels {
+                
+                userChannel["user"] = userId
+                userChannel.saveInBackground()
+                
+//                let query = PFQuery(className: "Channel")
+//                query.whereKey("network", equalTo: network)
+//                query.whereKey("name", equalTo: userChannel["name"] as! String)
+//                query.getFirstObjectInBackgroundWithBlock {
+//                    (object: PFObject?, error: NSError?) -> Void in
+//                    
+//                    userChannel["channel"] = object!["objectId"]
+//                    userChannel.saveInBackground()
+//                }
+            }
         }
     }
+    
     
     @IBAction func tapCancel(sender: AnyObject) {
         dismissViewControllerAnimated(true, completion: nil)

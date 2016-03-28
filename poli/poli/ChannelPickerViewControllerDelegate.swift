@@ -10,5 +10,5 @@ import Foundation
 
 protocol ChannelPickerViewControllerDelegate {
     
-    func getChannel(channel: String)
+    func setChannel(channel: String)
 }

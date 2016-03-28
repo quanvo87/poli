@@ -36,6 +36,7 @@ class ChannelPickerViewController: UIViewController, UITableViewDataSource, UITa
         query.orderByAscending("createdAt")
         query.findObjectsInBackgroundWithBlock {
             (objects: [PFObject]?, error: NSError?) -> Void in
+            
             self.channels = objects!
             self.channelsTableView.reloadData()
         }
@@ -54,7 +55,7 @@ class ChannelPickerViewController: UIViewController, UITableViewDataSource, UITa
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
-        delegate.getChannel(channels[indexPath.row]["name"] as! String)
+        delegate.setChannel(channels[indexPath.row]["name"] as! String)
         navigationController?.popViewControllerAnimated(true)
     }
 }

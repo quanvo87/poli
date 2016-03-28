@@ -25,7 +25,6 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     override func viewWillAppear(animated: Bool) {
         
         navigationItem.title = "poli"
-        
         getPosts()
     }
     
@@ -36,26 +35,39 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     func getPosts() {
         
         let user = PFUser.currentUser()
-        let network = user!["network"] as! String
-        let userId = user!.objectId as String?
+        let userId = user?.objectId
+        let network = user!["network"]
         
-        let channelQuery = PFQuery(className: "Channel")
-        channelQuery.whereKey("network", equalTo: network)
-        channelQuery.whereKey("users", equalTo: userId!)
-        
-        let postQuery = PFQuery(className: "Post")
-        postQuery.whereKey("channel", matchesKey: "objectId", inQuery: channelQuery)
-        postQuery.orderByDescending("createdAt")
-        postQuery.findObjectsInBackgroundWithBlock {
+        let userChannelQuery = PFQuery(className: "UserChannel")
+        userChannelQuery.whereKey("user", equalTo: userId!)
+        userChannelQuery.findObjectsInBackgroundWithBlock {
             (objects: [PFObject]?, error: NSError?) -> Void in
+            
+            var channels = [String]()
+            
+            for object in objects! {
+                channels.append(object["name"] as! (String))
+            }
+            
+            let channelQuery = PFQuery(className: "Channel")
+            channelQuery.whereKey("name", containedIn: channels)
+            
+            let postQuery = PFQuery(className: "Post")
+            postQuery.whereKey("network", equalTo: network)
+            postQuery.whereKey("channel", matchesKey: "name", inQuery: channelQuery)
+            postQuery.orderByDescending("createdAt")
+            postQuery.findObjectsInBackgroundWithBlock {
+                (objects: [PFObject]?, error: NSError?) -> Void in
+                
                 self.posts = objects!
                 self.homeTableView.reloadData()
+            }
         }
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return posts.count
-    } 
+    }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
@@ -63,7 +75,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         let post = posts[indexPath.row]
         
         cell.postTextLabel.text = post["text"] as? String
-        cell.channelLabel.text = post["channelName"] as? String
+        cell.channelLabel.text = post["channel"] as? String
         
         let createdAt = post.createdAt as NSDate?
         let dateFormatter = NSDateFormatter()

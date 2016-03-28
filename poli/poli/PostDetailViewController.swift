@@ -24,7 +24,7 @@ class PostDetailViewController: UIViewController, UITableViewDataSource, UITable
         super.viewDidLoad()
         
         postTextLabel.text = post["text"] as? String
-        channelLabel.text = post["channelName"] as? String
+        channelLabel.text = post["channel"] as? String
         
         let createdAt = post.createdAt as NSDate?
         let dateFormatter = NSDateFormatter()
@@ -51,6 +51,7 @@ class PostDetailViewController: UIViewController, UITableViewDataSource, UITable
         query.orderByAscending("createdAt")
         query.findObjectsInBackgroundWithBlock {
             (objects: [PFObject]?, error: NSError?) -> Void in
+            
             self.comments = objects!
             self.commentsTableView.reloadData()
         }
@@ -70,13 +71,17 @@ class PostDetailViewController: UIViewController, UITableViewDataSource, UITable
             
         } else {
             
+            let user = PFUser.currentUser()
+            let userId = user?.objectId
+            
             let comment = PFObject(className:"Comment")
             comment["class"] = "comment"
-            comment["creator"] = PFUser.currentUser()?.objectId
+            comment["creator"] = userId
             comment["text"] = newCommentText
             comment["post"] = post.objectId
             comment.saveInBackgroundWithBlock {
                 (success: Bool, error: NSError?) -> Void in
+                
                 self.newCommentTextField.text = ""
                 self.getComments()
             }

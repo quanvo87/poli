@@ -1,0 +1,6 @@
+framework module IODProfanityFilter {
+  umbrella header "IODProfanityFilter-umbrella.h"
+
+  export *
+  module * { export * }
+}
