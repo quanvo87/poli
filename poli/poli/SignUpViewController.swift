@@ -140,16 +140,6 @@ class SignUpViewController: UIViewController {
                 
                 userChannel["user"] = userId
                 userChannel.saveInBackground()
-                
-//                let query = PFQuery(className: "Channel")
-//                query.whereKey("network", equalTo: network)
-//                query.whereKey("name", equalTo: userChannel["name"] as! String)
-//                query.getFirstObjectInBackgroundWithBlock {
-//                    (object: PFObject?, error: NSError?) -> Void in
-//                    
-//                    userChannel["channel"] = object!["objectId"]
-//                    userChannel.saveInBackground()
-//                }
             }
         }
     }

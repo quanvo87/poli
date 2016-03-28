@@ -34,34 +34,24 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     func getPosts() {
         
-        let user = PFUser.currentUser()
-        let userId = user?.objectId
-        let network = user!["network"]
+        let userId = PFUser.currentUser()!.objectId as String?
+        let network = PFUser.currentUser()!["network"] as! String
         
         let userChannelQuery = PFQuery(className: "UserChannel")
         userChannelQuery.whereKey("user", equalTo: userId!)
-        userChannelQuery.findObjectsInBackgroundWithBlock {
+        
+        let channelQuery = PFQuery(className: "Channel")
+        channelQuery.whereKey("name", matchesKey: "name", inQuery: userChannelQuery)
+        
+        let postQuery = PFQuery(className: "Post")
+        postQuery.whereKey("network", equalTo: network)
+        postQuery.whereKey("channel", matchesKey: "name", inQuery: channelQuery)
+        postQuery.orderByDescending("createdAt")
+        postQuery.findObjectsInBackgroundWithBlock {
             (objects: [PFObject]?, error: NSError?) -> Void in
             
-            var channels = [String]()
-            
-            for object in objects! {
-                channels.append(object["name"] as! (String))
-            }
-            
-            let channelQuery = PFQuery(className: "Channel")
-            channelQuery.whereKey("name", containedIn: channels)
-            
-            let postQuery = PFQuery(className: "Post")
-            postQuery.whereKey("network", equalTo: network)
-            postQuery.whereKey("channel", matchesKey: "name", inQuery: channelQuery)
-            postQuery.orderByDescending("createdAt")
-            postQuery.findObjectsInBackgroundWithBlock {
-                (objects: [PFObject]?, error: NSError?) -> Void in
-                
-                self.posts = objects!
-                self.homeTableView.reloadData()
-            }
+            self.posts = objects!
+            self.homeTableView.reloadData()
         }
     }
     
@@ -91,6 +81,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
         if let postDetailViewController = storyboard?.instantiateViewControllerWithIdentifier("Post Detail") as! PostDetailViewController? {
+            
             postDetailViewController.post = posts[indexPath.row]
             navigationItem.title = "Home"
             self.navigationController?.pushViewController(postDetailViewController, animated: true)

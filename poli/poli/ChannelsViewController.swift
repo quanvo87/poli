@@ -11,7 +11,6 @@ import UIKit
 class ChannelsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     @IBOutlet weak var channelsTableView: UITableView!
-    var user = PFUser()
     var userId = String()
     var network = String()
     var userChannels = [String]()
@@ -26,9 +25,8 @@ class ChannelsViewController: UIViewController, UITableViewDataSource, UITableVi
         channelsTableView.dataSource = self
         channelsTableView.delegate = self
         
-        user = PFUser.currentUser()!
-        userId = user.objectId!
-        network = user["network"] as! String
+        userId = (PFUser.currentUser()?.objectId as String?)!
+        network = PFUser.currentUser()!["network"] as! String
     }
     
     override func viewDidAppear(animated: Bool) {

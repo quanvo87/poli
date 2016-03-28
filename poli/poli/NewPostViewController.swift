@@ -86,12 +86,13 @@ class NewPostViewController: UIViewController, ChannelPickerViewControllerDelega
             selectedChannelLabel.text = ""
             
             let user = PFUser.currentUser()
-            let userId = user?.objectId
+            let userId = user?.objectId as String?
             let network = user!["network"] as! String
             
             let post = PFObject(className: "Post")
             post["class"] = "post"
             post["creator"] = userId
+            post["network"] = network
             post["channel"] = channelName
             post["text"] = postText
             
@@ -131,7 +132,7 @@ class NewPostViewController: UIViewController, ChannelPickerViewControllerDelega
                 
                 if object == nil {
                     
-                    let newUserChannel = PFObject(className: "UserChanel")
+                    let newUserChannel = PFObject(className: "UserChannel")
                     newUserChannel["user"] = userId
                     newUserChannel["name"] = channelName
                     
