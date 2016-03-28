@@ -72,7 +72,7 @@ class MeViewController: UIViewController, UITableViewDataSource, UITableViewDele
         if type == "post" {
             
             cell.typeLabel.text = "Post"
-            cell.detailLabel.text = content["channelName"] as? String
+            cell.detailLabel.text = content["channel"] as? String
             
         } else if type == "comment" {
             
