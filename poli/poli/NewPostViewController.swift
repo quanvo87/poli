@@ -92,60 +92,52 @@ class NewPostViewController: UIViewController, ChannelPickerViewControllerDelega
             let post = PFObject(className: "Post")
             post["class"] = "post"
             post["creator"] = userId
-            post["network"] = network
             post["channel"] = channelName
             post["text"] = postText
-            
-            do {
-                try post.save()
-            }
-            catch {
-                print(error)
-            }
-            
-            let channelQuery = PFQuery(className: "Channel")
-            channelQuery.whereKey("network", equalTo: network)
-            channelQuery.whereKey("name", equalTo: channelName!)
-            channelQuery.getFirstObjectInBackgroundWithBlock {
-                (object: PFObject?, error: NSError?) -> Void in
+            post.saveInBackgroundWithBlock {
+                (success: Bool, error: NSError?) -> Void in
                 
-                if object == nil {
+                if success {
                     
-                    let newChannel = PFObject(className: "Channel")
-                    newChannel["name"] = channelName
-                    newChannel["network"] = network
-                    
-                    do {
-                        try newChannel.save()
+                    let channelQuery = PFQuery(className: "Channel")
+                    channelQuery.whereKey("network", equalTo: network)
+                    channelQuery.whereKey("name", equalTo: channelName!)
+                    channelQuery.getFirstObjectInBackgroundWithBlock {
+                        (object: PFObject?, error: NSError?) -> Void in
+                        
+                        if object == nil {
+                            
+                            let newChannel = PFObject(className: "Channel")
+                            newChannel["name"] = channelName
+                            newChannel["network"] = network
+                            newChannel.saveInBackground()
+                        }
                     }
-                    catch {
-                        print(error)
+                    
+                    let userChannelQuerry = PFQuery(className: "UserChannel")
+                    userChannelQuerry.whereKey("user", equalTo: userId!)
+                    userChannelQuerry.whereKey("name", equalTo: channelName!)
+                    userChannelQuerry.getFirstObjectInBackgroundWithBlock {
+                        (object: PFObject?, error: NSError?) -> Void in
+                        
+                        if object == nil {
+                            
+                            let newUserChannel = PFObject(className: "UserChannel")
+                            newUserChannel["user"] = userId
+                            newUserChannel["name"] = channelName
+                            newUserChannel.saveInBackgroundWithBlock {
+                                (success: Bool, error: NSError?) -> Void in
+                                
+                                if success {
+                                    self.tabBarController?.selectedIndex = 0
+                                }
+                            }
+                        } else {
+                            self.tabBarController?.selectedIndex = 0
+                        }
                     }
                 }
             }
-            
-            let userChannelQuerry = PFQuery(className: "UserChannel")
-            userChannelQuerry.whereKey("user", equalTo: userId!)
-            userChannelQuerry.whereKey("name", equalTo: channelName!)
-            userChannelQuerry.getFirstObjectInBackgroundWithBlock {
-                (object: PFObject?, error: NSError?) -> Void in
-                
-                if object == nil {
-                    
-                    let newUserChannel = PFObject(className: "UserChannel")
-                    newUserChannel["user"] = userId
-                    newUserChannel["name"] = channelName
-                    
-                    do {
-                        try newUserChannel.save()
-                    }
-                    catch {
-                        print(error)
-                    }
-                }
-            }
-            
-            self.tabBarController?.selectedIndex = 0
         }
     }
     

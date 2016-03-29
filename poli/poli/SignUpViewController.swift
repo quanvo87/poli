@@ -49,33 +49,36 @@ class SignUpViewController: UIViewController {
             user.password = passwordTextField.text
             user["network"] = network
             user.signUpInBackgroundWithBlock {
-                (succeeded: Bool, error: NSError?) -> Void in
+                (success: Bool, error: NSError?) -> Void in
                 
-                let userId = (PFUser.currentUser()?.objectId)!
-                
-                PFUser.logOut()
-                
-                if error == nil {
+                if success {
                     
-                    self.joinNetworks(network, userId: userId)
+                    let userId = (PFUser.currentUser()?.objectId)!
                     
-                    self.messageLabel.text = ""
+                    PFUser.logOut()
                     
-                    let alert: UIAlertController = UIAlertController(title: nil, message: "Verification e-mail sent. Please verify to log in!", preferredStyle: .Alert)
-                    let okButton: UIAlertAction = UIAlertAction(title: "Ok!", style: .Default) { action -> Void in
-                        self.dismissViewControllerAnimated(true, completion: nil)
+                    if error == nil {
+                        
+                        self.joinNetworks(network, userId: userId)
+                        
+                        self.messageLabel.text = ""
+                        
+                        let alert: UIAlertController = UIAlertController(title: nil, message: "Verification e-mail sent. Please verify to log in!", preferredStyle: .Alert)
+                        let okButton: UIAlertAction = UIAlertAction(title: "Ok!", style: .Default) { action -> Void in
+                            self.dismissViewControllerAnimated(true, completion: nil)
+                        }
+                        alert.addAction(okButton)
+                        self.presentViewController(alert, animated: true, completion: nil)
+                        
+                    } else {
+                        
+                        let alert: UIAlertController = UIAlertController(title: nil, message: "Unable to sign up. Please try again.", preferredStyle: .Alert)
+                        let okButton: UIAlertAction = UIAlertAction(title: "Ok", style: .Default) { action -> Void in
+                            self.dismissViewControllerAnimated(true, completion: nil)
+                        }
+                        alert.addAction(okButton)
+                        self.presentViewController(alert, animated: true, completion: nil)
                     }
-                    alert.addAction(okButton)
-                    self.presentViewController(alert, animated: true, completion: nil)
-                    
-                } else {
-                    
-                    let alert: UIAlertController = UIAlertController(title: nil, message: "Unable to sign up. Please try again.", preferredStyle: .Alert)
-                    let okButton: UIAlertAction = UIAlertAction(title: "Ok", style: .Default) { action -> Void in
-                        self.dismissViewControllerAnimated(true, completion: nil)
-                    }
-                    alert.addAction(okButton)
-                    self.presentViewController(alert, animated: true, completion: nil)
                 }
             }
         }
@@ -88,62 +91,51 @@ class SignUpViewController: UIViewController {
         networkQuery.getFirstObjectInBackgroundWithBlock {
             (object: PFObject?, error: NSError?) -> Void in
             
-            if object == nil {
+            if error == nil {
                 
-                let newNetwork = PFObject(className: "Network")
-                
-                newNetwork["name"] = network
-                
-                do {
-                    try newNetwork.save()
+                if object == nil {
+                    
+                    let newNetwork = PFObject(className: "Network")
+                    newNetwork["name"] = network
+                    newNetwork.saveInBackground()
+                    
+                    let general = PFObject(className: "Channel")
+                    let funny = PFObject(className: "Channel")
+                    let events = PFObject(className: "Channel")
+                    let buySellTrade = PFObject(className: "Channel")
+                    
+                    general["name"] = "General"
+                    funny["name"] = "Funny"
+                    events["name"] = "Events"
+                    buySellTrade["name"] = "Buy/Sell/Trade"
+                    
+                    let channels = [general, funny, events, buySellTrade]
+                    
+                    for channel in channels {
+                        channel["network"] = network
+                        channel.saveInBackground()
+                    }
                 }
-                catch {
-                    print(error)
-                }
                 
-                let general = PFObject(className: "Channel")
-                let funny = PFObject(className: "Channel")
-                let events = PFObject(className: "Channel")
-                let buySellTrade = PFObject(className: "Channel")
+                let general = PFObject(className: "UserChannel")
+                let funny = PFObject(className: "UserChannel")
+                let events = PFObject(className: "UserChannel")
+                let buySellTrade = PFObject(className: "UserChannel")
                 
                 general["name"] = "General"
                 funny["name"] = "Funny"
                 events["name"] = "Events"
                 buySellTrade["name"] = "Buy/Sell/Trade"
                 
-                let channels = [general, funny, events, buySellTrade]
+                let userChannels = [general, funny, events, buySellTrade]
                 
-                for channel in channels {
-                    channel["network"] = network
-                    do {
-                        try channel.save()
-                    }
-                    catch {
-                        print(error)
-                    }
+                for userChannel in userChannels {
+                    userChannel["user"] = userId
+                    userChannel.saveInBackground()
                 }
-            }
-            
-            let general = PFObject(className: "UserChannel")
-            let funny = PFObject(className: "UserChannel")
-            let events = PFObject(className: "UserChannel")
-            let buySellTrade = PFObject(className: "UserChannel")
-            
-            general["name"] = "General"
-            funny["name"] = "Funny"
-            events["name"] = "Events"
-            buySellTrade["name"] = "Buy/Sell/Trade"
-            
-            let userChannels = [general, funny, events, buySellTrade]
-            
-            for userChannel in userChannels {
-                
-                userChannel["user"] = userId
-                userChannel.saveInBackground()
             }
         }
     }
-    
     
     @IBAction func tapCancel(sender: AnyObject) {
         dismissViewControllerAnimated(true, completion: nil)

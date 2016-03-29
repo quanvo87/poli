@@ -40,24 +40,28 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     func getPosts() {
         
-        let userId = PFUser.currentUser()!.objectId as String?
-        let network = PFUser.currentUser()!["network"] as! String
+        let user = PFUser.currentUser()
+        let userId = user!.objectId as String?
+        let network = user!["network"] as! String
         
         let userChannelQuery = PFQuery(className: "UserChannel")
         userChannelQuery.whereKey("user", equalTo: userId!)
         
         let channelQuery = PFQuery(className: "Channel")
+        channelQuery.whereKey("network", equalTo: network)
         channelQuery.whereKey("name", matchesKey: "name", inQuery: userChannelQuery)
         
         let postQuery = PFQuery(className: "Post")
-        postQuery.whereKey("network", equalTo: network)
         postQuery.whereKey("channel", matchesKey: "name", inQuery: channelQuery)
         postQuery.orderByDescending("createdAt")
         postQuery.findObjectsInBackgroundWithBlock {
             (objects: [PFObject]?, error: NSError?) -> Void in
             
-            self.posts = objects!
-            self.homeTableView.reloadData()
+            if error == nil {
+                
+                self.posts = objects!
+                self.homeTableView.reloadData()
+            }
         }
     }
     

@@ -37,8 +37,11 @@ class ChannelPickerViewController: UIViewController, UITableViewDataSource, UITa
         query.findObjectsInBackgroundWithBlock {
             (objects: [PFObject]?, error: NSError?) -> Void in
             
-            self.channels = objects!
-            self.channelsTableView.reloadData()
+            if error == nil {
+                
+                self.channels = objects!
+                self.channelsTableView.reloadData()
+            }
         }
     }
     
@@ -47,7 +50,6 @@ class ChannelPickerViewController: UIViewController, UITableViewDataSource, UITa
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        
         let cell = tableView.dequeueReusableCellWithIdentifier("Channel Picker Cell", forIndexPath: indexPath) as! ChannelPickerTableViewCell
         cell.channelNameLabel.text = channels[indexPath.row]["name"] as? String
         return cell

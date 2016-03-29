@@ -13,8 +13,8 @@ class ChannelsViewController: UIViewController, UITableViewDataSource, UITableVi
     @IBOutlet weak var channelsTableView: UITableView!
     var userId = String()
     var network = String()
-    var userChannels = [String]()
     var channels = [PFObject]()
+    var userChannels = [String]()
     
     override func viewDidLoad() {
         
@@ -25,18 +25,34 @@ class ChannelsViewController: UIViewController, UITableViewDataSource, UITableVi
         channelsTableView.dataSource = self
         channelsTableView.delegate = self
         
-        userId = (PFUser.currentUser()?.objectId as String?)!
-        network = PFUser.currentUser()!["network"] as! String
+        let user = PFUser.currentUser()
+        userId = (user!.objectId as String?)!
+        network = user!["network"] as! String
     }
     
     override func viewDidAppear(animated: Bool) {
         
-        getUserChannels()
         getChannels()
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
+    }
+    
+    func getChannels() {
+        
+        let query = PFQuery(className: "Channel")
+        query.whereKey("network", equalTo: network)
+        query.orderByAscending("createdAt")
+        query.findObjectsInBackgroundWithBlock {
+            (objects: [PFObject]?, error: NSError?) -> Void in
+            
+            if error == nil {
+                
+                self.channels = objects!
+                self.getUserChannels()
+            }
+        }
     }
     
     func getUserChannels() {
@@ -48,24 +64,15 @@ class ChannelsViewController: UIViewController, UITableViewDataSource, UITableVi
         query.findObjectsInBackgroundWithBlock {
             (objects: [PFObject]?, error: NSError?) -> Void in
             
-            for object in objects! {
-                newUserChannels.append(object["name"] as! (String))
+            if error == nil {
+                
+                for object in objects! {
+                    newUserChannels.append(object["name"] as! (String))
+                }
+                
+                self.userChannels = newUserChannels
+                self.channelsTableView.reloadData()
             }
-            
-            self.userChannels = newUserChannels
-        }
-    }
-    
-    func getChannels() {
-        
-        let query = PFQuery(className: "Channel")
-        query.whereKey("network", equalTo: network)
-        query.orderByAscending("createdAt")
-        query.findObjectsInBackgroundWithBlock {
-            (objects: [PFObject]?, error: NSError?) -> Void in
-            
-            self.channels = objects!
-            self.channelsTableView.reloadData()
         }
     }
     
@@ -97,17 +104,19 @@ class ChannelsViewController: UIViewController, UITableViewDataSource, UITableVi
             
             if cell.accessoryType == .None {
                 
-                cell.accessoryType = .Checkmark
-                
                 let newUserChannel = PFObject(className: "UserChannel")
                 newUserChannel["user"] = self.userId
                 newUserChannel["name"] = channelName
                 
-                newUserChannel.saveInBackground()
+                newUserChannel.saveInBackgroundWithBlock {
+                    (success: Bool, error: NSError?) -> Void in
+                    
+                    if success {
+                        cell.accessoryType = .Checkmark
+                    }
+                }
                 
             } else {
-                
-                cell.accessoryType = .None
                 
                 let userChannelQuery = PFQuery(className: "UserChannel")
                 userChannelQuery.whereKey("user", equalTo: self.userId)
@@ -115,7 +124,13 @@ class ChannelsViewController: UIViewController, UITableViewDataSource, UITableVi
                 userChannelQuery.getFirstObjectInBackgroundWithBlock {
                     (object: PFObject?, error: NSError?) -> Void in
                     
-                    object?.deleteInBackground()
+                    object!.deleteInBackgroundWithBlock {
+                        (success: Bool, error: NSError?) -> Void in
+                        
+                        if success {
+                            cell.accessoryType = .None
+                        }
+                    }
                 }
             }
         }
@@ -141,7 +156,9 @@ class ChannelsViewController: UIViewController, UITableViewDataSource, UITableVi
                         newUserChannel.saveInBackgroundWithBlock {
                             (success: Bool, error: NSError?) -> Void in
                             
-                            cell.accessoryType = .Checkmark
+                            if success {
+                                cell.accessoryType = .Checkmark
+                            }
                         }
                     }
                 }
@@ -168,10 +185,12 @@ class ChannelsViewController: UIViewController, UITableViewDataSource, UITableVi
                         userChannelQuery.getFirstObjectInBackgroundWithBlock {
                             (object: PFObject?, error: NSError?) -> Void in
                             
-                            object?.deleteInBackgroundWithBlock {
+                            object!.deleteInBackgroundWithBlock {
                                 (success: Bool, error: NSError?) -> Void in
                                 
-                                cell.accessoryType = .None
+                                if success {
+                                    cell.accessoryType = .None
+                                }
                             }
                         }
                     }
