@@ -20,6 +20,8 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         homeTableView.delegate = self
         homeTableView.dataSource = self
         automaticallyAdjustsScrollViewInsets = false
+        homeTableView.rowHeight = UITableViewAutomaticDimension
+        homeTableView.estimatedRowHeight = 80
     }
     
     override func viewWillAppear(animated: Bool) {
