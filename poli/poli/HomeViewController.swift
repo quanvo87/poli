@@ -77,7 +77,6 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         let cell = tableView.dequeueReusableCellWithIdentifier("Post", forIndexPath: indexPath) as! HomeTableViewCell
         let post = posts[indexPath.row]
         
-        cell.postTextLabel.text = post["text"] as? String
         cell.channelLabel.text = post["channel"] as? String
         
         let createdAt = post.createdAt as NSDate?
@@ -85,8 +84,15 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         dateFormatter.dateStyle = .ShortStyle
         dateFormatter.timeStyle = .ShortStyle
         let createdAtString = dateFormatter.stringFromDate(createdAt!)
-        
         cell.timeStampLabel.text = createdAtString
+        
+        let text = post["text"] as? NSString
+        if text!.length > 144 {
+            cell.postTextLabel.text = "\(text!.substringToIndex(144))..."
+            
+        } else {
+            cell.postTextLabel.text = text as? String
+        }
         
         return cell
     }

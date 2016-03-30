@@ -23,7 +23,6 @@ class PostDetailViewController: UIViewController, UITableViewDataSource, UITable
         
         super.viewDidLoad()
         
-        postTextLabel.text = post["text"] as? String
         channelLabel.text = post["channel"] as? String
         
         let createdAt = post.createdAt as NSDate?
@@ -31,13 +30,24 @@ class PostDetailViewController: UIViewController, UITableViewDataSource, UITable
         dateFormatter.dateStyle = .ShortStyle
         dateFormatter.timeStyle = .ShortStyle
         let createdAtString = dateFormatter.stringFromDate(createdAt!)
-        
         timeStampLabel.text = createdAtString
+        
+        let text = post["text"] as? NSString
+        if text!.length > 200 {
+            postTextLabel.text = "\(text!.substringToIndex(200))..."
+        } else {
+            postTextLabel.text = text as? String
+        }
         
         commentsTableView.dataSource = self
         commentsTableView.delegate = self
+        commentsTableView.rowHeight = UITableViewAutomaticDimension
+        commentsTableView.estimatedRowHeight = 80
         
         getComments()
+        
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("keyboardWillShow:"), name: UIKeyboardWillShowNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("keyboardWillHide:"), name: UIKeyboardWillHideNotification, object: nil)
     }
     
     override func didReceiveMemoryWarning() {
@@ -102,20 +112,37 @@ class PostDetailViewController: UIViewController, UITableViewDataSource, UITable
         let cell = tableView.dequeueReusableCellWithIdentifier("Comment", forIndexPath: indexPath) as! CommentsTableViewCell
         let comment = comments[indexPath.row]
         
-        cell.commentsTextLabel.text = comment["text"] as? String
+        let text = comment["text"] as? NSString
+        if text!.length > 144 {
+            cell.commentsTextLabel.text = "\(text!.substringToIndex(144))..."
+            
+        } else {
+            cell.commentsTextLabel.text = text as? String
+        }
         
         let createdAt = comment.createdAt as NSDate?
         let dateFormatter = NSDateFormatter()
         dateFormatter.timeStyle = .ShortStyle
         dateFormatter.dateStyle = .ShortStyle
         let createdAtString = dateFormatter.stringFromDate(createdAt!)
-        
         cell.timeStampLabel.text = createdAtString
         
         return cell
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    }
+    
+    func keyboardWillShow(notification: NSNotification) {
+        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.CGRectValue() {
+            self.view.frame.origin.y -= keyboardSize.height
+        }
+    }
+    
+    func keyboardWillHide(notification: NSNotification) {
+        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.CGRectValue() {
+            self.view.frame.origin.y += keyboardSize.height
+        }
     }
     
     func textFieldShouldReturn(textField: UITextField) -> Bool {

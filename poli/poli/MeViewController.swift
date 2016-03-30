@@ -21,6 +21,8 @@ class MeViewController: UIViewController, UITableViewDataSource, UITableViewDele
         
         meTableView.dataSource = self
         meTableView.delegate = self
+        meTableView.rowHeight = UITableViewAutomaticDimension
+        meTableView.estimatedRowHeight = 80
         automaticallyAdjustsScrollViewInsets = false
     }
     
