@@ -52,6 +52,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         channelQuery.whereKey("name", matchesKey: "name", inQuery: userChannelQuery)
         
         let postQuery = PFQuery(className: "Post")
+        postQuery.whereKey("type", equalTo: "post")
         postQuery.whereKey("channel", matchesKey: "name", inQuery: channelQuery)
         postQuery.orderByDescending("createdAt")
         postQuery.findObjectsInBackgroundWithBlock {

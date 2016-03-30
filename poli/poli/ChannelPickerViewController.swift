@@ -31,14 +31,13 @@ class ChannelPickerViewController: UIViewController, UITableViewDataSource, UITa
     
     func getChannels() {
         
-        let query = PFQuery(className:"Channel")
+        let query = PFQuery(className: "Channel")
         query.whereKey("network", equalTo:PFUser.currentUser()!["network"])
         query.orderByAscending("createdAt")
         query.findObjectsInBackgroundWithBlock {
             (objects: [PFObject]?, error: NSError?) -> Void in
             
             if error == nil {
-                
                 self.channels = objects!
                 self.channelsTableView.reloadData()
             }

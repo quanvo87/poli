@@ -11,7 +11,7 @@ import UIKit
 class MeViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     @IBOutlet weak var meTableView: UITableView!
-    var cells = [PFObject]()
+    var posts = [PFObject]()
     
     override func viewDidLoad() {
         
@@ -25,70 +25,64 @@ class MeViewController: UIViewController, UITableViewDataSource, UITableViewDele
     }
     
     override func viewDidAppear(animated: Bool) {
-        getCells()
+        getPosts()
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
     
-    func getCells() {
+    func getPosts() {
         
-        var cells = [PFObject]()
         let user = PFUser.currentUser()
         let userId = user!.objectId as String?
         
-        let postQuery = PFQuery(className: "Post")
-        postQuery.whereKey("creator", equalTo: userId!)
-        postQuery.findObjectsInBackgroundWithBlock {
+        let query = PFQuery(className: "Post")
+        query.whereKey("creator", equalTo: userId!)
+        query.orderByDescending("createdAt")
+        query.findObjectsInBackgroundWithBlock {
             (objects: [PFObject]?, error: NSError?) -> Void in
             
-            cells.appendContentsOf(objects!)
-            
-            let commentQuery = PFQuery(className: "Comment")
-            commentQuery.whereKey("creator", equalTo: userId!)
-            commentQuery.findObjectsInBackgroundWithBlock {
-                (objects: [PFObject]?, error: NSError?) -> Void in
-                
-                cells.appendContentsOf(objects!)
-                
-                self.cells = cells.sort({ $0.createdAt!.compare($1.createdAt!) == .OrderedDescending })
+            if error == nil {
+                self.posts = objects!
                 self.meTableView.reloadData()
             }
         }
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return cells.count
+        return posts.count
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCellWithIdentifier("Me", forIndexPath: indexPath) as! MeTableViewCell
-        let content = cells[indexPath.row]
+        let post = posts[indexPath.row]
         
-        let type = content["class"] as? String
+        let type = post["type"] as? String
         
         if type == "post" {
             
             cell.typeLabel.text = "Post"
-            cell.detailLabel.text = content["channel"] as? String
+            cell.detailLabel.text = post["channel"] as? String
             
-        } else if type == "comment" {
+        } else {
             
             cell.typeLabel.text = "Comment"
             
             let query = PFQuery(className: "Post")
-            query.getObjectInBackgroundWithId((content["post"] as? String)!) {
+            query.getObjectInBackgroundWithId((post["post"] as? String)!) {
                 (object: PFObject?, error: NSError?) -> Void in
                 
-                cell.detailLabel.text = object!["text"] as? String
+                if error == nil {
+                    cell.detailLabel.text = object!["text"] as? String
+                }
             }
         }
         
-        cell.cellTextLabel.text = content["text"] as? String
+        cell.cellTextLabel.text = post["text"] as? String
         
-        let createdAt = content.createdAt as NSDate?
+        let createdAt = post.createdAt as NSDate?
         let dateFormatter = NSDateFormatter()
         dateFormatter.dateStyle = .ShortStyle
         dateFormatter.timeStyle = .ShortStyle
@@ -103,22 +97,24 @@ class MeViewController: UIViewController, UITableViewDataSource, UITableViewDele
         
         if let postDetailViewController = storyboard?.instantiateViewControllerWithIdentifier("Post Detail") as! PostDetailViewController? {
             
-            let content = cells[indexPath.row]
-            let type = content["class"] as? String
+            let post = posts[indexPath.row]
+            let type = post["type"] as? String
             
             if type == "post" {
                 
-                postDetailViewController.post = content
+                postDetailViewController.post = post
                 self.navigationController?.pushViewController(postDetailViewController, animated: true)
                 
-            } else if type == "comment" {
+            } else {
                 
                 let query = PFQuery(className: "Post")
-                query.getObjectInBackgroundWithId((content["post"] as? String)!) {
+                query.getObjectInBackgroundWithId((post["post"] as? String)!) {
                     (object: PFObject?, error: NSError?) -> Void in
                     
-                    postDetailViewController.post = object!
-                    self.navigationController?.pushViewController(postDetailViewController, animated: true)
+                    if error == nil {
+                        postDetailViewController.post = object!
+                        self.navigationController?.pushViewController(postDetailViewController, animated: true)
+                    }
                 }
             }
         }

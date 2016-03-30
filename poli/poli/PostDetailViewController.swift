@@ -46,14 +46,17 @@ class PostDetailViewController: UIViewController, UITableViewDataSource, UITable
     
     func getComments() {
         
-        let query = PFQuery(className:"Comment")
+        let query = PFQuery(className: "Post")
+        query.whereKey("type", equalTo: "comment")
         query.whereKey("post", equalTo:post.objectId!)
         query.orderByAscending("createdAt")
         query.findObjectsInBackgroundWithBlock {
             (objects: [PFObject]?, error: NSError?) -> Void in
             
-            self.comments = objects!
-            self.commentsTableView.reloadData()
+            if error == nil {
+                self.comments = objects!
+                self.commentsTableView.reloadData()
+            }
         }
     }
     
@@ -74,16 +77,18 @@ class PostDetailViewController: UIViewController, UITableViewDataSource, UITable
             let user = PFUser.currentUser()
             let userId = user?.objectId
             
-            let comment = PFObject(className:"Comment")
-            comment["class"] = "comment"
+            let comment = PFObject(className: "Post")
+            comment["type"] = "comment"
             comment["creator"] = userId
             comment["text"] = newCommentText
             comment["post"] = post.objectId
             comment.saveInBackgroundWithBlock {
                 (success: Bool, error: NSError?) -> Void in
                 
-                self.newCommentTextField.text = ""
-                self.getComments()
+                if success {
+                    self.newCommentTextField.text = ""
+                    self.getComments()
+                }
             }
         }
     }

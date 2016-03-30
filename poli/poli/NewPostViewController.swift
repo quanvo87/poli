@@ -90,7 +90,7 @@ class NewPostViewController: UIViewController, ChannelPickerViewControllerDelega
             let network = user!["network"] as! String
             
             let post = PFObject(className: "Post")
-            post["class"] = "post"
+            post["type"] = "post"
             post["creator"] = userId
             post["channel"] = channelName
             post["text"] = postText
