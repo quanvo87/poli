@@ -19,9 +19,9 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         
         homeTableView.delegate = self
         homeTableView.dataSource = self
-        automaticallyAdjustsScrollViewInsets = false
         homeTableView.rowHeight = UITableViewAutomaticDimension
         homeTableView.estimatedRowHeight = 80
+        automaticallyAdjustsScrollViewInsets = false
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -89,7 +89,6 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         let text = post["text"] as? NSString
         if text!.length > 144 {
             cell.postTextLabel.text = "\(text!.substringToIndex(144))..."
-            
         } else {
             cell.postTextLabel.text = text as? String
         }

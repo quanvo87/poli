@@ -61,8 +61,14 @@ class MeViewController: UIViewController, UITableViewDataSource, UITableViewDele
         let cell = tableView.dequeueReusableCellWithIdentifier("Me", forIndexPath: indexPath) as! MeTableViewCell
         let post = posts[indexPath.row]
         
-        let type = post["type"] as? String
+        let createdAt = post.createdAt as NSDate?
+        let dateFormatter = NSDateFormatter()
+        dateFormatter.dateStyle = .ShortStyle
+        dateFormatter.timeStyle = .ShortStyle
+        let createdAtString = dateFormatter.stringFromDate(createdAt!)
+        cell.timeStampLabel.text = createdAtString
         
+        let type = post["type"] as? String
         if type == "post" {
             
             cell.typeLabel.text = "Post"
@@ -82,15 +88,12 @@ class MeViewController: UIViewController, UITableViewDataSource, UITableViewDele
             }
         }
         
-        cell.cellTextLabel.text = post["text"] as? String
-        
-        let createdAt = post.createdAt as NSDate?
-        let dateFormatter = NSDateFormatter()
-        dateFormatter.dateStyle = .ShortStyle
-        dateFormatter.timeStyle = .ShortStyle
-        let createdAtString = dateFormatter.stringFromDate(createdAt!)
-        
-        cell.timeStampLabel.text = createdAtString
+        let text = post["text"] as? NSString
+        if text!.length > 144 {
+            cell.cellTextLabel.text = "\(text!.substringToIndex(144))..."
+        } else {
+            cell.cellTextLabel.text = text as? String
+        }
         
         return cell
     }

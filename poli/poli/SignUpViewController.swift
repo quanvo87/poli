@@ -17,10 +17,7 @@ class SignUpViewController: UIViewController {
     override func viewDidLoad() {
         
         super.viewDidLoad()
-        
         messageLabel.text = ""
-        
-        self.emailTextField.becomeFirstResponder()
     }
     
     override func didReceiveMemoryWarning() {
