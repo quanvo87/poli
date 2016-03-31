@@ -138,11 +138,6 @@ class SignUpViewController: UIViewController {
         dismissViewControllerAnimated(true, completion: nil)
     }
     
-    func textFieldShouldReturn(textField: UITextField) -> Bool {
-        textField.resignFirstResponder()
-        return true
-    }
-    
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         self.view.endEditing(true)
     }

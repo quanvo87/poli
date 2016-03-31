@@ -48,10 +48,10 @@ class NewPostViewController: UIViewController, ChannelPickerViewControllerDelega
         let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .Cancel) { action -> Void in
         }
         actionSheetController.addAction(cancelAction)
-        let nextAction: UIAlertAction = UIAlertAction(title: "Ok", style: .Default) { action -> Void in
+        let okAction: UIAlertAction = UIAlertAction(title: "Ok", style: .Default) { action -> Void in
             self.selectedChannelLabel.text = inputTextField?.text
         }
-        actionSheetController.addAction(nextAction)
+        actionSheetController.addAction(okAction)
         actionSheetController.addTextFieldWithConfigurationHandler { textField -> Void in
             inputTextField = textField
         }
@@ -92,6 +92,7 @@ class NewPostViewController: UIViewController, ChannelPickerViewControllerDelega
             post["type"] = "post"
             post["creator"] = userId
             post["channel"] = channelName
+            post["flags"] = 0
             post["text"] = postText
             post.saveInBackgroundWithBlock {
                 (success: Bool, error: NSError?) -> Void in
@@ -150,11 +151,6 @@ class NewPostViewController: UIViewController, ChannelPickerViewControllerDelega
         if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.CGRectValue() {
             self.view.frame.origin.y += keyboardSize.height
         }
-    }
-    
-    func textFieldShouldReturn(textField: UITextField) -> Bool {
-        textField.resignFirstResponder()
-        return true
     }
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {

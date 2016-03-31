@@ -192,6 +192,9 @@
                                 <rect key="frame" x="259" y="94" width="45" height="24"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="10"/>
                                 <state key="normal" title="Flag Post"/>
+                                <connections>
+                                    <action selector="tapReportPost:" destination="6gc-Sc-aif" eventType="touchUpInside" id="tQy-HN-9Zw"/>
+                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>

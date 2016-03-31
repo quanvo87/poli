@@ -12,10 +12,16 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     @IBOutlet weak var homeTableView: UITableView!
     var posts = [PFObject]()
+    var userId = String()
+    var network = String()
     
     override func viewDidLoad() {
         
         super.viewDidLoad()
+        
+        let user = PFUser.currentUser()
+        userId = (user!.objectId as String?)!
+        network = user!["network"] as! String
         
         homeTableView.delegate = self
         homeTableView.dataSource = self
@@ -42,12 +48,8 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     func getPosts() {
         
-        let user = PFUser.currentUser()
-        let userId = user!.objectId as String?
-        let network = user!["network"] as! String
-        
         let userChannelQuery = PFQuery(className: "UserChannel")
-        userChannelQuery.whereKey("user", equalTo: userId!)
+        userChannelQuery.whereKey("user", equalTo: userId)
         
         let channelQuery = PFQuery(className: "Channel")
         channelQuery.whereKey("network", equalTo: network)
@@ -56,12 +58,12 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         let postQuery = PFQuery(className: "Post")
         postQuery.whereKey("type", equalTo: "post")
         postQuery.whereKey("channel", matchesKey: "name", inQuery: channelQuery)
+        postQuery.whereKey("flags", lessThan: 3)
         postQuery.orderByDescending("createdAt")
         postQuery.findObjectsInBackgroundWithBlock {
             (objects: [PFObject]?, error: NSError?) -> Void in
             
             if error == nil {
-                
                 self.posts = objects!
                 self.homeTableView.reloadData()
             }
@@ -98,11 +100,26 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
-        if let postDetailViewController = storyboard?.instantiateViewControllerWithIdentifier("Post Detail") as! PostDetailViewController? {
-            
-            postDetailViewController.post = posts[indexPath.row]
-            navigationItem.title = "Home"
-            self.navigationController?.pushViewController(postDetailViewController, animated: true)
+        let post = posts[indexPath.row]
+        let flags = post["flags"] as! Int
+        if flags > 2 {
+            showPostClosed()
+        } else {
+            if let postDetailViewController = storyboard?.instantiateViewControllerWithIdentifier("Post Detail") as! PostDetailViewController? {
+                postDetailViewController.post = post
+                navigationItem.title = "Home"
+                navigationController?.pushViewController(postDetailViewController, animated: true)
+            }
         }
+    }
+    
+    func showPostClosed() {
+        
+        let actionSheetController: UIAlertController = UIAlertController(title: "", message: "This post has been flagged as inappropriate and is now closed.", preferredStyle: .Alert)
+        let okAction: UIAlertAction = UIAlertAction(title: "Ok", style: .Default) { action -> Void in
+            navigationController?.popViewControllerAnimated(true)
+        }
+        actionSheetController.addAction(okAction)
+        self.presentViewController(actionSheetController, animated: true, completion: nil)
     }
 }
