@@ -188,10 +188,10 @@
                                 <color key="textColor" red="0.40000000596046448" green="0.40000000596046448" blue="0.40000000596046448" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MsC-2P-2J6" userLabel="Flag Post Button">
-                                <rect key="frame" x="259" y="94" width="45" height="24"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MsC-2P-2J6" userLabel="Report Button">
+                                <rect key="frame" x="271" y="94" width="33" height="24"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="10"/>
-                                <state key="normal" title="Flag Post"/>
+                                <state key="normal" title="Report"/>
                                 <connections>
                                     <action selector="tapReportPost:" destination="6gc-Sc-aif" eventType="touchUpInside" id="tQy-HN-9Zw"/>
                                 </connections>
@@ -236,6 +236,73 @@
             </objects>
             <point key="canvasLocation" x="-1156" y="1909"/>
         </scene>
+        <!--ReportChannelViewController-->
+        <scene sceneID="ju0-DX-g8c">
+            <objects>
+                <viewController storyboardIdentifier="Report Channel" id="9oG-cd-9Rk" userLabel="ReportChannelViewController" customClass="ReportChannelTableViewController" customModule="poli" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="GKZ-Cj-LoF"/>
+                        <viewControllerLayoutGuide type="bottom" id="WH7-cH-K96"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="X3z-2a-LnW" userLabel="Report Channel Table View">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Report A Channel:" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AyO-pT-Jkv">
+                                <rect key="frame" x="90" y="28" width="140" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="TgC-rF-MUW" userLabel="ReportChannelTableView">
+                                <rect key="frame" x="16" y="57" width="288" height="511"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Report Channel Cell" id="j1F-ja-I79" userLabel="ReportChannelTableViewCell" customClass="ReportChannelTableViewCell" customModule="poli" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="28" width="288" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="j1F-ja-I79" id="IYq-bx-yfh">
+                                            <rect key="frame" x="0.0" y="0.0" width="288" height="43"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Channel Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rWP-JE-tOd" userLabel="Channel Name Label">
+                                                    <rect key="frame" x="8" y="8" width="272" height="17"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="rWP-JE-tOd" firstAttribute="top" secondItem="IYq-bx-yfh" secondAttribute="topMargin" id="0aa-ab-J4z"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="rWP-JE-tOd" secondAttribute="trailing" id="OO4-HS-qoY"/>
+                                                <constraint firstItem="rWP-JE-tOd" firstAttribute="leading" secondItem="IYq-bx-yfh" secondAttribute="leadingMargin" id="vfv-pp-JyK"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="channelNameLabel" destination="rWP-JE-tOd" id="SZu-2z-jgQ"/>
+                                        </connections>
+                                    </tableViewCell>
+                                </prototypes>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="AyO-pT-Jkv" firstAttribute="centerX" secondItem="X3z-2a-LnW" secondAttribute="centerX" id="57t-zJ-Gzp"/>
+                            <constraint firstItem="WH7-cH-K96" firstAttribute="top" secondItem="TgC-rF-MUW" secondAttribute="bottom" id="ZsL-ll-YmP"/>
+                            <constraint firstItem="TgC-rF-MUW" firstAttribute="top" secondItem="AyO-pT-Jkv" secondAttribute="bottom" constant="8" id="doW-Ta-SGe"/>
+                            <constraint firstItem="AyO-pT-Jkv" firstAttribute="top" secondItem="GKZ-Cj-LoF" secondAttribute="bottom" constant="8" id="g1C-Zs-mN2"/>
+                            <constraint firstItem="TgC-rF-MUW" firstAttribute="leading" secondItem="X3z-2a-LnW" secondAttribute="leadingMargin" id="jCx-eY-Ods"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="TgC-rF-MUW" secondAttribute="trailing" id="lk7-Zu-GYF"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="reportChannelTableView" destination="TgC-rF-MUW" id="wFx-gh-8Jl"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="E1l-l0-8UB" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-716" y="1935"/>
+        </scene>
         <!--Channels View Controller-->
         <scene sceneID="wg7-f3-ORb">
             <objects>
@@ -249,40 +316,43 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="m1w-N1-Wc2">
-                                <rect key="frame" x="192" y="72" width="82" height="30"/>
+                                <rect key="frame" x="131" y="72" width="58" height="24"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="10"/>
                                 <state key="normal" title="Unselect All"/>
                                 <connections>
                                     <action selector="tapUnselectAll:" destination="8rJ-Kc-sve" eventType="touchUpInside" id="6mm-lP-UmB"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WxK-Db-DbJ">
-                                <rect key="frame" x="46" y="72" width="65" height="30"/>
+                                <rect key="frame" x="36" y="72" width="46" height="24"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="10"/>
                                 <state key="normal" title="Select All"/>
                                 <connections>
                                     <action selector="tapSelectAll:" destination="8rJ-Kc-sve" eventType="touchUpInside" id="JRU-f7-Pah"/>
                                 </connections>
                             </button>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="L87-qb-cyd">
-                                <rect key="frame" x="12" y="110" width="296" height="401"/>
+                                <rect key="frame" x="16" y="104" width="288" height="415"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Channel Cell" id="4KD-R2-Y6C" customClass="ChannelsTableViewCell" customModule="poli" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="28" width="296" height="44"/>
+                                        <rect key="frame" x="0.0" y="28" width="288" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="4KD-R2-Y6C" id="piI-Ca-Yhh">
-                                            <rect key="frame" x="0.0" y="0.0" width="296" height="43"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="288" height="43"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Channel Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MP5-4d-cQG">
-                                                    <rect key="frame" x="0.0" y="0.0" width="113" height="21"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text="Channel Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MP5-4d-cQG">
+                                                    <rect key="frame" x="8" y="8" width="272" height="17"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstItem="MP5-4d-cQG" firstAttribute="top" secondItem="piI-Ca-Yhh" secondAttribute="topMargin" constant="-8" id="523-aV-spq"/>
-                                                <constraint firstItem="MP5-4d-cQG" firstAttribute="leading" secondItem="piI-Ca-Yhh" secondAttribute="leadingMargin" constant="-8" id="V1g-X1-0XC"/>
+                                                <constraint firstItem="MP5-4d-cQG" firstAttribute="top" secondItem="piI-Ca-Yhh" secondAttribute="topMargin" id="738-Jc-tBG"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="MP5-4d-cQG" secondAttribute="trailing" id="lLS-DA-QA5"/>
+                                                <constraint firstItem="MP5-4d-cQG" firstAttribute="leading" secondItem="piI-Ca-Yhh" secondAttribute="leadingMargin" id="xkJ-Ca-U9p"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
@@ -291,17 +361,28 @@
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PG9-Kp-dWE">
+                                <rect key="frame" x="209" y="72" width="75" height="24"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="10"/>
+                                <state key="normal" title="Report Channel"/>
+                                <connections>
+                                    <action selector="tapReportChannel:" destination="8rJ-Kc-sve" eventType="touchUpInside" id="LSB-sd-NvC"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="L87-qb-cyd" firstAttribute="top" secondItem="WxK-Db-DbJ" secondAttribute="bottom" constant="8" id="3B4-J8-pkB"/>
-                            <constraint firstItem="Djb-ko-YwX" firstAttribute="top" secondItem="L87-qb-cyd" secondAttribute="bottom" constant="8" id="73t-ii-lIX"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="L87-qb-cyd" secondAttribute="trailing" constant="-4" id="8ah-6T-GPI"/>
-                            <constraint firstItem="L87-qb-cyd" firstAttribute="leading" secondItem="QS5-Rx-YEW" secondAttribute="leadingMargin" constant="-4" id="JDj-J1-Sxd"/>
-                            <constraint firstItem="m1w-N1-Wc2" firstAttribute="top" secondItem="L7p-HK-0SC" secondAttribute="bottom" constant="8" id="WDi-2S-u69"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="m1w-N1-Wc2" secondAttribute="trailing" constant="30" id="XjW-4v-tKT"/>
-                            <constraint firstItem="WxK-Db-DbJ" firstAttribute="top" secondItem="L7p-HK-0SC" secondAttribute="bottom" constant="8" id="e38-xH-q5K"/>
-                            <constraint firstItem="WxK-Db-DbJ" firstAttribute="leading" secondItem="QS5-Rx-YEW" secondAttribute="leadingMargin" constant="30" id="lga-70-JTm"/>
+                            <constraint firstItem="L87-qb-cyd" firstAttribute="leading" secondItem="QS5-Rx-YEW" secondAttribute="leadingMargin" id="9fl-Kw-iil"/>
+                            <constraint firstItem="m1w-N1-Wc2" firstAttribute="centerX" secondItem="QS5-Rx-YEW" secondAttribute="centerX" id="B7y-Tc-wOq"/>
+                            <constraint firstItem="Djb-ko-YwX" firstAttribute="top" secondItem="L87-qb-cyd" secondAttribute="bottom" id="CsF-Kf-2t3"/>
+                            <constraint firstItem="m1w-N1-Wc2" firstAttribute="top" secondItem="L7p-HK-0SC" secondAttribute="bottom" constant="8" id="Khq-YE-uNq"/>
+                            <constraint firstItem="L87-qb-cyd" firstAttribute="top" secondItem="PG9-Kp-dWE" secondAttribute="bottom" constant="8" id="Omy-cB-WQu"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="L87-qb-cyd" secondAttribute="trailing" id="Sv8-Iv-RvZ"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="PG9-Kp-dWE" secondAttribute="trailing" constant="20" id="cXe-xq-f2k"/>
+                            <constraint firstItem="PG9-Kp-dWE" firstAttribute="top" secondItem="L7p-HK-0SC" secondAttribute="bottom" constant="8" id="gPt-2p-4gY"/>
+                            <constraint firstItem="WxK-Db-DbJ" firstAttribute="leading" secondItem="QS5-Rx-YEW" secondAttribute="leadingMargin" constant="20" id="iBJ-nT-yEf"/>
+                            <constraint firstItem="WxK-Db-DbJ" firstAttribute="top" secondItem="L7p-HK-0SC" secondAttribute="bottom" constant="8" id="nAi-Nz-67c"/>
+                            <constraint firstItem="m1w-N1-Wc2" firstAttribute="centerX" secondItem="QS5-Rx-YEW" secondAttribute="centerX" id="t6Q-7M-brl"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="J1w-nl-47F"/>
@@ -526,8 +607,8 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Channel Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bDb-oL-GWj">
-                                                    <rect key="frame" x="8" y="8" width="113" height="21"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <rect key="frame" x="8" y="8" width="95" height="17"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>

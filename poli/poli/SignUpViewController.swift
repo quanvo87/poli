@@ -110,6 +110,8 @@ class SignUpViewController: UIViewController {
                     
                     for channel in channels {
                         channel["network"] = network
+                        channel["type"] = "default"
+                        channel["flags"] = 0
                         channel.saveInBackground()
                     }
                 }

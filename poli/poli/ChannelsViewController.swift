@@ -198,4 +198,10 @@ class ChannelsViewController: UIViewController, UITableViewDataSource, UITableVi
             }
         }
     }
+    
+    @IBAction func tapReportChannel(sender: AnyObject) {
+        if let reportChannelViewController = storyboard?.instantiateViewControllerWithIdentifier("Report Channel") as! ReportChannelTableViewController? {
+            navigationController?.pushViewController(reportChannelViewController, animated: true)
+        }
+    }
 }

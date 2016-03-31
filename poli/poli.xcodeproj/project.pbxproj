@@ -25,6 +25,8 @@
 		7F0F0D2B1C7D4775005011B6 /* ParseUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F0F0D251C7D4775005011B6 /* ParseUI.framework */; settings = {ASSET_TAGS = (); }; };
 		7F14E2911C8DE41600AF2BF3 /* MeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F14E2901C8DE41600AF2BF3 /* MeViewController.swift */; settings = {ASSET_TAGS = (); }; };
 		7F226A8E1C8E8448006B3A15 /* ChannelPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F226A8D1C8E8448006B3A15 /* ChannelPickerViewController.swift */; settings = {ASSET_TAGS = (); }; };
+		7F3F79591CACC0D1007C89A9 /* ReportChannelTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F3F79581CACC0D1007C89A9 /* ReportChannelTableViewController.swift */; settings = {ASSET_TAGS = (); }; };
+		7F3F795B1CACC0F4007C89A9 /* ReportChannelTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F3F795A1CACC0F4007C89A9 /* ReportChannelTableViewCell.swift */; settings = {ASSET_TAGS = (); }; };
 		7F45ECBC1C7E032A00580C00 /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F45ECBB1C7E032A00580C00 /* SignUpViewController.swift */; settings = {ASSET_TAGS = (); }; };
 		7F45ECBE1C7E18F200580C00 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F45ECBD1C7E18F200580C00 /* HomeViewController.swift */; settings = {ASSET_TAGS = (); }; };
 		7F5208E81C8FB6960090F433 /* ChannelPickerViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F5208E71C8FB6960090F433 /* ChannelPickerViewControllerDelegate.swift */; settings = {ASSET_TAGS = (); }; };
@@ -64,6 +66,8 @@
 		7F0F0D251C7D4775005011B6 /* ParseUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ParseUI.framework; sourceTree = "<group>"; };
 		7F14E2901C8DE41600AF2BF3 /* MeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MeViewController.swift; sourceTree = "<group>"; };
 		7F226A8D1C8E8448006B3A15 /* ChannelPickerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChannelPickerViewController.swift; sourceTree = "<group>"; };
+		7F3F79581CACC0D1007C89A9 /* ReportChannelTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReportChannelTableViewController.swift; sourceTree = "<group>"; };
+		7F3F795A1CACC0F4007C89A9 /* ReportChannelTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReportChannelTableViewCell.swift; sourceTree = "<group>"; };
 		7F45ECBB1C7E032A00580C00 /* SignUpViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
 		7F45ECBD1C7E18F200580C00 /* HomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		7F5208E71C8FB6960090F433 /* ChannelPickerViewControllerDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChannelPickerViewControllerDelegate.swift; sourceTree = "<group>"; };
@@ -166,9 +170,11 @@
 				7F540D891C8917ED008B783D /* CommentsTableViewCell.swift */,
 				7F523DC11C9245F300761464 /* ChannelsViewController.swift */,
 				7F523DC31C924A7E00761464 /* ChannelsTableViewCell.swift */,
+				7F3F79581CACC0D1007C89A9 /* ReportChannelTableViewController.swift */,
+				7F3F795A1CACC0F4007C89A9 /* ReportChannelTableViewCell.swift */,
 				7FC2807B1C84A40F0072B218 /* NewPostViewController.swift */,
-				7F5208E71C8FB6960090F433 /* ChannelPickerViewControllerDelegate.swift */,
 				7F226A8D1C8E8448006B3A15 /* ChannelPickerViewController.swift */,
+				7F5208E71C8FB6960090F433 /* ChannelPickerViewControllerDelegate.swift */,
 				7F5208EB1C8FC1B90090F433 /* ChannelPickerTableViewCell.swift */,
 				7F14E2901C8DE41600AF2BF3 /* MeViewController.swift */,
 				7FCAADE61C989F61006CBA68 /* MeTableViewCell.swift */,
@@ -259,10 +265,12 @@
 				7FBDB2801C853AF200B98292 /* HomeTableViewCell.swift in Sources */,
 				7FCAADE71C989F61006CBA68 /* MeTableViewCell.swift in Sources */,
 				7FDE86301C7E9EFF003D797D /* SettingsViewController.swift in Sources */,
+				7F3F79591CACC0D1007C89A9 /* ReportChannelTableViewController.swift in Sources */,
 				7F523DC41C924A7E00761464 /* ChannelsTableViewCell.swift in Sources */,
 				7F5208E81C8FB6960090F433 /* ChannelPickerViewControllerDelegate.swift in Sources */,
 				7FC2807C1C84A40F0072B218 /* NewPostViewController.swift in Sources */,
 				7F523DC21C9245F300761464 /* ChannelsViewController.swift in Sources */,
+				7F3F795B1CACC0F4007C89A9 /* ReportChannelTableViewCell.swift in Sources */,
 				7F5691541C8490A40072D6B8 /* LogInViewController.swift in Sources */,
 				7F5208EC1C8FC1B90090F433 /* ChannelPickerTableViewCell.swift in Sources */,
 				7F540D8A1C8917ED008B783D /* CommentsTableViewCell.swift in Sources */,

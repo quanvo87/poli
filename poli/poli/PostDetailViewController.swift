@@ -63,75 +63,89 @@ class PostDetailViewController: UIViewController, UITableViewDataSource, UITable
     
     //# MARK: - Report Post
     
-    @IBAction func tapReportPost(sender: AnyObject) {
+    func reportPost(post: PFObject) {
         
+        let postId = post.objectId
         let query = PFQuery(className: "Flag")
         query.whereKey("user", equalTo: userId)
-        query.whereKey("content", equalTo: postId)
+        query.whereKey("content", equalTo: postId!)
         query.getFirstObjectInBackgroundWithBlock {
             (object: PFObject?, error: NSError?) -> Void in
             
             if object == nil {
-                self.showReportPostConfirm()
+                self.showReportPostConfirm(post)
             } else {
-                self.showReportPostFail()
+                self.showReportPostFail(post)
             }
         }
     }
     
-    func showReportPostConfirm() {
+    func showReportPostConfirm(post: PFObject) {
         
-        let actionSheetController: UIAlertController = UIAlertController(title: "", message: "Report post for inappropriate content?", preferredStyle: .Alert)
+        let actionSheetController: UIAlertController = UIAlertController(title: "", message: "Report for inappropriate content?", preferredStyle: .Alert)
         let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .Cancel) { action -> Void in
         }
         actionSheetController.addAction(cancelAction)
         let yesAction: UIAlertAction = UIAlertAction(title: "Yes", style: .Default) { action -> Void in
-            self.reportPost()
+            self.confirmReportPost(post)
         }
         actionSheetController.addAction(yesAction)
         self.presentViewController(actionSheetController, animated: true, completion: nil)
     }
     
-    func showReportPostFail() {
+    func showReportPostFail(post: PFObject) {
         
-        let actionSheetController: UIAlertController = UIAlertController(title: "", message: "You have already reported this post.", preferredStyle: .Alert)
+        let type = post["type"] as! String
+        let actionSheetController: UIAlertController = UIAlertController(title: "", message: "You have already reported this \(type). With enough flags, it will be removed.", preferredStyle: .Alert)
         let okAction: UIAlertAction = UIAlertAction(title: "Ok", style: .Default) { action -> Void in
+            if type == "comment" {
+                self.commentsTableView.reloadData()
+            }
         }
         actionSheetController.addAction(okAction)
         self.presentViewController(actionSheetController, animated: true, completion: nil)
     }
     
-    func reportPost() {
+    func confirmReportPost(post: PFObject) {
         
+        let postId = post.objectId
         let flag = PFObject(className: "Flag")
         flag["user"] = userId
         flag["content"] = postId
         flag.saveInBackgroundWithBlock {
             (success: Bool, error: NSError?) -> Void in
             if error == nil {
-                self.incrementFlags()
+                self.incrementFlags(post)
             }
         }
     }
     
-    func incrementFlags() {
+    func incrementFlags(post: PFObject) {
         
         post.incrementKey("flags")
         post.saveInBackgroundWithBlock {
             (success: Bool, error: NSError?) -> Void in
             if error == nil {
-                self.showReportPostSuccessful()
+                self.showReportPostSuccessful(post)
             }
         }
     }
     
-    func showReportPostSuccessful() {
+    func showReportPostSuccessful(post: PFObject) {
         
-        let actionSheetController: UIAlertController = UIAlertController(title: "", message: "Post has been reported. With enough flags, posts will be deleted.", preferredStyle: .Alert)
+        let type = (post["type"] as! String).capitalizedString
+        let actionSheetController: UIAlertController = UIAlertController(title: "", message: "\(type) has been reported. With enough flags, it will be removed.", preferredStyle: .Alert)
         let okAction: UIAlertAction = UIAlertAction(title: "Ok", style: .Default) { action -> Void in
+            if type == "Comment" {
+                self.commentsTableView.reloadData()
+            }
         }
         actionSheetController.addAction(okAction)
         self.presentViewController(actionSheetController, animated: true, completion: nil)
+    }
+    
+    @IBAction func tapReportPost(sender: AnyObject) {
+        reportPost(post)
     }
     
     //# MARK: - Create A Comment
@@ -189,6 +203,7 @@ class PostDetailViewController: UIViewController, UITableViewDataSource, UITable
         let query = PFQuery(className: "Post")
         query.whereKey("type", equalTo: "comment")
         query.whereKey("post", equalTo:postId)
+        query.whereKey("flags", lessThan: 3)
         query.orderByAscending("createdAt")
         query.findObjectsInBackgroundWithBlock {
             (objects: [PFObject]?, error: NSError?) -> Void in
@@ -228,6 +243,9 @@ class PostDetailViewController: UIViewController, UITableViewDataSource, UITable
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        
+        let comment = comments[indexPath.row]
+        reportPost(comment)
     }
     
     //# MARK: - Keyboard

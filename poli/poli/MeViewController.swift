@@ -38,9 +38,9 @@ class MeViewController: UIViewController, UITableViewDataSource, UITableViewDele
         
         let user = PFUser.currentUser()
         let userId = user!.objectId as String?
-        
         let query = PFQuery(className: "Post")
         query.whereKey("creator", equalTo: userId!)
+        query.whereKey("flags", lessThan: 3)
         query.orderByDescending("createdAt")
         query.findObjectsInBackgroundWithBlock {
             (objects: [PFObject]?, error: NSError?) -> Void in

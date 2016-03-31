@@ -108,8 +108,10 @@ class NewPostViewController: UIViewController, ChannelPickerViewControllerDelega
                         if object == nil {
                             
                             let newChannel = PFObject(className: "Channel")
-                            newChannel["name"] = channelName
                             newChannel["network"] = network
+                            newChannel["type"] = "custom"
+                            newChannel["name"] = channelName
+                            newChannel["flags"] = 0
                             newChannel.saveInBackground()
                         }
                     }

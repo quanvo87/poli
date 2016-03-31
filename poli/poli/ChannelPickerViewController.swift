@@ -33,6 +33,7 @@ class ChannelPickerViewController: UIViewController, UITableViewDataSource, UITa
         
         let query = PFQuery(className: "Channel")
         query.whereKey("network", equalTo:PFUser.currentUser()!["network"])
+        query.whereKey("flags", lessThan: 3)
         query.orderByAscending("createdAt")
         query.findObjectsInBackgroundWithBlock {
             (objects: [PFObject]?, error: NSError?) -> Void in
