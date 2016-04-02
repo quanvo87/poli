@@ -129,7 +129,7 @@ class ChannelsViewController: UIViewController, UITableViewDataSource, UITableVi
                 if let cell = channelsTableView.cellForRowAtIndexPath(NSIndexPath(forRow: j, inSection: i)) {
                     
                     if cell.accessoryType == .None {
-                        
+
                         let channel = self.channels[j]
                         let channelName = channel["name"] as! String
                         let newUserChannel = PFObject(className: "UserChannel")

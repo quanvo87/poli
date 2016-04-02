@@ -209,7 +209,6 @@ class PostDetailViewController: UIViewController, UITableViewDataSource, UITable
                 self.view.frame.origin.y += keyboardSize.height - offset.height
             })
         }
-        print(self.view.frame.origin.y)
     }
     
     func keyboardWillHide(sender: NSNotification) {
