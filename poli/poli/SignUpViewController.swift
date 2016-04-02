@@ -27,6 +27,7 @@ class SignUpViewController: UIViewController {
     //# MARK: - Sign Up
     @IBAction func tapSignUp(sender: AnyObject) {
         self.messageLabel.text = ""
+        
         let email = emailTextField.text?.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet()).lowercaseString
         let password = passwordTextField.text
         var network = String()
@@ -39,6 +40,7 @@ class SignUpViewController: UIViewController {
             
         } else {
             network = email!.componentsSeparatedByString("@")[1]
+            
             let user = PFUser()
             user.username = email
             user.email = email

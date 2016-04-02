@@ -24,6 +24,8 @@ class ChannelsViewController: UIViewController, UITableViewDataSource, UITableVi
         let user = PFUser.currentUser()
         userId = (user!.objectId as String?)!
         network = user!["network"] as! String
+        
+        setUpTableView()
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -75,13 +77,11 @@ class ChannelsViewController: UIViewController, UITableViewDataSource, UITableVi
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        
         let cell = tableView.dequeueReusableCellWithIdentifier("Channel Cell", forIndexPath: indexPath) as! ChannelsTableViewCell
         let channel = self.channels[indexPath.row]
         let channelName = channel["name"] as? String
         
         cell.channelNameLabel.text = channelName
-        
         if userChannels.contains(channelName!) {
             cell.accessoryType = .Checkmark
         }
@@ -90,37 +90,28 @@ class ChannelsViewController: UIViewController, UITableViewDataSource, UITableVi
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        
         let channel = self.channels[indexPath.row]
         let channelName = channel["name"] as? String
-        
         if let cell = tableView.cellForRowAtIndexPath(indexPath) {
             
             if cell.accessoryType == .None {
-                
                 let newUserChannel = PFObject(className: "UserChannel")
                 newUserChannel["user"] = self.userId
                 newUserChannel["name"] = channelName
-                
                 newUserChannel.saveInBackgroundWithBlock {
                     (success: Bool, error: NSError?) -> Void in
-                    
                     if success {
                         cell.accessoryType = .Checkmark
                     }
                 }
-                
             } else {
-                
                 let userChannelQuery = PFQuery(className: "UserChannel")
                 userChannelQuery.whereKey("user", equalTo: self.userId)
                 userChannelQuery.whereKey("name", equalTo: channelName!)
                 userChannelQuery.getFirstObjectInBackgroundWithBlock {
                     (object: PFObject?, error: NSError?) -> Void in
-                    
                     object!.deleteInBackgroundWithBlock {
                         (success: Bool, error: NSError?) -> Void in
-                        
                         if success {
                             cell.accessoryType = .None
                         }
@@ -130,10 +121,9 @@ class ChannelsViewController: UIViewController, UITableViewDataSource, UITableVi
         }
     }
     
+    //#MARK: - Buttons
     @IBAction func tapSelectAll(sender: AnyObject) {
-        
         for i in 0...channelsTableView.numberOfSections - 1 {
-            
             for j in 0...channelsTableView.numberOfRowsInSection(i) - 1 {
                 
                 if let cell = channelsTableView.cellForRowAtIndexPath(NSIndexPath(forRow: j, inSection: i)) {
@@ -142,14 +132,12 @@ class ChannelsViewController: UIViewController, UITableViewDataSource, UITableVi
                         
                         let channel = self.channels[j]
                         let channelName = channel["name"] as! String
-                        
                         let newUserChannel = PFObject(className: "UserChannel")
+                        
                         newUserChannel["user"] = self.userId
                         newUserChannel["name"] = channelName
-                        
                         newUserChannel.saveInBackgroundWithBlock {
                             (success: Bool, error: NSError?) -> Void in
-                            
                             if success {
                                 cell.accessoryType = .Checkmark
                             }
@@ -161,27 +149,22 @@ class ChannelsViewController: UIViewController, UITableViewDataSource, UITableVi
     }
     
     @IBAction func tapUnselectAll(sender: AnyObject) {
-        
         for i in 0...channelsTableView.numberOfSections - 1 {
-            
             for j in 0...channelsTableView.numberOfRowsInSection(i) - 1 {
-                
                 if let cell = channelsTableView.cellForRowAtIndexPath(NSIndexPath(forRow: j, inSection: i)) {
                     
                     if cell.accessoryType == .Checkmark {
                         
                         let channel = self.channels[j]
                         let channelName = channel["name"] as! String
-                        
                         let userChannelQuery = PFQuery(className: "UserChannel")
+                        
                         userChannelQuery.whereKey("user", equalTo: self.userId)
                         userChannelQuery.whereKey("name", equalTo: channelName)
                         userChannelQuery.getFirstObjectInBackgroundWithBlock {
                             (object: PFObject?, error: NSError?) -> Void in
-                            
                             object!.deleteInBackgroundWithBlock {
                                 (success: Bool, error: NSError?) -> Void in
-                                
                                 if success {
                                     cell.accessoryType = .None
                                 }

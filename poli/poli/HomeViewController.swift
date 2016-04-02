@@ -26,7 +26,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     override func viewWillAppear(animated: Bool) {
-        navigationItem.title = "poli"
+        navigationItem.title = "poli - " + network
         getPosts()
     }
     
@@ -80,7 +80,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         let post = posts[indexPath.row]
         
         let date = post.createdAt! as NSDate
-        cell.timeStampLabel.text = date.dateToString()
+        cell.timeStampLabel.text = date.toString()
         
         cell.channelLabel.text = post["channel"] as? String
         

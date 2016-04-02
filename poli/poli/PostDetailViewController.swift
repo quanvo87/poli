@@ -47,7 +47,7 @@ class PostDetailViewController: UIViewController, UITableViewDataSource, UITable
     //# MARK: - Set Post Values
     func setPostValues() {
         let date = post.createdAt! as NSDate
-        timeStampLabel.text = date.dateToString()
+        timeStampLabel.text = date.toString()
 
         channelLabel.text = post["channel"] as? String
         
@@ -64,14 +64,14 @@ class PostDetailViewController: UIViewController, UITableViewDataSource, UITable
         query.getFirstObjectInBackgroundWithBlock {
             (object: PFObject?, error: NSError?) -> Void in
             if object == nil {
-                self.showConfirmReportPost(post)
+                self.confirmReportPost(post)
             } else {
                 self.showAlert("You have already reported this. With enough flags, it will be removed.")
             }
         }
     }
     
-    func showConfirmReportPost(post: PFObject) {
+    func confirmReportPost(post: PFObject) {
         let actionSheetController: UIAlertController = UIAlertController(title: "", message: "Report for inappropriate content?", preferredStyle: .Alert)
         let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .Cancel) { action -> Void in
         }
@@ -180,7 +180,7 @@ class PostDetailViewController: UIViewController, UITableViewDataSource, UITable
         let comment = comments[indexPath.row]
         
         let date = comment.createdAt! as NSDate
-        cell.timeStampLabel.text = date.dateToString()
+        cell.timeStampLabel.text = date.toString()
         
         let text = comment["text"] as! NSString
         cell.commentsTextLabel.text = text.stringByTrimmingCharacters(144)

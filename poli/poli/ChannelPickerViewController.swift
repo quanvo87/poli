@@ -15,13 +15,9 @@ class ChannelPickerViewController: UIViewController, UITableViewDataSource, UITa
     var channels = [PFObject]()
     
     override func viewDidLoad() {
-        
         super.viewDidLoad()
         
-        channelsTableView.dataSource = self
-        channelsTableView.delegate = self
-        automaticallyAdjustsScrollViewInsets = false
-        
+        setUpTableView()
         getChannels()
     }
     
@@ -29,15 +25,20 @@ class ChannelPickerViewController: UIViewController, UITableViewDataSource, UITa
         super.didReceiveMemoryWarning()
     }
     
+    //# MARK: - Table View
+    func setUpTableView() {
+        channelsTableView.dataSource = self
+        channelsTableView.delegate = self
+        automaticallyAdjustsScrollViewInsets = false
+    }
+    
     func getChannels() {
-        
         let query = PFQuery(className: "Channel")
         query.whereKey("network", equalTo:PFUser.currentUser()!["network"])
         query.whereKey("flags", lessThan: 3)
         query.orderByAscending("createdAt")
         query.findObjectsInBackgroundWithBlock {
             (objects: [PFObject]?, error: NSError?) -> Void in
-            
             if error == nil {
                 self.channels = objects!
                 self.channelsTableView.reloadData()
@@ -56,7 +57,6 @@ class ChannelPickerViewController: UIViewController, UITableViewDataSource, UITa
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        
         delegate.setChannel(channels[indexPath.row]["name"] as! String)
         navigationController?.popViewControllerAnimated(true)
     }

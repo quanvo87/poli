@@ -14,11 +14,9 @@ class NewPostViewController: UIViewController, ChannelPickerViewControllerDelega
     @IBOutlet weak var selectedChannelLabel: UILabel!
     
     override func viewDidLoad() {
-        
         super.viewDidLoad()
         
         navigationItem.title = "New Post"
-        
         selectedChannelLabel.text = ""
     }
     
@@ -26,8 +24,8 @@ class NewPostViewController: UIViewController, ChannelPickerViewControllerDelega
         super.didReceiveMemoryWarning()
     }
     
+    //# MARK: - Select Channel
     @IBAction func tapSelectChannel(sender: UIButton) {
-        
         if let channelPickerViewController = storyboard?.instantiateViewControllerWithIdentifier("Channel Picker") as! ChannelPickerViewController? {
             channelPickerViewController.delegate = self
             self.navigationController?.pushViewController(channelPickerViewController, animated: true)
@@ -38,8 +36,9 @@ class NewPostViewController: UIViewController, ChannelPickerViewControllerDelega
         self.selectedChannelLabel.text = channel
     }
     
+    
+    //# MARK: - New Channel
     @IBAction func tapNewChannel(sender: AnyObject) {
-        
         var inputTextField: UITextField?
         let actionSheetController: UIAlertController = UIAlertController(title: "", message: "Create a new channel:", preferredStyle: .Alert)
         let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .Cancel) { action -> Void in
@@ -55,29 +54,18 @@ class NewPostViewController: UIViewController, ChannelPickerViewControllerDelega
         self.presentViewController(actionSheetController, animated: true, completion: nil)
     }
     
+    //# MARK: - Create New Post
     @IBAction func tapPost(sender: AnyObject) {
-        
         let postText = postTextView.text
         let channelName = selectedChannelLabel.text?.capitalizedString
         
         if postText == "" {
-            
-            let alert: UIAlertController = UIAlertController(title: "", message: "Posts cannot be blank.", preferredStyle: .Alert)
-            let alertButton: UIAlertAction = UIAlertAction(title: "Ok", style: .Default) { action -> Void in
-            }
-            alert.addAction(alertButton)
-            self.presentViewController(alert, animated: true, completion: nil)
+            self.showAlert("Posts cannot be blank.")
             
         } else if channelName == "" {
-            
-            let alert: UIAlertController = UIAlertController(title: "", message: "Please select a channel for your post.", preferredStyle: .Alert)
-            let alertButton: UIAlertAction = UIAlertAction(title: "Ok", style: .Default) { action -> Void in
-            }
-            alert.addAction(alertButton)
-            self.presentViewController(alert, animated: true, completion: nil)
+            self.showAlert("Please select a chanel for your post.")
             
         } else {
-            
             postTextView.text = ""
             selectedChannelLabel.text = ""
             
@@ -95,7 +83,6 @@ class NewPostViewController: UIViewController, ChannelPickerViewControllerDelega
                 (success: Bool, error: NSError?) -> Void in
                 
                 if success {
-                    
                     let channelQuery = PFQuery(className: "Channel")
                     channelQuery.whereKey("network", equalTo: network)
                     channelQuery.whereKey("name", equalTo: channelName!)
@@ -103,7 +90,6 @@ class NewPostViewController: UIViewController, ChannelPickerViewControllerDelega
                         (object: PFObject?, error: NSError?) -> Void in
                         
                         if object == nil {
-                            
                             let newChannel = PFObject(className: "Channel")
                             newChannel["network"] = network
                             newChannel["type"] = "custom"
@@ -112,7 +98,6 @@ class NewPostViewController: UIViewController, ChannelPickerViewControllerDelega
                             newChannel.saveInBackground()
                         }
                     }
-                    
                     let userChannelQuerry = PFQuery(className: "UserChannel")
                     userChannelQuerry.whereKey("user", equalTo: userId!)
                     userChannelQuerry.whereKey("name", equalTo: channelName!)
@@ -120,13 +105,11 @@ class NewPostViewController: UIViewController, ChannelPickerViewControllerDelega
                         (object: PFObject?, error: NSError?) -> Void in
                         
                         if object == nil {
-                            
                             let newUserChannel = PFObject(className: "UserChannel")
                             newUserChannel["user"] = userId
                             newUserChannel["name"] = channelName
                             newUserChannel.saveInBackgroundWithBlock {
                                 (success: Bool, error: NSError?) -> Void in
-                                
                                 if success {
                                     self.tabBarController?.selectedIndex = 0
                                 }
@@ -140,6 +123,7 @@ class NewPostViewController: UIViewController, ChannelPickerViewControllerDelega
         }
     }
     
+    //# MARK: - Keyboard
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         self.view.endEditing(true)
     }

@@ -9,7 +9,7 @@
 import Foundation
 
 extension NSDate {
-    func dateToString() -> String {
+    func toString() -> String {
         let dateFormatter = NSDateFormatter()
         dateFormatter.dateStyle = .ShortStyle
         dateFormatter.timeStyle = .ShortStyle
@@ -30,7 +30,6 @@ extension NSString {
 }
 
 extension UIViewController {
-    //MARK: - Show Alert
     func showAlert(message: String) {
         let alert: UIAlertController = UIAlertController(title: "", message: message, preferredStyle: .Alert)
         let alertButton: UIAlertAction = UIAlertAction(title: "Ok", style: .Default) { action -> Void in

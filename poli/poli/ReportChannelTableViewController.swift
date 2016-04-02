@@ -16,17 +16,13 @@ class ReportChannelTableViewController: UIViewController, UITableViewDataSource,
     var network = String()
     
     override func viewDidLoad() {
-        
         super.viewDidLoad()
         
         let user = PFUser.currentUser()
         userId = (user?.objectId)!
         network = user!["network"] as! String
         
-        reportChannelTableView.dataSource = self
-        reportChannelTableView.delegate = self
-        automaticallyAdjustsScrollViewInsets = false
-        
+        setUpTableView()
         getChannels()
     }
     
@@ -34,47 +30,35 @@ class ReportChannelTableViewController: UIViewController, UITableViewDataSource,
         super.didReceiveMemoryWarning()
     }
     
+    //# MARK: - Report Channel
     func reportPost(post: PFObject) {
-        
         let postId = post.objectId
         let query = PFQuery(className: "Flag")
         query.whereKey("user", equalTo: userId)
         query.whereKey("content", equalTo: postId!)
         query.getFirstObjectInBackgroundWithBlock {
             (object: PFObject?, error: NSError?) -> Void in
-            
             if object == nil {
-                self.showReportPostConfirm(post)
+                self.confirmReportPost(post)
             } else {
-                self.showReportPostFail(post)
+                self.showAlert("You have already reported this channel. With enough flags, it will be removed.")
             }
         }
     }
     
-    func showReportPostConfirm(post: PFObject) {
-        
+    func confirmReportPost(post: PFObject) {
         let actionSheetController: UIAlertController = UIAlertController(title: "", message: "Report channel for inappropriate title?", preferredStyle: .Alert)
         let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .Cancel) { action -> Void in
         }
         actionSheetController.addAction(cancelAction)
         let yesAction: UIAlertAction = UIAlertAction(title: "Yes", style: .Default) { action -> Void in
-            self.confirmReportPost(post)
+            self.proceedReportPost(post)
         }
         actionSheetController.addAction(yesAction)
         self.presentViewController(actionSheetController, animated: true, completion: nil)
     }
     
-    func showReportPostFail(post: PFObject) {
-        
-        let actionSheetController: UIAlertController = UIAlertController(title: "", message: "You have already reported this channel. With enough flags, it will be removed.", preferredStyle: .Alert)
-        let okAction: UIAlertAction = UIAlertAction(title: "Ok", style: .Default) { action -> Void in
-        }
-        actionSheetController.addAction(okAction)
-        self.presentViewController(actionSheetController, animated: true, completion: nil)
-    }
-    
-    func confirmReportPost(post: PFObject) {
-        
+    func proceedReportPost(post: PFObject) {
         let postId = post.objectId
         let flag = PFObject(className: "Flag")
         flag["user"] = userId
@@ -88,35 +72,39 @@ class ReportChannelTableViewController: UIViewController, UITableViewDataSource,
     }
     
     func incrementFlags(post: PFObject) {
-        
         post.incrementKey("flags")
         post.saveInBackgroundWithBlock {
             (success: Bool, error: NSError?) -> Void in
             if error == nil {
-                self.showReportPostSuccessful(post)
+                self.showReportChannelSuccess()
             }
         }
     }
     
-    func showReportPostSuccessful(post: PFObject) {
-        
-        let actionSheetController: UIAlertController = UIAlertController(title: "", message: "Channel has been reported. With enough flags, it will be removed.", preferredStyle: .Alert)
-        let okAction: UIAlertAction = UIAlertAction(title: "Ok", style: .Default) { action -> Void in
+    func showReportChannelSuccess() {
+        let alert: UIAlertController = UIAlertController(title: "", message: "Channel has been reported. With enough flags, it will be removed.", preferredStyle: .Alert)
+        let alertButton: UIAlertAction = UIAlertAction(title: "Ok", style: .Default) { action -> Void in
             self.navigationController?.popViewControllerAnimated(true)
         }
-        actionSheetController.addAction(okAction)
-        self.presentViewController(actionSheetController, animated: true, completion: nil)
+        alert.addAction(alertButton)
+        self.presentViewController(alert, animated: true, completion: nil)
+    }
+    
+    //# MARK: - Table View
+    func setUpTableView() {
+        reportChannelTableView.dataSource = self
+        reportChannelTableView.delegate = self
+        automaticallyAdjustsScrollViewInsets = false
     }
     
     func getChannels() {
-        
         let query = PFQuery(className: "Channel")
         query.whereKey("network", equalTo: network)
+        query.whereKey("type", equalTo: "custom")
         query.whereKey("flags", lessThan: 3)
         query.orderByAscending("createdAt")
         query.findObjectsInBackgroundWithBlock {
             (objects: [PFObject]?, error: NSError?) -> Void in
-            
             if error == nil {
                 self.channels = objects!
                 self.reportChannelTableView.reloadData()
@@ -135,23 +123,7 @@ class ReportChannelTableViewController: UIViewController, UITableViewDataSource,
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        
         let channel = channels[indexPath.row]
-        let type = channel["type"] as! String
-        
-        if type == "default" {
-            showCannotReportDefaultChannel()
-        } else {
-            reportPost(channel)
-        }
-    }
-    
-    func showCannotReportDefaultChannel() {
-        
-        let actionSheetController: UIAlertController = UIAlertController(title: "", message: "Default channels cannot be reported.", preferredStyle: .Alert)
-        let okAction: UIAlertAction = UIAlertAction(title: "Ok", style: .Default) { action -> Void in
-        }
-        actionSheetController.addAction(okAction)
-        self.presentViewController(actionSheetController, animated: true, completion: nil)
+        reportPost(channel)
     }
 }

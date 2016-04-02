@@ -27,6 +27,7 @@ class LogInViewController: UIViewController {
     //# MARK: - Log In
     @IBAction func tapLogIn(sender: AnyObject) {
         self.messageLabel.text = ""
+        
         let email = emailTextField.text?.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet()).lowercaseString
         let password = passwordTextField.text
         
