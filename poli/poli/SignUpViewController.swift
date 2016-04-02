@@ -15,8 +15,8 @@ class SignUpViewController: UIViewController {
     @IBOutlet weak var messageLabel: UILabel!
     
     override func viewDidLoad() {
-        
         super.viewDidLoad()
+        
         messageLabel.text = ""
     }
     
@@ -24,122 +24,105 @@ class SignUpViewController: UIViewController {
         super.didReceiveMemoryWarning()
     }
     
+    //# MARK: - Sign Up
     @IBAction func tapSignUp(sender: AnyObject) {
-        
-        let network = "utexas.edu"
         self.messageLabel.text = ""
-        
-        let email = emailTextField.text?.lowercaseString
+        let email = emailTextField.text?.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet()).lowercaseString
         let password = passwordTextField.text
+        var network = String()
         
-        if email?.hasSuffix(network) == false {
-            self.messageLabel.text = "Please enter an e-mail associated with a supported organization."
+        if isValidEmail(email!) == false {
+            self.messageLabel.text = "Please enter a valid e-mail."
             
         } else if password == "" {
             self.messageLabel.text = "Please enter a password."
             
         } else {
-            
+            network = email!.componentsSeparatedByString("@")[1]
             let user = PFUser()
-            user.username = emailTextField.text
-            user.email = emailTextField.text
-            user.password = passwordTextField.text
+            user.username = email
+            user.email = email
+            user.password = password
             user["network"] = network
             user.signUpInBackgroundWithBlock {
                 (success: Bool, error: NSError?) -> Void in
-                
                 if success {
-                    
+                    self.messageLabel.text = ""
                     let userId = (PFUser.currentUser()?.objectId)!
-                    
                     PFUser.logOut()
+                    self.joinNetworks(network, userId: userId)
+                    self.showSignUpSuccess()
                     
-                    if error == nil {
-                        
-                        self.joinNetworks(network, userId: userId)
-                        
-                        self.messageLabel.text = ""
-                        
-                        let alert: UIAlertController = UIAlertController(title: nil, message: "Verification e-mail sent. Please verify to log in!", preferredStyle: .Alert)
-                        let okButton: UIAlertAction = UIAlertAction(title: "Ok!", style: .Default) { action -> Void in
-                            self.dismissViewControllerAnimated(true, completion: nil)
-                        }
-                        alert.addAction(okButton)
-                        self.presentViewController(alert, animated: true, completion: nil)
-                        
-                    } else {
-                        
-                        let alert: UIAlertController = UIAlertController(title: nil, message: "Unable to sign up. Please try again.", preferredStyle: .Alert)
-                        let okButton: UIAlertAction = UIAlertAction(title: "Ok", style: .Default) { action -> Void in
-                            self.dismissViewControllerAnimated(true, completion: nil)
-                        }
-                        alert.addAction(okButton)
-                        self.presentViewController(alert, animated: true, completion: nil)
-                    }
+                } else {
+                    self.showAlert("Unable to sign up. Please try again.")
                 }
             }
         }
+    }
+    
+    func isValidEmail(testStr: String) -> Bool {
+        let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}"
+        let emailTest = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
+        let result = emailTest.evaluateWithObject(testStr)
+        return result
     }
     
     func joinNetworks(network: String, userId: String) {
-        
-        let networkQuery = PFQuery(className:"Network")
-        networkQuery.whereKey("name", equalTo:network)
-        networkQuery.getFirstObjectInBackgroundWithBlock {
+        let query = PFQuery(className: "Network")
+        query.whereKey("name", equalTo: network)
+        query.getFirstObjectInBackgroundWithBlock {
             (object: PFObject?, error: NSError?) -> Void in
-            
-            if error == nil {
-                
-                if object == nil {
-                    
-                    let newNetwork = PFObject(className: "Network")
-                    newNetwork["name"] = network
-                    newNetwork.saveInBackground()
-                    
-                    let general = PFObject(className: "Channel")
-                    let funny = PFObject(className: "Channel")
-                    let events = PFObject(className: "Channel")
-                    let buySellTrade = PFObject(className: "Channel")
-                    
-                    general["name"] = "General"
-                    funny["name"] = "Funny"
-                    events["name"] = "Events"
-                    buySellTrade["name"] = "Buy/Sell/Trade"
-                    
-                    let channels = [general, funny, events, buySellTrade]
-                    
-                    for channel in channels {
-                        channel["network"] = network
-                        channel["type"] = "default"
-                        channel["flags"] = 0
-                        channel.saveInBackground()
-                    }
-                }
-                
-                let general = PFObject(className: "UserChannel")
-                let funny = PFObject(className: "UserChannel")
-                let events = PFObject(className: "UserChannel")
-                let buySellTrade = PFObject(className: "UserChannel")
-                
-                general["name"] = "General"
-                funny["name"] = "Funny"
-                events["name"] = "Events"
-                buySellTrade["name"] = "Buy/Sell/Trade"
-                
-                let userChannels = [general, funny, events, buySellTrade]
-                
-                for userChannel in userChannels {
-                    userChannel["user"] = userId
-                    userChannel.saveInBackground()
-                }
+            if object == nil {
+                self.createNetwork(network)
+                self.createChannel("General", network: network)
+                self.createChannel("Funny", network: network)
+                self.createChannel("Events", network: network)
+                self.createChannel("Buy/Sell/Trade", network: network)
             }
+            self.createUserChannel("General", user: userId)
+            self.createUserChannel("Funny", user: userId)
+            self.createUserChannel("Events", user: userId)
+            self.createUserChannel("Buy/Sell/Trade", user: userId)
         }
     }
     
+    func createNetwork(network: String) {
+        let newNetwork = PFObject(className: "Network")
+        newNetwork["name"] = network
+        newNetwork.saveInBackground()
+    }
+    
+    func createChannel(channel: String, network: String) {
+        let newChannel = PFObject(className: "Channel")
+        newChannel["name"] = channel
+        newChannel["network"] = network
+        newChannel["type"] = "default"
+        newChannel["flags"] = 0
+        newChannel.saveInBackground()
+    }
+    
+    func createUserChannel(name: String, user: String) {
+        let newUserChannel = PFObject(className: "UserChannel")
+        newUserChannel["name"] = name
+        newUserChannel["user"] = user
+        newUserChannel.saveInBackground()
+    }
+    
+    func showSignUpSuccess() {
+        let alert: UIAlertController = UIAlertController(title: "Success!", message: "Verification e-mail sent. Please verify to log in!", preferredStyle: .Alert)
+        let okButton: UIAlertAction = UIAlertAction(title: "Ok!", style: .Default) { action -> Void in
+            self.dismissViewControllerAnimated(true, completion: nil)
+        }
+        alert.addAction(okButton)
+        self.presentViewController(alert, animated: true, completion: nil)
+    }
+    
+    //# MARK: - Cancel
     @IBAction func tapCancel(sender: AnyObject) {
         dismissViewControllerAnimated(true, completion: nil)
     }
     
+    //# MARK: - Keyboard
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         self.view.endEditing(true)
     }

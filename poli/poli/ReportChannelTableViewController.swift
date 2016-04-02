@@ -102,7 +102,7 @@ class ReportChannelTableViewController: UIViewController, UITableViewDataSource,
         
         let actionSheetController: UIAlertController = UIAlertController(title: "", message: "Channel has been reported. With enough flags, it will be removed.", preferredStyle: .Alert)
         let okAction: UIAlertAction = UIAlertAction(title: "Ok", style: .Default) { action -> Void in
-            navigationController?.popViewControllerAnimated(true)
+            self.navigationController?.popViewControllerAnimated(true)
         }
         actionSheetController.addAction(okAction)
         self.presentViewController(actionSheetController, animated: true, completion: nil)

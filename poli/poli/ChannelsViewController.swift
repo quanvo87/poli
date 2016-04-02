@@ -17,13 +17,9 @@ class ChannelsViewController: UIViewController, UITableViewDataSource, UITableVi
     var userChannels = [String]()
     
     override func viewDidLoad() {
-        
         super.viewDidLoad()
         
         navigationItem.title = "Channels"
-        
-        channelsTableView.dataSource = self
-        channelsTableView.delegate = self
         
         let user = PFUser.currentUser()
         userId = (user!.objectId as String?)!
@@ -31,7 +27,6 @@ class ChannelsViewController: UIViewController, UITableViewDataSource, UITableVi
     }
     
     override func viewDidAppear(animated: Bool) {
-        
         getChannels()
     }
     
@@ -39,16 +34,20 @@ class ChannelsViewController: UIViewController, UITableViewDataSource, UITableVi
         super.didReceiveMemoryWarning()
     }
     
+    //# MARK: - Table View
+    func setUpTableView() {
+        channelsTableView.dataSource = self
+        channelsTableView.delegate = self
+    }
+    
     func getChannels() {
-        
         let query = PFQuery(className: "Channel")
         query.whereKey("network", equalTo: network)
+        query.whereKey("flags", lessThan: 3)
         query.orderByAscending("createdAt")
         query.findObjectsInBackgroundWithBlock {
             (objects: [PFObject]?, error: NSError?) -> Void in
-            
             if error == nil {
-                
                 self.channels = objects!
                 self.getUserChannels()
             }
@@ -56,20 +55,15 @@ class ChannelsViewController: UIViewController, UITableViewDataSource, UITableVi
     }
     
     func getUserChannels() {
-        
         var newUserChannels = [String]()
-        
         let query = PFQuery(className: "UserChannel")
         query.whereKey("user", equalTo: userId)
         query.findObjectsInBackgroundWithBlock {
             (objects: [PFObject]?, error: NSError?) -> Void in
-            
             if error == nil {
-                
                 for object in objects! {
                     newUserChannels.append(object["name"] as! (String))
                 }
-                
                 self.userChannels = newUserChannels
                 self.channelsTableView.reloadData()
             }

@@ -25,12 +25,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func logIn() {
-        
         if (PFUser.currentUser() == nil) {
-            
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let logInViewController = storyboard.instantiateViewControllerWithIdentifier("Log In") as! LogInViewController
-            
             self.window?.rootViewController = logInViewController
         }
     }
@@ -56,7 +53,4 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationWillTerminate(application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
-
-
 }
-
