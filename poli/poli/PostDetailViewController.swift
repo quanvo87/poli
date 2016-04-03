@@ -8,7 +8,7 @@
 
 import UIKit
 
-class PostDetailViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class PostDetailViewController: UIViewController, UITextFieldDelegate, UITableViewDataSource, UITableViewDelegate {
     
     @IBOutlet weak var postTextLabel: UILabel!
     @IBOutlet weak var timeStampLabel: UILabel!
@@ -31,6 +31,8 @@ class PostDetailViewController: UIViewController, UITableViewDataSource, UITable
         setUpTableView()
         getComments()
         
+        newCommentTextField.delegate = self
+        
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(PostDetailViewController.keyboardWillShow(_:)), name:UIKeyboardWillShowNotification, object: self.view.window)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(PostDetailViewController.keyboardWillHide(_:)), name:UIKeyboardWillHideNotification, object: self.view.window)
     }
@@ -48,7 +50,7 @@ class PostDetailViewController: UIViewController, UITableViewDataSource, UITable
     func setPostValues() {
         let date = post.createdAt! as NSDate
         timeStampLabel.text = date.toString()
-
+        
         channelLabel.text = post["channel"] as? String
         
         let text = post["text"] as! NSString
@@ -119,11 +121,11 @@ class PostDetailViewController: UIViewController, UITableViewDataSource, UITable
     }
     
     //# MARK: - Create A Comment
-    @IBAction func tapComment(sender: AnyObject) {
+    func createComment() {
         let flags = post["flags"] as! Int
         if flags > 2 {
             self.showAlert("This post has been flagged as inappropriate and commenting has been disabled.")
-        
+            
         } else {
             let newCommentText = self.newCommentTextField.text
             if newCommentText == "" {
@@ -146,6 +148,10 @@ class PostDetailViewController: UIViewController, UITableViewDataSource, UITable
                 }
             }
         }
+    }
+    
+    @IBAction func tapComment(sender: AnyObject) {
+        createComment()
     }
     
     //# MARK: - Table View
@@ -219,5 +225,11 @@ class PostDetailViewController: UIViewController, UITableViewDataSource, UITable
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         self.view.endEditing(true)
+    }
+    
+    func textFieldShouldReturn(textField: UITextField) -> Bool {
+        self.newCommentTextField.resignFirstResponder()
+        createComment()
+        return true
     }
 }

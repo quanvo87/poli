@@ -1,6 +1,0 @@
-platform :ios, '8.0'
-use_frameworks!
-
-target 'poli' do
-pod 'IODProfanityFilter', '~> 1.0'
-end

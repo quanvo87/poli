@@ -8,7 +8,7 @@
 
 import UIKit
 
-class SignUpViewController: UIViewController {
+class SignUpViewController: UIViewController, UITextFieldDelegate {
     
     @IBOutlet weak var emailTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
@@ -18,6 +18,7 @@ class SignUpViewController: UIViewController {
         super.viewDidLoad()
         
         messageLabel.text = ""
+        passwordTextField.delegate = self
     }
     
     override func didReceiveMemoryWarning() {
@@ -25,7 +26,7 @@ class SignUpViewController: UIViewController {
     }
     
     //# MARK: - Sign Up
-    @IBAction func tapSignUp(sender: AnyObject) {
+    func signUp() {
         self.messageLabel.text = ""
         
         let email = emailTextField.text?.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet()).lowercaseString
@@ -119,6 +120,10 @@ class SignUpViewController: UIViewController {
         self.presentViewController(alert, animated: true, completion: nil)
     }
     
+    @IBAction func tapSignUp(sender: AnyObject) {
+        signUp()
+    }
+    
     //# MARK: - Cancel
     @IBAction func tapCancel(sender: AnyObject) {
         dismissViewControllerAnimated(true, completion: nil)
@@ -127,5 +132,11 @@ class SignUpViewController: UIViewController {
     //# MARK: - Keyboard
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         self.view.endEditing(true)
+    }
+    
+    func textFieldShouldReturn(textField: UITextField) -> Bool {
+        self.passwordTextField.resignFirstResponder()
+        signUp()
+        return true
     }
 }

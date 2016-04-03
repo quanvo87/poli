@@ -712,17 +712,10 @@
                                 <textInputTraits key="textInputTraits" secureTextEntry="YES"/>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dgo-Zd-VG0">
-                                <rect key="frame" x="66" y="307" width="42" height="30"/>
+                                <rect key="frame" x="212" y="307" width="42" height="30"/>
                                 <state key="normal" title="Log In"/>
                                 <connections>
                                     <action selector="tapLogIn:" destination="tmv-2j-ORE" eventType="touchUpInside" id="km6-x5-kaq"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nHp-1m-cr1">
-                                <rect key="frame" x="199" y="307" width="55" height="30"/>
-                                <state key="normal" title="Sign Up"/>
-                                <connections>
-                                    <action selector="tapSignUp:" destination="tmv-2j-ORE" eventType="touchUpInside" id="Shz-tX-Wqs"/>
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Message" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Yyu-cI-kx2">
@@ -737,12 +730,21 @@
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nHp-1m-cr1">
+                                <rect key="frame" x="66" y="307" width="55" height="30"/>
+                                <state key="normal" title="Sign Up"/>
+                                <connections>
+                                    <action selector="tapSignUp:" destination="tmv-2j-ORE" eventType="touchUpInside" id="Shz-tX-Wqs"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="Yyu-cI-kx2" firstAttribute="leading" secondItem="nrf-NN-fG7" secondAttribute="leadingMargin" id="0T3-Rh-v59"/>
                             <constraint firstItem="Bss-uu-hqF" firstAttribute="leading" secondItem="nrf-NN-fG7" secondAttribute="leadingMargin" id="2IL-r2-I0G"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="dgo-Zd-VG0" secondAttribute="trailing" constant="50" id="2dw-yD-1r2"/>
                             <constraint firstItem="Bss-uu-hqF" firstAttribute="top" secondItem="Di4-m8-G83" secondAttribute="bottom" constant="100" id="2uO-mi-LeY"/>
+                            <constraint firstItem="nHp-1m-cr1" firstAttribute="leading" secondItem="nrf-NN-fG7" secondAttribute="leadingMargin" constant="50" id="4cT-0W-E1D"/>
                             <constraint firstItem="QXE-MP-cZm" firstAttribute="leading" secondItem="nrf-NN-fG7" secondAttribute="leadingMargin" id="9mp-kb-gOV"/>
                             <constraint firstAttribute="trailingMargin" secondItem="lAz-2R-MNP" secondAttribute="trailing" id="AWB-vx-1sE"/>
                             <constraint firstAttribute="trailingMargin" secondItem="Bss-uu-hqF" secondAttribute="trailing" id="AwC-IN-Ugt"/>
@@ -751,11 +753,9 @@
                             <constraint firstAttribute="trailingMargin" secondItem="Yyu-cI-kx2" secondAttribute="trailing" id="DY2-dc-evS"/>
                             <constraint firstItem="Bss-uu-hqF" firstAttribute="top" secondItem="QXE-MP-cZm" secondAttribute="bottom" constant="8" id="Egk-nN-Yp9"/>
                             <constraint firstItem="dgo-Zd-VG0" firstAttribute="top" secondItem="lAz-2R-MNP" secondAttribute="bottom" constant="8" id="Gic-Qe-Xw8"/>
-                            <constraint firstItem="dgo-Zd-VG0" firstAttribute="leading" secondItem="nrf-NN-fG7" secondAttribute="leadingMargin" constant="50" id="HZb-nY-Twu"/>
                             <constraint firstItem="lAz-2R-MNP" firstAttribute="centerY" secondItem="nrf-NN-fG7" secondAttribute="centerY" id="b8O-PY-cF0"/>
                             <constraint firstItem="lAz-2R-MNP" firstAttribute="leading" secondItem="nrf-NN-fG7" secondAttribute="leadingMargin" id="gcK-Wv-1Fd"/>
                             <constraint firstItem="lAz-2R-MNP" firstAttribute="top" secondItem="Bss-uu-hqF" secondAttribute="bottom" constant="8" id="mwz-xw-Jfk"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="nHp-1m-cr1" secondAttribute="trailing" constant="50" id="qC3-rz-mWi"/>
                             <constraint firstItem="Di4-m8-G83" firstAttribute="centerX" secondItem="nrf-NN-fG7" secondAttribute="centerX" id="ySy-ab-7VG"/>
                         </constraints>
                     </view>
