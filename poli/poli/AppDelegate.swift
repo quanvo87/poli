@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import Fabric
+import Crashlytics
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -18,6 +20,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         Parse.enableLocalDatastore()
         Parse.setApplicationId("biIZCFM9Ca2hdZtL1g65iIJI5QsmopRYy4iBJxme", clientKey: "yrlJxRybPagTbb2rtuxnRotm1r2OyB0iGZP5mCPy")
         PFAnalytics.trackAppOpenedWithLaunchOptions(launchOptions)
+        
+        Fabric.with([Crashlytics.self])
+        
+        Flurry.startSession("3K48PRF5G7B4KZ7CFJTF")
+        Flurry.logEvent("Launched application!")
         
         logIn()
         

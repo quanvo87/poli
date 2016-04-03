@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		020BB72F1CAFA704005BA2A6 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020BB72E1CAFA704005BA2A6 /* Extensions.swift */; };
+		02EF8D5B1CB0AFCE001AAED3 /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 02EF8D591CB0AFCE001AAED3 /* Fabric.framework */; };
+		02EF8D5C1CB0AFCE001AAED3 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 02EF8D5A1CB0AFCE001AAED3 /* Crashlytics.framework */; };
+		02EF8D681CB0B8C6001AAED3 /* libFlurry_7.5.2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 02EF8D671CB0B8C6001AAED3 /* libFlurry_7.5.2.a */; };
 		7F0F0CFE1C7D423D005011B6 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F0F0CFD1C7D423D005011B6 /* AudioToolbox.framework */; };
 		7F0F0D001C7D4249005011B6 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F0F0CFF1C7D4249005011B6 /* CFNetwork.framework */; };
 		7F0F0D021C7D4251005011B6 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F0F0D011C7D4251005011B6 /* CoreGraphics.framework */; };
@@ -48,6 +51,10 @@
 
 /* Begin PBXFileReference section */
 		020BB72E1CAFA704005BA2A6 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		02EF8D591CB0AFCE001AAED3 /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = SOURCE_ROOT; };
+		02EF8D5A1CB0AFCE001AAED3 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = SOURCE_ROOT; };
+		02EF8D651CB0B8C6001AAED3 /* Flurry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Flurry.h; sourceTree = "<group>"; };
+		02EF8D671CB0B8C6001AAED3 /* libFlurry_7.5.2.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libFlurry_7.5.2.a; sourceTree = "<group>"; };
 		7F0F0CFD1C7D423D005011B6 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		7F0F0CFF1C7D4249005011B6 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		7F0F0D011C7D4251005011B6 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -94,14 +101,17 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7F0F0D0C1C7D4276005011B6 /* SystemConfiguration.framework in Frameworks */,
+				7F0F0D081C7D4267005011B6 /* Security.framework in Frameworks */,
 				7F0F0D101C7D4287005011B6 /* libsqlite3.tbd in Frameworks */,
 				7F0F0D0E1C7D4280005011B6 /* libz.tbd in Frameworks */,
 				7F0F0D291C7D4775005011B6 /* ParseFacebookUtilsV4.framework in Frameworks */,
-				7F0F0D0C1C7D4276005011B6 /* SystemConfiguration.framework in Frameworks */,
+				02EF8D5B1CB0AFCE001AAED3 /* Fabric.framework in Frameworks */,
 				7F0F0D2A1C7D4775005011B6 /* ParseTwitterUtils.framework in Frameworks */,
 				7F0F0D2B1C7D4775005011B6 /* ParseUI.framework in Frameworks */,
-				7F0F0D081C7D4267005011B6 /* Security.framework in Frameworks */,
+				02EF8D5C1CB0AFCE001AAED3 /* Crashlytics.framework in Frameworks */,
 				7F0F0D061C7D425F005011B6 /* QuartzCore.framework in Frameworks */,
+				02EF8D681CB0B8C6001AAED3 /* libFlurry_7.5.2.a in Frameworks */,
 				7F0F0D041C7D4259005011B6 /* CoreLocation.framework in Frameworks */,
 				7F0F0D021C7D4251005011B6 /* CoreGraphics.framework in Frameworks */,
 				7F0F0D261C7D4775005011B6 /* Bolts.framework in Frameworks */,
@@ -118,6 +128,10 @@
 		7F0F0CFC1C7D41C2005011B6 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				02EF8D651CB0B8C6001AAED3 /* Flurry.h */,
+				02EF8D671CB0B8C6001AAED3 /* libFlurry_7.5.2.a */,
+				02EF8D591CB0AFCE001AAED3 /* Fabric.framework */,
+				02EF8D5A1CB0AFCE001AAED3 /* Crashlytics.framework */,
 				7F0F0D201C7D4775005011B6 /* Bolts.framework */,
 				7F0F0D211C7D4775005011B6 /* Parse.framework */,
 				7F0F0D221C7D4775005011B6 /* ParseFacebookUtils.framework */,
@@ -142,8 +156,8 @@
 			isa = PBXGroup;
 			children = (
 				7FEA8A251C7BE15900141D15 /* poli */,
-				7FEA8A241C7BE15900141D15 /* Products */,
 				7F0F0CFC1C7D41C2005011B6 /* Frameworks */,
+				7FEA8A241C7BE15900141D15 /* Products */,
 			);
 			sourceTree = "<group>";
 		};
@@ -196,6 +210,7 @@
 				7FEA8A1F1C7BE15900141D15 /* Sources */,
 				7FEA8A201C7BE15900141D15 /* Frameworks */,
 				7FEA8A211C7BE15900141D15 /* Resources */,
+				02EF8D581CB0AF93001AAED3 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -257,6 +272,22 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		02EF8D581CB0AF93001AAED3 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "./Fabric.framework/run d120eafde775f5163218da97b6dac610b9e8f227 c29b7ca06c8723d49a88d9a97a9c6174c59b99d701f354525c64b017cd1b327c";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		7FEA8A1F1C7BE15900141D15 /* Sources */ = {
@@ -398,13 +429,20 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/poli",
+					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = poli/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Flurry",
+					"$(PROJECT_DIR)/poli",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = Quan.poli;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
@@ -422,13 +460,20 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/poli",
+					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = poli/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Flurry",
+					"$(PROJECT_DIR)/poli",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = Quan.poli;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
