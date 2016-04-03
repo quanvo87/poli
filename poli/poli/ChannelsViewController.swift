@@ -129,11 +129,9 @@ class ChannelsViewController: UIViewController, UITableViewDataSource, UITableVi
                 if let cell = channelsTableView.cellForRowAtIndexPath(NSIndexPath(forRow: j, inSection: i)) {
                     
                     if cell.accessoryType == .None {
-
                         let channel = self.channels[j]
                         let channelName = channel["name"] as! String
                         let newUserChannel = PFObject(className: "UserChannel")
-                        
                         newUserChannel["user"] = self.userId
                         newUserChannel["name"] = channelName
                         newUserChannel.saveInBackgroundWithBlock {
@@ -151,14 +149,13 @@ class ChannelsViewController: UIViewController, UITableViewDataSource, UITableVi
     @IBAction func tapUnselectAll(sender: AnyObject) {
         for i in 0...channelsTableView.numberOfSections - 1 {
             for j in 0...channelsTableView.numberOfRowsInSection(i) - 1 {
+                
                 if let cell = channelsTableView.cellForRowAtIndexPath(NSIndexPath(forRow: j, inSection: i)) {
                     
                     if cell.accessoryType == .Checkmark {
-                        
                         let channel = self.channels[j]
                         let channelName = channel["name"] as! String
                         let userChannelQuery = PFQuery(className: "UserChannel")
-                        
                         userChannelQuery.whereKey("user", equalTo: self.userId)
                         userChannelQuery.whereKey("name", equalTo: channelName)
                         userChannelQuery.getFirstObjectInBackgroundWithBlock {

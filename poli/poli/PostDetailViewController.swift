@@ -79,13 +79,13 @@ class PostDetailViewController: UIViewController, UITextFieldDelegate, UITableVi
         }
         actionSheetController.addAction(cancelAction)
         let yesAction: UIAlertAction = UIAlertAction(title: "Yes", style: .Default) { action -> Void in
-            self.proceedConfirmPost(post)
+            self.proceedReportPost(post)
         }
         actionSheetController.addAction(yesAction)
         self.presentViewController(actionSheetController, animated: true, completion: nil)
     }
     
-    func proceedConfirmPost(post: PFObject) {
+    func proceedReportPost(post: PFObject) {
         let postId = post.objectId
         let flag = PFObject(className: "Flag")
         flag["user"] = userId
@@ -132,6 +132,7 @@ class PostDetailViewController: UIViewController, UITextFieldDelegate, UITableVi
                 self.showAlert("Comments cannot be blank")
                 
             } else {
+                newCommentTextField.text = ""
                 let comment = PFObject(className: "Post")
                 comment["type"] = "comment"
                 comment["post"] = postId
@@ -141,7 +142,6 @@ class PostDetailViewController: UIViewController, UITextFieldDelegate, UITableVi
                 comment.saveInBackgroundWithBlock {
                     (success: Bool, error: NSError?) -> Void in
                     if success {
-                        self.newCommentTextField.text = ""
                         self.getComments()
                         self.view.endEditing(true)
                     }

@@ -28,7 +28,6 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
     //# MARK: - Sign Up
     func signUp() {
         self.messageLabel.text = ""
-        
         let email = emailTextField.text?.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet()).lowercaseString
         let password = passwordTextField.text
         var network = String()
@@ -40,8 +39,8 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
             self.messageLabel.text = "Please enter a password."
             
         } else {
+            self.messageLabel.text = ""
             network = email!.componentsSeparatedByString("@")[1]
-            
             let user = PFUser()
             user.username = email
             user.email = email
@@ -50,7 +49,6 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
             user.signUpInBackgroundWithBlock {
                 (success: Bool, error: NSError?) -> Void in
                 if success {
-                    self.messageLabel.text = ""
                     let userId = (PFUser.currentUser()?.objectId)!
                     PFUser.logOut()
                     self.joinNetworks(network, userId: userId)

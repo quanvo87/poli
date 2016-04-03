@@ -65,7 +65,6 @@ class MeViewController: UIViewController, UITableViewDataSource, UITableViewDele
         cell.timeStampLabel.text = createdAt?.toString()
         
         let type = post["type"] as? String
-        
         if type == "post" {
             cell.typeLabel.text = "Post"
             cell.detailLabel.text = post["channel"] as? String

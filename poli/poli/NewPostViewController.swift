@@ -36,7 +36,6 @@ class NewPostViewController: UIViewController, ChannelPickerViewControllerDelega
         self.selectedChannelLabel.text = channel
     }
     
-    
     //# MARK: - New Channel
     @IBAction func tapNewChannel(sender: AnyObject) {
         var inputTextField: UITextField?
@@ -88,7 +87,6 @@ class NewPostViewController: UIViewController, ChannelPickerViewControllerDelega
                     channelQuery.whereKey("name", equalTo: channelName!)
                     channelQuery.getFirstObjectInBackgroundWithBlock {
                         (object: PFObject?, error: NSError?) -> Void in
-                        
                         if object == nil {
                             let newChannel = PFObject(className: "Channel")
                             newChannel["network"] = network
@@ -103,7 +101,6 @@ class NewPostViewController: UIViewController, ChannelPickerViewControllerDelega
                     userChannelQuerry.whereKey("name", equalTo: channelName!)
                     userChannelQuerry.getFirstObjectInBackgroundWithBlock {
                         (object: PFObject?, error: NSError?) -> Void in
-                        
                         if object == nil {
                             let newUserChannel = PFObject(className: "UserChannel")
                             newUserChannel["user"] = userId

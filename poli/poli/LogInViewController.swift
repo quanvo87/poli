@@ -28,7 +28,6 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
     //# MARK: - Log In
     func logIn() {
         self.messageLabel.text = ""
-        
         let email = emailTextField.text?.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet()).lowercaseString
         let password = passwordTextField.text
         
@@ -36,11 +35,11 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
             self.messageLabel.text = "Please enter a valid username and password."
             
         } else {
+            self.messageLabel.text = ""
             PFUser.logInWithUsernameInBackground(email!, password:password!) {
                 (user: PFUser?, error: NSError?) -> Void in
                 if error == nil {
                     if user!["emailVerified"] as! Bool == true {
-                        self.messageLabel.text = ""
                         self.logInSuccess()
                         
                     } else {
