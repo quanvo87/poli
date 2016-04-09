@@ -52,12 +52,13 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         let userChannelQuery = PFQuery(className: "UserChannel")
         userChannelQuery.whereKey("user", equalTo: userId)
         
-        let channelQuery = PFQuery(className: "Channel")
+        let channelQuery = PFQuery(className: "Content")
+        channelQuery.whereKey("type", containedIn: ["default channel", "custom channel"])
         channelQuery.whereKey("network", equalTo: network)
-        channelQuery.whereKey("flags", lessThan: 3)
         channelQuery.whereKey("name", matchesKey: "name", inQuery: userChannelQuery)
+        channelQuery.whereKey("flags", lessThan: 3)
         
-        let postQuery = PFQuery(className: "Post")
+        let postQuery = PFQuery(className: "Content")
         postQuery.whereKey("type", equalTo: "post")
         postQuery.whereKey("channel", matchesKey: "name", inQuery: channelQuery)
         postQuery.whereKey("flags", lessThan: 3)

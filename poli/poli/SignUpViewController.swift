@@ -94,10 +94,10 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
     }
     
     func createChannel(channel: String, network: String) {
-        let newChannel = PFObject(className: "Channel")
+        let newChannel = PFObject(className: "Content")
+        newChannel["type"] = "default channel"
         newChannel["name"] = channel
         newChannel["network"] = network
-        newChannel["type"] = "default"
         newChannel["flags"] = 0
         newChannel.saveInBackground()
     }

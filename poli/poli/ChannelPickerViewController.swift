@@ -33,7 +33,8 @@ class ChannelPickerViewController: UIViewController, UITableViewDataSource, UITa
     }
     
     func getChannels() {
-        let query = PFQuery(className: "Channel")
+        let query = PFQuery(className: "Content")
+        query.whereKey("type", containedIn: ["default channel", "custom channel"])
         query.whereKey("network", equalTo:PFUser.currentUser()!["network"])
         query.whereKey("flags", lessThan: 3)
         query.orderByAscending("createdAt")

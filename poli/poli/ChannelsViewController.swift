@@ -43,7 +43,8 @@ class ChannelsViewController: UIViewController, UITableViewDataSource, UITableVi
     }
     
     func getChannels() {
-        let query = PFQuery(className: "Channel")
+        let query = PFQuery(className: "Content")
+        query.whereKey("type", containedIn: ["default channel", "custom channel"])
         query.whereKey("network", equalTo: network)
         query.whereKey("flags", lessThan: 3)
         query.orderByAscending("createdAt")

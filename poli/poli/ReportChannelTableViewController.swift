@@ -98,9 +98,9 @@ class ReportChannelTableViewController: UIViewController, UITableViewDataSource,
     }
     
     func getChannels() {
-        let query = PFQuery(className: "Channel")
+        let query = PFQuery(className: "Content")
+        query.whereKey("type", equalTo: "custom channel")
         query.whereKey("network", equalTo: network)
-        query.whereKey("type", equalTo: "custom")
         query.whereKey("flags", lessThan: 3)
         query.orderByAscending("createdAt")
         query.findObjectsInBackgroundWithBlock {

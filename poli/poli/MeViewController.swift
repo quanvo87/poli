@@ -40,7 +40,8 @@ class MeViewController: UIViewController, UITableViewDataSource, UITableViewDele
     func getPosts() {
         let user = PFUser.currentUser()
         let userId = user!.objectId as String?
-        let query = PFQuery(className: "Post")
+        let query = PFQuery(className: "Content")
+        query.whereKey("type", equalTo: "post")
         query.whereKey("creator", equalTo: userId!)
         query.whereKey("flags", lessThan: 3)
         query.orderByDescending("createdAt")
@@ -71,7 +72,8 @@ class MeViewController: UIViewController, UITableViewDataSource, UITableViewDele
             
         } else {
             cell.typeLabel.text = "Comment"
-            let query = PFQuery(className: "Post")
+            let query = PFQuery(className: "Content")
+            query.whereKey("type", equalTo: "post")
             query.getObjectInBackgroundWithId((post["post"] as? String)!) {
                 (object: PFObject?, error: NSError?) -> Void in
                 if error == nil {
@@ -96,7 +98,8 @@ class MeViewController: UIViewController, UITableViewDataSource, UITableViewDele
                 self.navigationController?.pushViewController(postDetailViewController, animated: true)
                 
             } else {
-                let query = PFQuery(className: "Post")
+                let query = PFQuery(className: "Content")
+                query.whereKey("type", equalTo: "post")
                 query.getObjectInBackgroundWithId((post["post"] as? String)!) {
                     (object: PFObject?, error: NSError?) -> Void in
                     if error == nil {

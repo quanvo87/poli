@@ -19,6 +19,7 @@ class PostDetailViewController: UIViewController, UITextFieldDelegate, UITableVi
     var post = PFObject(className: "Post")
     var postId = String()
     var comments = [PFObject]()
+    var flaggedContent = [String]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,8 +34,8 @@ class PostDetailViewController: UIViewController, UITextFieldDelegate, UITableVi
         
         newCommentTextField.delegate = self
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("keyboardWillShow:"), name:UIKeyboardWillShowNotification, object: self.view.window)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("keyboardWillHide:"), name:UIKeyboardWillHideNotification, object: self.view.window)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(PostDetailViewController.keyboardWillShow(_:)), name:UIKeyboardWillShowNotification, object: self.view.window)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(PostDetailViewController.keyboardWillHide(_:)), name:UIKeyboardWillHideNotification, object: self.view.window)
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -57,74 +58,79 @@ class PostDetailViewController: UIViewController, UITextFieldDelegate, UITableVi
         postTextLabel.text = text.stringByTrimmingCharacters(200)
     }
     
-    //# MARK: - Report Post
-    func reportPost(post: PFObject) {
-        let postId = post.objectId
-        let query = PFQuery(className: "Flag")
-        query.whereKey("user", equalTo: userId)
-        query.whereKey("content", equalTo: postId!)
-        query.getFirstObjectInBackgroundWithBlock {
-            (object: PFObject?, error: NSError?) -> Void in
-            if object == nil {
-                self.confirmReportPost(post)
-            } else {
-                self.showAlert("You have already reported this. With enough flags, it will be removed.")
-            }
+    //# MARK: - Report
+    func showReportMenu(content: PFObject) {
+        let contentType = content["type"] as! String
+        let alert = UIAlertController(title: "Report", message: nil, preferredStyle: .Alert)
+        let reportPostButton = UIAlertAction(title: "Report \(contentType)", style: .Default, handler: { (action) -> Void in
+            self.reportContentConfirm(content)
+        })
+        let reportUserButton = UIAlertAction(title: "Report User", style: .Default, handler: { (action) -> Void in
+            // implement
+        })
+        let cancelButton = UIAlertAction(title: "Cancel", style: .Cancel) { (action) -> Void in
         }
+        alert.addAction(reportPostButton)
+        alert.addAction(reportUserButton)
+        alert.addAction(cancelButton)
+        presentViewController(alert, animated: true, completion: nil)
     }
     
-    func confirmReportPost(post: PFObject) {
-        let actionSheetController: UIAlertController = UIAlertController(title: "", message: "Report for inappropriate content?", preferredStyle: .Alert)
-        let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .Cancel) { action -> Void in
+    func reportContentConfirm(content: PFObject) {
+        let alert: UIAlertController = UIAlertController(title: "", message: "Really report?", preferredStyle: .Alert)
+        let cancelButton: UIAlertAction = UIAlertAction(title: "Cancel", style: .Cancel) { action -> Void in
         }
-        actionSheetController.addAction(cancelAction)
-        let yesAction: UIAlertAction = UIAlertAction(title: "Yes", style: .Default) { action -> Void in
-            self.proceedReportPost(post)
+        let yesButton: UIAlertAction = UIAlertAction(title: "Yes", style: .Default) { action -> Void in
+            self.reportContent(content)
         }
-        actionSheetController.addAction(yesAction)
-        self.presentViewController(actionSheetController, animated: true, completion: nil)
+        alert.addAction(cancelButton)
+        alert.addAction(yesButton)
+        self.presentViewController(alert, animated: true, completion: nil)
     }
     
-    func proceedReportPost(post: PFObject) {
-        let postId = post.objectId
+    func reportContent(content: PFObject) {
+        let contentId = content.objectId
         let flag = PFObject(className: "Flag")
+        flag["type"] = "comment"
         flag["user"] = userId
-        flag["content"] = postId
+        flag["content"] = contentId
         flag.saveInBackgroundWithBlock {
             (success: Bool, error: NSError?) -> Void in
             if error == nil {
-                self.incrementFlags(post)
+                self.incrementFlags(content)
             }
         }
     }
     
-    func incrementFlags(post: PFObject) {
-        post.incrementKey("flags")
-        post.saveInBackgroundWithBlock {
+    func incrementFlags(content: PFObject) {
+        content.incrementKey("flags")
+        content.saveInBackgroundWithBlock {
             (success: Bool, error: NSError?) -> Void in
             if error == nil {
-                self.showReportPostSuccessful(post)
+                self.showReportSuccessful(content)
             }
         }
     }
     
-    func showReportPostSuccessful(post: PFObject) {
-        let type = (post["type"] as! String).capitalizedString
-        self.showAlert("Content has been reported. With enough flags, it will be removed.")
-        if type == "Comment" {
-            self.commentsTableView.reloadData()
+    func showReportSuccessful(content: PFObject) {
+        let type = (content["type"] as! String).capitalizedString
+        self.showAlert("Content reported.")
+        if type == "Post" {
+            dismissViewControllerAnimated(true, completion: nil)
+        } else {
+            getComments()
         }
     }
     
-    @IBAction func tapReportPost(sender: AnyObject) {
-        reportPost(post)
+    @IBAction func tapReport(sender: AnyObject) {
+        showReportMenu(post)
     }
     
     //# MARK: - Create A Comment
-    func createComment() {
+    func startCreateComment() {
         let flags = post["flags"] as! Int
         if flags > 2 {
-            self.showAlert("This post has been flagged as inappropriate and commenting has been disabled.")
+            showPostDisabled()
             
         } else {
             let newCommentText = self.newCommentTextField.text
@@ -133,25 +139,38 @@ class PostDetailViewController: UIViewController, UITextFieldDelegate, UITableVi
                 
             } else {
                 newCommentTextField.text = ""
-                let comment = PFObject(className: "Post")
-                comment["type"] = "comment"
-                comment["post"] = postId
-                comment["creator"] = userId
-                comment["flags"] = 0
-                comment["text"] = newCommentText
-                comment.saveInBackgroundWithBlock {
-                    (success: Bool, error: NSError?) -> Void in
-                    if success {
-                        self.getComments()
-                        self.view.endEditing(true)
-                    }
-                }
+                createComment(newCommentText!)
+            }
+        }
+    }
+    
+    func showPostDisabled() {
+        let alert = UIAlertController(title: nil, message: "This post has been flagged as inappropriate and commenting has been disabled.", preferredStyle: .Alert)
+        let okButton = UIAlertAction(title: "Ok", style: .Default, handler: { (action) -> Void in
+            self.dismissViewControllerAnimated(true, completion: nil)
+        })
+        alert.addAction(okButton)
+        presentViewController(alert, animated: true, completion: nil)
+    }
+    
+    func createComment(newCommentText: String) {
+        let comment = PFObject(className: "Content")
+        comment["type"] = "comment"
+        comment["post"] = postId
+        comment["creator"] = userId
+        comment["flags"] = 0
+        comment["text"] = newCommentText
+        comment.saveInBackgroundWithBlock {
+            (success: Bool, error: NSError?) -> Void in
+            if success {
+                self.getComments()
+                self.view.endEditing(true)
             }
         }
     }
     
     @IBAction func tapComment(sender: AnyObject) {
-        createComment()
+        startCreateComment()
     }
     
     //# MARK: - Table View
@@ -163,10 +182,44 @@ class PostDetailViewController: UIViewController, UITextFieldDelegate, UITableVi
     }
     
     func getComments() {
-        let query = PFQuery(className: "Post")
-        query.whereKey("type", equalTo: "comment")
+        getFlags()
+        
+//        let query = PFQuery(className: "Content")
+//        query.whereKey("type", equalTo: "comment")
+//        query.whereKey("post", equalTo:postId)
+//        query.whereKey("flags", lessThan: 3)
+//        query.orderByAscending("createdAt")
+//        query.findObjectsInBackgroundWithBlock {
+//            (objects: [PFObject]?, error: NSError?) -> Void in
+//            if error == nil {
+//                self.comments = objects!
+//                self.commentsTableView.reloadData()
+//            }
+//        }
+    }
+    
+    func getFlags() {
+        let query = PFQuery(className: "Flag")
+        query.whereKey("user", equalTo: userId)
+        query.whereKey("type", containedIn: ["user", "comment"])
+        query.findObjectsInBackgroundWithBlock {
+            (objects: [PFObject]?, error: NSError?) -> Void in
+            if error == nil {
+                for object in objects! {
+                    let flaggedContent = object["content"] as! String
+                    self.flaggedContent.append(flaggedContent)
+                }
+                self.getFilteredComments()
+            }
+        }
+    }
+    
+    func getFilteredComments() {
+        let query = PFQuery(className: "Content")
         query.whereKey("post", equalTo:postId)
         query.whereKey("flags", lessThan: 3)
+        query.whereKey("creator", notContainedIn: flaggedContent)
+        query.whereKey("objectId", notContainedIn: flaggedContent)
         query.orderByAscending("createdAt")
         query.findObjectsInBackgroundWithBlock {
             (objects: [PFObject]?, error: NSError?) -> Void in
@@ -196,7 +249,7 @@ class PostDetailViewController: UIViewController, UITextFieldDelegate, UITableVi
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         let comment = comments[indexPath.row]
-        reportPost(comment)
+        showReportMenu(comment)
     }
     
     //# MARK: - Keyboard
@@ -229,7 +282,7 @@ class PostDetailViewController: UIViewController, UITextFieldDelegate, UITableVi
     
     func textFieldShouldReturn(textField: UITextField) -> Bool {
         self.newCommentTextField.resignFirstResponder()
-        createComment()
+        startCreateComment()
         return true
     }
 }
