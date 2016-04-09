@@ -60,24 +60,24 @@ class PostDetailViewController: UIViewController, UITextFieldDelegate, UITableVi
     
     //# MARK: - Report
     func showReportMenu(content: PFObject) {
-        let contentType = content["type"] as! String
-        let alert = UIAlertController(title: "Report", message: nil, preferredStyle: .Alert)
-        let reportPostButton = UIAlertAction(title: "Report \(contentType)", style: .Default, handler: { (action) -> Void in
+        let contentType = (content["type"] as! String).capitalizedString
+        let alert = UIAlertController(title: "What would you like to report?", message: nil, preferredStyle: .Alert)
+        let reportContentButton = UIAlertAction(title: "Report \(contentType)", style: .Default, handler: { (action) -> Void in
             self.reportContentConfirm(content)
         })
         let reportUserButton = UIAlertAction(title: "Report User", style: .Default, handler: { (action) -> Void in
-            // implement
+            
         })
         let cancelButton = UIAlertAction(title: "Cancel", style: .Cancel) { (action) -> Void in
         }
-        alert.addAction(reportPostButton)
+        alert.addAction(reportContentButton)
         alert.addAction(reportUserButton)
         alert.addAction(cancelButton)
         presentViewController(alert, animated: true, completion: nil)
     }
     
     func reportContentConfirm(content: PFObject) {
-        let alert: UIAlertController = UIAlertController(title: "", message: "Really report?", preferredStyle: .Alert)
+        let alert = UIAlertController(title: "", message: "Really report?", preferredStyle: .Alert)
         let cancelButton: UIAlertAction = UIAlertAction(title: "Cancel", style: .Cancel) { action -> Void in
         }
         let yesButton: UIAlertAction = UIAlertAction(title: "Yes", style: .Default) { action -> Void in
@@ -89,11 +89,11 @@ class PostDetailViewController: UIViewController, UITextFieldDelegate, UITableVi
     }
     
     func reportContent(content: PFObject) {
-        let contentId = content.objectId
         let flag = PFObject(className: "Flag")
         flag["type"] = "comment"
         flag["user"] = userId
-        flag["content"] = contentId
+        flag["content"] = content.objectId
+        flag["contentCreator"] = content["creator"]
         flag.saveInBackgroundWithBlock {
             (success: Bool, error: NSError?) -> Void in
             if error == nil {
@@ -114,12 +114,24 @@ class PostDetailViewController: UIViewController, UITextFieldDelegate, UITableVi
     
     func showReportSuccessful(content: PFObject) {
         let type = (content["type"] as! String).capitalizedString
-        self.showAlert("Content reported.")
         if type == "Post" {
-            dismissViewControllerAnimated(true, completion: nil)
+            showReportPostSuccessful()
         } else {
-            getComments()
+            showReportCommentSuccessful()
         }
+    }
+    
+    func showReportPostSuccessful() {
+        let alert = UIAlertController(title: "", message: "Post successfully reported. Please go back to the home screen to hide the post.", preferredStyle: .Alert)
+        let okButton = UIAlertAction(title: "Ok", style: .Default, handler: {(action) in
+        })
+        alert.addAction(okButton)
+        self.presentViewController(alert, animated: true, completion: nil)
+    }
+    
+    func showReportCommentSuccessful() {
+        self.showAlert("Comment successfully reported.")
+        getComments()
     }
     
     @IBAction func tapReport(sender: AnyObject) {
@@ -131,12 +143,10 @@ class PostDetailViewController: UIViewController, UITextFieldDelegate, UITableVi
         let flags = post["flags"] as! Int
         if flags > 2 {
             showPostDisabled()
-            
         } else {
             let newCommentText = self.newCommentTextField.text
             if newCommentText == "" {
                 self.showAlert("Comments cannot be blank")
-                
             } else {
                 newCommentTextField.text = ""
                 createComment(newCommentText!)
@@ -173,29 +183,9 @@ class PostDetailViewController: UIViewController, UITextFieldDelegate, UITableVi
         startCreateComment()
     }
     
-    //# MARK: - Table View
-    func setUpTableView() {
-        commentsTableView.dataSource = self
-        commentsTableView.delegate = self
-        commentsTableView.rowHeight = UITableViewAutomaticDimension
-        commentsTableView.estimatedRowHeight = 80
-    }
-    
+    //# MARK: - Get Comments
     func getComments() {
         getFlags()
-        
-//        let query = PFQuery(className: "Content")
-//        query.whereKey("type", equalTo: "comment")
-//        query.whereKey("post", equalTo:postId)
-//        query.whereKey("flags", lessThan: 3)
-//        query.orderByAscending("createdAt")
-//        query.findObjectsInBackgroundWithBlock {
-//            (objects: [PFObject]?, error: NSError?) -> Void in
-//            if error == nil {
-//                self.comments = objects!
-//                self.commentsTableView.reloadData()
-//            }
-//        }
     }
     
     func getFlags() {
@@ -228,6 +218,14 @@ class PostDetailViewController: UIViewController, UITextFieldDelegate, UITableVi
                 self.commentsTableView.reloadData()
             }
         }
+    }
+    
+    //# MARK: - Table View
+    func setUpTableView() {
+        commentsTableView.dataSource = self
+        commentsTableView.delegate = self
+        commentsTableView.rowHeight = UITableViewAutomaticDimension
+        commentsTableView.estimatedRowHeight = 80
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

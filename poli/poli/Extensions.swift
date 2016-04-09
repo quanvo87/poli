@@ -31,7 +31,7 @@ extension NSString {
 
 extension UIViewController {
     func showAlert(message: String) {
-        let alert: UIAlertController = UIAlertController(title: "", message: message, preferredStyle: .Alert)
+        let alert = UIAlertController(title: "", message: message, preferredStyle: .Alert)
         let alertButton: UIAlertAction = UIAlertAction(title: "Ok", style: .Default) { action -> Void in
         }
         alert.addAction(alertButton)

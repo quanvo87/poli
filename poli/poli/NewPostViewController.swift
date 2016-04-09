@@ -73,7 +73,7 @@ class NewPostViewController: UIViewController, ChannelPickerViewControllerDelega
     
     func createPost(postText: String, channelName: String) {
         let user = PFUser.currentUser()
-        let userId = user?.objectId as String?
+        let userId = user!.objectId
         let network = user!["network"] as! String
         let post = PFObject(className: "Content")
         post["type"] = "post"
@@ -84,6 +84,7 @@ class NewPostViewController: UIViewController, ChannelPickerViewControllerDelega
         post.saveInBackgroundWithBlock {
             (success: Bool, error: NSError?) -> Void in
             if success {
+                print("huh")
                 self.setUpChannelAndUserChannel(network, channelName: channelName, userId: userId!)
             }
         }
