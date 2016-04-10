@@ -25,9 +25,13 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         setUpTableView()
     }
     
+    override func viewDidAppear(animated: Bool) {
+        checkIfUserIsBanned()
+        getPosts()
+    }
+    
     override func viewWillAppear(animated: Bool) {
         navigationItem.title = "poli - " + network
-        getPosts()
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -39,16 +43,12 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         super.didReceiveMemoryWarning()
     }
     
-    //# MARK: - Table View
-    func setUpTableView() {
-        homeTableView.delegate = self
-        homeTableView.dataSource = self
-        homeTableView.rowHeight = UITableViewAutomaticDimension
-        homeTableView.estimatedRowHeight = 80
-        automaticallyAdjustsScrollViewInsets = false
-    }
-    
+    //# MARK: - Get Posts
     func getPosts() {
+        let flagQuery = PFQuery(className: "Flag")
+        flagQuery.whereKey("user", equalTo: userId)
+        flagQuery.whereKey("type", containedIn: ["user", "post"])
+        
         let userChannelQuery = PFQuery(className: "UserChannel")
         userChannelQuery.whereKey("user", equalTo: userId)
         
@@ -57,11 +57,15 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         channelQuery.whereKey("network", equalTo: network)
         channelQuery.whereKey("name", matchesKey: "name", inQuery: userChannelQuery)
         channelQuery.whereKey("flags", lessThan: 3)
+        channelQuery.whereKey("creator", doesNotMatchKey: "content", inQuery: flagQuery)
+        channelQuery.whereKey("objectId", doesNotMatchKey: "content", inQuery: flagQuery)
         
         let postQuery = PFQuery(className: "Content")
         postQuery.whereKey("type", equalTo: "post")
         postQuery.whereKey("channel", matchesKey: "name", inQuery: channelQuery)
         postQuery.whereKey("flags", lessThan: 3)
+        postQuery.whereKey("creator", doesNotMatchKey: "content", inQuery: flagQuery)
+        postQuery.whereKey("objectId", doesNotMatchKey: "content", inQuery: flagQuery)
         postQuery.orderByDescending("createdAt")
         postQuery.findObjectsInBackgroundWithBlock {
             (objects: [PFObject]?, error: NSError?) -> Void in
@@ -70,6 +74,15 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                 self.homeTableView.reloadData()
             }
         }
+    }
+    
+    //# MARK: - Table View
+    func setUpTableView() {
+        homeTableView.delegate = self
+        homeTableView.dataSource = self
+        homeTableView.rowHeight = UITableViewAutomaticDimension
+        homeTableView.estimatedRowHeight = 80
+        automaticallyAdjustsScrollViewInsets = false
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

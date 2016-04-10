@@ -227,6 +227,7 @@
                     </view>
                     <connections>
                         <outlet property="channelLabel" destination="1pq-Sc-vS6" id="GC6-7t-FWm"/>
+                        <outlet property="commentButton" destination="3lC-Sa-wDc" id="ycO-fA-Lsf"/>
                         <outlet property="commentsTableView" destination="OSV-gR-h7n" id="MfN-jZ-q4L"/>
                         <outlet property="newCommentTextField" destination="NrJ-8G-zi9" id="yZv-fL-Ur3"/>
                         <outlet property="postTextLabel" destination="TSh-1D-tth" id="9EE-JW-WMD"/>

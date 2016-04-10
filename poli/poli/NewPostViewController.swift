@@ -20,6 +20,10 @@ class NewPostViewController: UIViewController, ChannelPickerViewControllerDelega
         selectedChannelLabel.text = ""
     }
     
+    override func viewDidAppear(animated: Bool) {
+        checkIfUserIsBanned()
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
@@ -39,18 +43,18 @@ class NewPostViewController: UIViewController, ChannelPickerViewControllerDelega
     //# MARK: - New Channel
     @IBAction func tapNewChannel(sender: AnyObject) {
         var inputTextField: UITextField?
-        let actionSheetController: UIAlertController = UIAlertController(title: "", message: "Create a new channel:", preferredStyle: .Alert)
-        let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .Cancel) { action -> Void in
+        let alert = UIAlertController(title: "", message: "Create a new channel:", preferredStyle: .Alert)
+        let cancelButton = UIAlertAction(title: "Cancel", style: .Cancel) { action -> Void in
         }
-        actionSheetController.addAction(cancelAction)
-        let okAction: UIAlertAction = UIAlertAction(title: "Ok", style: .Default) { action -> Void in
+        let okButton = UIAlertAction(title: "Ok", style: .Default) { action -> Void in
             self.selectedChannelLabel.text = inputTextField?.text
         }
-        actionSheetController.addAction(okAction)
-        actionSheetController.addTextFieldWithConfigurationHandler { textField -> Void in
+        alert.addAction(cancelButton)
+        alert.addAction(okButton)
+        alert.addTextFieldWithConfigurationHandler { textField -> Void in
             inputTextField = textField
         }
-        self.presentViewController(actionSheetController, animated: true, completion: nil)
+        self.presentViewController(alert, animated: true, completion: nil)
     }
     
     //# MARK: - Create New Post
@@ -59,10 +63,10 @@ class NewPostViewController: UIViewController, ChannelPickerViewControllerDelega
         let channelName = selectedChannelLabel.text?.capitalizedString
         
         if postText == "" {
-            self.showAlert("Posts cannot be blank.")
+            showAlert("Posts cannot be blank.")
             
         } else if channelName == "" {
-            self.showAlert("Please select a channel for your post.")
+            showAlert("Please select a channel for your post.")
             
         } else {
             postTextView.text = ""
@@ -113,6 +117,7 @@ class NewPostViewController: UIViewController, ChannelPickerViewControllerDelega
         let newChannel = PFObject(className: "Content")
         newChannel["type"] = "custom channel"
         newChannel["network"] = network
+        newChannel["creator"] = userId
         newChannel["name"] = channelName
         newChannel["flags"] = 0
         newChannel.saveInBackgroundWithBlock {

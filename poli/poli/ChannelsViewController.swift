@@ -43,12 +43,18 @@ class ChannelsViewController: UIViewController, UITableViewDataSource, UITableVi
     }
     
     func getChannels() {
-        let query = PFQuery(className: "Content")
-        query.whereKey("type", containedIn: ["default channel", "custom channel"])
-        query.whereKey("network", equalTo: network)
-        query.whereKey("flags", lessThan: 3)
-        query.orderByAscending("createdAt")
-        query.findObjectsInBackgroundWithBlock {
+        let flagQuery = PFQuery(className: "Flag")
+        flagQuery.whereKey("type", containedIn: ["user", "channel"])
+        flagQuery.whereKey("user", equalTo: userId)
+        
+        let channelQuery = PFQuery(className: "Content")
+        channelQuery.whereKey("type", containedIn: ["default channel", "custom channel"])
+        channelQuery.whereKey("network", equalTo: network)
+        channelQuery.whereKey("flags", lessThan: 3)
+        channelQuery.whereKey("creator", doesNotMatchKey: "content", inQuery: flagQuery)
+        channelQuery.whereKey("objectId", doesNotMatchKey: "content", inQuery: flagQuery)
+        channelQuery.orderByAscending("createdAt")
+        channelQuery.findObjectsInBackgroundWithBlock {
             (objects: [PFObject]?, error: NSError?) -> Void in
             if error == nil {
                 self.channels = objects!

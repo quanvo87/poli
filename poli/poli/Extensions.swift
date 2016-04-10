@@ -37,4 +37,57 @@ extension UIViewController {
         alert.addAction(alertButton)
         self.presentViewController(alert, animated: true, completion: nil)
     }
+    
+    //# MARK: - Check if user is banned
+    func checkIfUserIsBanned() {
+        let user = PFUser.currentUser()
+        let userId = (user?.objectId)! as String
+        checkUserFlags(user!, userId: userId)
+    }
+    
+    func checkUserFlags(user: PFUser, userId: String) {
+        let query = PFQuery(className: "Flag")
+        query.whereKey("content", equalTo: userId)
+        query.findObjectsInBackgroundWithBlock {
+            (objects: [PFObject]?, error: NSError?) -> Void in
+            if error == nil {
+                if objects?.count > 2 {
+                    self.kickUser(user)
+                } else {
+                    self.checkFlaggedContent(user, userId: userId)
+                }
+            }
+        }
+    }
+    
+    func checkFlaggedContent(user: PFUser, userId: String) {
+        let query = PFQuery(className: "FlaggedContent")
+        query.whereKey("creator", equalTo: userId)
+        query.findObjectsInBackgroundWithBlock {
+            (objects: [PFObject]?, error: NSError?) -> Void in
+            if error == nil {
+                if objects?.count > 2 {
+                    self.kickUser(user)
+                }
+            }
+        }
+    }
+    
+    func kickUser(user: PFUser) {
+        let alert = UIAlertController(title: "", message: "This accound has been reported too many times for posting inappropriate content and is now banned.", preferredStyle: .Alert)
+        let alertButton: UIAlertAction = UIAlertAction(title: "Ok", style: .Default) { action -> Void in
+            self.logOut()
+        }
+        alert.addAction(alertButton)
+        self.presentViewController(alert, animated: true, completion: nil)
+    }
+    
+    //# MARK: - Log out
+    func logOut() {
+        PFUser.logOut()
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let logInViewController  = storyboard.instantiateViewControllerWithIdentifier("Log In") as! LogInViewController
+        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        appDelegate.window?.rootViewController = logInViewController
+    }
 }

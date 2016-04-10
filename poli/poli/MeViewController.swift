@@ -21,6 +21,7 @@ class MeViewController: UIViewController, UITableViewDataSource, UITableViewDele
     }
     
     override func viewDidAppear(animated: Bool) {
+        checkIfUserIsBanned()
         getPosts()
     }
     
@@ -28,20 +29,12 @@ class MeViewController: UIViewController, UITableViewDataSource, UITableViewDele
         super.didReceiveMemoryWarning()
     }
     
-    //# MARK: - Table View
-    func setUpTableView() {
-        meTableView.dataSource = self
-        meTableView.delegate = self
-        meTableView.rowHeight = UITableViewAutomaticDimension
-        meTableView.estimatedRowHeight = 80
-        automaticallyAdjustsScrollViewInsets = false
-    }
-    
+    //# MARK: - Get Content
     func getPosts() {
         let user = PFUser.currentUser()
         let userId = user!.objectId as String?
         let query = PFQuery(className: "Content")
-        query.whereKey("type", equalTo: "post")
+        query.whereKey("type", containedIn: ["post", "comment"])
         query.whereKey("creator", equalTo: userId!)
         query.whereKey("flags", lessThan: 3)
         query.orderByDescending("createdAt")
@@ -52,6 +45,15 @@ class MeViewController: UIViewController, UITableViewDataSource, UITableViewDele
                 self.meTableView.reloadData()
             }
         }
+    }
+    
+    //# MARK: - Table View
+    func setUpTableView() {
+        meTableView.dataSource = self
+        meTableView.delegate = self
+        meTableView.rowHeight = UITableViewAutomaticDimension
+        meTableView.estimatedRowHeight = 80
+        automaticallyAdjustsScrollViewInsets = false
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

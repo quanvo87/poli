@@ -30,63 +30,153 @@ class ReportChannelTableViewController: UIViewController, UITableViewDataSource,
         super.didReceiveMemoryWarning()
     }
     
+    //# MARK: - Get Channels
+    func getChannels() {
+        let flagQuery = PFQuery(className: "Flag")
+        flagQuery.whereKey("type", containedIn: ["user", "channel"])
+        flagQuery.whereKey("user", equalTo: userId)
+        
+        let channelQuery = PFQuery(className: "Content")
+        channelQuery.whereKey("type", equalTo: "custom channel")
+        channelQuery.whereKey("network", equalTo: network)
+        channelQuery.whereKey("flags", lessThan: 3)
+        channelQuery.whereKey("creator", doesNotMatchKey: "content", inQuery: flagQuery)
+        channelQuery.whereKey("objectId", doesNotMatchKey: "content", inQuery: flagQuery)
+        channelQuery.orderByAscending("createdAt")
+        channelQuery.findObjectsInBackgroundWithBlock {
+            (objects: [PFObject]?, error: NSError?) -> Void in
+            if error == nil {
+                self.channels = objects!
+                self.reportChannelTableView.reloadData()
+            }
+        }
+    }
+    
+    //# MARK: - Report
+    func showReportMenu(content: PFObject) {
+        let alert = UIAlertController(title: "Inappropriate content?", message: nil, preferredStyle: .Alert)
+        let reportContentButton = UIAlertAction(title: "Report Channel", style: .Default, handler: { (action) -> Void in
+            self.confirmReportContent(content)
+        })
+        let reportUserButton = UIAlertAction(title: "Report User", style: .Default, handler: { (action) -> Void in
+            self.confirmReportUser(content)
+        })
+        let cancelButton = UIAlertAction(title: "Cancel", style: .Cancel) { (action) -> Void in
+        }
+        alert.addAction(reportContentButton)
+        alert.addAction(reportUserButton)
+        alert.addAction(cancelButton)
+        presentViewController(alert, animated: true, completion: nil)
+    }
+    
     //# MARK: - Report Channel
-    func reportPost(post: PFObject) {
-        let postId = post.objectId
-        let query = PFQuery(className: "Flag")
-        query.whereKey("user", equalTo: userId)
-        query.whereKey("content", equalTo: postId!)
+    func confirmReportContent(content: PFObject) {
+        let alert = UIAlertController(title: "", message: "Really report?", preferredStyle: .Alert)
+        let cancelButton: UIAlertAction = UIAlertAction(title: "Cancel", style: .Cancel) { action -> Void in
+        }
+        let yesButton: UIAlertAction = UIAlertAction(title: "Yes", style: .Default) { action -> Void in
+            self.reportContent(content)
+        }
+        alert.addAction(cancelButton)
+        alert.addAction(yesButton)
+        self.presentViewController(alert, animated: true, completion: nil)
+    }
+    
+    func reportContent(content: PFObject) {
+        getFlaggedContent(content)
+    }
+    
+    func getFlaggedContent(content: PFObject) {
+        let query = PFQuery(className: "FlaggedContent")
+        query.whereKey("creator", equalTo: content["creator"])
+        query.whereKey("content", equalTo: content.objectId!)
         query.getFirstObjectInBackgroundWithBlock {
-            (object: PFObject?, error: NSError?) -> Void in
+            (object: PFObject?, error: NSError?) in
             if object == nil {
-                self.confirmReportPost(post)
+                self.createFlaggedContent(content)
             } else {
-                self.showAlert("You have already reported this channel. With enough flags, it will be removed.")
+                self.createFlag(content)
             }
         }
     }
     
-    func confirmReportPost(post: PFObject) {
-        let actionSheetController: UIAlertController = UIAlertController(title: "", message: "Report channel for inappropriate title?", preferredStyle: .Alert)
-        let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .Cancel) { action -> Void in
+    func createFlaggedContent(content: PFObject) {
+        let flaggedContent = PFObject(className: "FlaggedContent")
+        flaggedContent["creator"] = content["creator"]
+        flaggedContent["content"] = content.objectId
+        flaggedContent.saveInBackgroundWithBlock {
+            (success: Bool, error: NSError?) in
+            if error == nil {
+                self.createFlag(content)
+            }
         }
-        actionSheetController.addAction(cancelAction)
-        let yesAction: UIAlertAction = UIAlertAction(title: "Yes", style: .Default) { action -> Void in
-            self.proceedReportPost(post)
-        }
-        actionSheetController.addAction(yesAction)
-        self.presentViewController(actionSheetController, animated: true, completion: nil)
     }
     
-    func proceedReportPost(post: PFObject) {
-        let postId = post.objectId
+    func createFlag(content: PFObject) {
         let flag = PFObject(className: "Flag")
+        flag["type"] = "channel"
         flag["user"] = userId
-        flag["content"] = postId
+        flag["content"] = content.objectId
+        flag["contentCreator"] = content["creator"]
         flag.saveInBackgroundWithBlock {
-            (success: Bool, error: NSError?) -> Void in
+            (success: Bool, error: NSError?) in
             if error == nil {
-                self.incrementFlags(post)
+                self.incrementFlags(content)
             }
         }
     }
     
-    func incrementFlags(post: PFObject) {
-        post.incrementKey("flags")
-        post.saveInBackgroundWithBlock {
-            (success: Bool, error: NSError?) -> Void in
+    func incrementFlags(content: PFObject) {
+        content.incrementKey("flags")
+        content.saveInBackgroundWithBlock {
+            (success: Bool, error: NSError?) in
             if error == nil {
-                self.showReportChannelSuccess()
+                self.showReportSuccessful()
             }
         }
     }
     
-    func showReportChannelSuccess() {
-        let alert: UIAlertController = UIAlertController(title: "", message: "Channel has been reported. With enough flags, it will be removed.", preferredStyle: .Alert)
-        let alertButton: UIAlertAction = UIAlertAction(title: "Ok", style: .Default) { action -> Void in
+    func showReportSuccessful() {
+        let alert = UIAlertController(title: "", message: "Channel successfully reported and will no longer be shown to you.", preferredStyle: .Alert)
+        let okButton = UIAlertAction(title: "Ok", style: .Default, handler: {(action) in
             self.navigationController?.popViewControllerAnimated(true)
+        })
+        alert.addAction(okButton)
+        self.presentViewController(alert, animated: true, completion: nil)
+    }
+    
+    //# MARK: - Report User
+    func confirmReportUser(content: PFObject) {
+        let alert = UIAlertController(title: "", message: "Really report?", preferredStyle: .Alert)
+        let cancelButton: UIAlertAction = UIAlertAction(title: "Cancel", style: .Cancel) { action in
         }
-        alert.addAction(alertButton)
+        let yesButton: UIAlertAction = UIAlertAction(title: "Yes", style: .Default) { action in
+            self.reportUser(content)
+        }
+        alert.addAction(cancelButton)
+        alert.addAction(yesButton)
+        self.presentViewController(alert, animated: true, completion: nil)
+    }
+    
+    func reportUser(content: PFObject) {
+        let flag = PFObject(className: "Flag")
+        flag["type"] = "user"
+        flag["user"] = userId
+        flag["content"] = content["creator"]
+        flag.saveInBackgroundWithBlock {
+            (success: Bool, error: NSError?) in
+            if error == nil {
+                self.showReportUserSuccessful()
+            }
+        }
+    }
+    
+    func showReportUserSuccessful() {
+        let alert = UIAlertController(title: "", message: "User successfully reported. You will no longer see their content.", preferredStyle: .Alert)
+        let okButton = UIAlertAction(title: "Ok", style: .Default, handler: {(action) in
+            self.navigationController?.popViewControllerAnimated(true)
+        })
+        alert.addAction(okButton)
         self.presentViewController(alert, animated: true, completion: nil)
     }
     
@@ -95,21 +185,6 @@ class ReportChannelTableViewController: UIViewController, UITableViewDataSource,
         reportChannelTableView.dataSource = self
         reportChannelTableView.delegate = self
         automaticallyAdjustsScrollViewInsets = false
-    }
-    
-    func getChannels() {
-        let query = PFQuery(className: "Content")
-        query.whereKey("type", equalTo: "custom channel")
-        query.whereKey("network", equalTo: network)
-        query.whereKey("flags", lessThan: 3)
-        query.orderByAscending("createdAt")
-        query.findObjectsInBackgroundWithBlock {
-            (objects: [PFObject]?, error: NSError?) -> Void in
-            if error == nil {
-                self.channels = objects!
-                self.reportChannelTableView.reloadData()
-            }
-        }
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -124,6 +199,6 @@ class ReportChannelTableViewController: UIViewController, UITableViewDataSource,
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         let channel = channels[indexPath.row]
-        reportPost(channel)
+        showReportMenu(channel)
     }
 }

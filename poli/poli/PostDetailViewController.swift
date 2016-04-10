@@ -13,13 +13,13 @@ class PostDetailViewController: UIViewController, UITextFieldDelegate, UITableVi
     @IBOutlet weak var postTextLabel: UILabel!
     @IBOutlet weak var timeStampLabel: UILabel!
     @IBOutlet weak var channelLabel: UILabel!
-    @IBOutlet weak var newCommentTextField: UITextField!
     @IBOutlet weak var commentsTableView: UITableView!
+    @IBOutlet weak var newCommentTextField: UITextField!
+    @IBOutlet weak var commentButton: UIButton!
     var userId = String()
     var post = PFObject(className: "Post")
     var postId = String()
     var comments = [PFObject]()
-    var flaggedContent = [String]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,9 +33,14 @@ class PostDetailViewController: UIViewController, UITextFieldDelegate, UITableVi
         getComments()
         
         newCommentTextField.delegate = self
+        disableCommentButton()
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(PostDetailViewController.keyboardWillShow(_:)), name:UIKeyboardWillShowNotification, object: self.view.window)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(PostDetailViewController.keyboardWillHide(_:)), name:UIKeyboardWillHideNotification, object: self.view.window)
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        checkIfUserIsBanned()
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -59,14 +64,18 @@ class PostDetailViewController: UIViewController, UITextFieldDelegate, UITableVi
     }
     
     //# MARK: - Report
+    @IBAction func tapReport(sender: AnyObject) {
+        showReportMenu(post)
+    }
+    
     func showReportMenu(content: PFObject) {
         let contentType = (content["type"] as! String).capitalizedString
-        let alert = UIAlertController(title: "What would you like to report?", message: nil, preferredStyle: .Alert)
+        let alert = UIAlertController(title: "Inappropriate content?", message: nil, preferredStyle: .Alert)
         let reportContentButton = UIAlertAction(title: "Report \(contentType)", style: .Default, handler: { (action) -> Void in
-            self.reportContentConfirm(content)
+            self.confirmReportContent(content)
         })
         let reportUserButton = UIAlertAction(title: "Report User", style: .Default, handler: { (action) -> Void in
-            
+            self.confirmReportUser(content)
         })
         let cancelButton = UIAlertAction(title: "Cancel", style: .Cancel) { (action) -> Void in
         }
@@ -76,7 +85,8 @@ class PostDetailViewController: UIViewController, UITextFieldDelegate, UITableVi
         presentViewController(alert, animated: true, completion: nil)
     }
     
-    func reportContentConfirm(content: PFObject) {
+    //# MARK: - Report Post/Comment
+    func confirmReportContent(content: PFObject) {
         let alert = UIAlertController(title: "", message: "Really report?", preferredStyle: .Alert)
         let cancelButton: UIAlertAction = UIAlertAction(title: "Cancel", style: .Cancel) { action -> Void in
         }
@@ -89,13 +99,43 @@ class PostDetailViewController: UIViewController, UITextFieldDelegate, UITableVi
     }
     
     func reportContent(content: PFObject) {
+        getFlaggedContent(content)
+    }
+    
+    func getFlaggedContent(content: PFObject) {
+        let query = PFQuery(className: "FlaggedContent")
+        query.whereKey("creator", equalTo: content["creator"])
+        query.whereKey("content", equalTo: content.objectId!)
+        query.getFirstObjectInBackgroundWithBlock {
+            (object: PFObject?, error: NSError?) in
+            if object == nil {
+                self.createFlaggedContent(content)
+            } else {
+                self.createFlag(content)
+            }
+        }
+    }
+    
+    func createFlaggedContent(content: PFObject) {
+        let flaggedContent = PFObject(className: "FlaggedContent")
+        flaggedContent["creator"] = content["creator"]
+        flaggedContent["content"] = content.objectId
+        flaggedContent.saveInBackgroundWithBlock {
+            (success: Bool, error: NSError?) in
+            if error == nil {
+                self.createFlag(content)
+            }
+        }
+    }
+    
+    func createFlag(content: PFObject) {
         let flag = PFObject(className: "Flag")
-        flag["type"] = "comment"
+        flag["type"] = content["type"]
         flag["user"] = userId
         flag["content"] = content.objectId
         flag["contentCreator"] = content["creator"]
         flag.saveInBackgroundWithBlock {
-            (success: Bool, error: NSError?) -> Void in
+            (success: Bool, error: NSError?) in
             if error == nil {
                 self.incrementFlags(content)
             }
@@ -105,7 +145,7 @@ class PostDetailViewController: UIViewController, UITextFieldDelegate, UITableVi
     func incrementFlags(content: PFObject) {
         content.incrementKey("flags")
         content.saveInBackgroundWithBlock {
-            (success: Bool, error: NSError?) -> Void in
+            (success: Bool, error: NSError?) in
             if error == nil {
                 self.showReportSuccessful(content)
             }
@@ -113,8 +153,7 @@ class PostDetailViewController: UIViewController, UITextFieldDelegate, UITableVi
     }
     
     func showReportSuccessful(content: PFObject) {
-        let type = (content["type"] as! String).capitalizedString
-        if type == "Post" {
+        if content["type"] as! String == "post" {
             showReportPostSuccessful()
         } else {
             showReportCommentSuccessful()
@@ -122,97 +161,82 @@ class PostDetailViewController: UIViewController, UITextFieldDelegate, UITableVi
     }
     
     func showReportPostSuccessful() {
-        let alert = UIAlertController(title: "", message: "Post successfully reported. Please go back to the home screen to hide the post.", preferredStyle: .Alert)
+        let alert = UIAlertController(title: "", message: "Post successfully reported and will no longer be shown to you.", preferredStyle: .Alert)
         let okButton = UIAlertAction(title: "Ok", style: .Default, handler: {(action) in
+            self.navigationController?.popViewControllerAnimated(true)
         })
         alert.addAction(okButton)
         self.presentViewController(alert, animated: true, completion: nil)
     }
     
     func showReportCommentSuccessful() {
-        self.showAlert("Comment successfully reported.")
+        self.showAlert("Comment successfully reported and will no longer be shown to you.")
         getComments()
     }
     
-    @IBAction func tapReport(sender: AnyObject) {
-        showReportMenu(post)
+    //# MARK: - Report User
+    func confirmReportUser(content: PFObject) {
+        let alert = UIAlertController(title: "", message: "Really report?", preferredStyle: .Alert)
+        let cancelButton: UIAlertAction = UIAlertAction(title: "Cancel", style: .Cancel) { action in
+        }
+        let yesButton: UIAlertAction = UIAlertAction(title: "Yes", style: .Default) { action in
+            self.reportUser(content)
+        }
+        alert.addAction(cancelButton)
+        alert.addAction(yesButton)
+        self.presentViewController(alert, animated: true, completion: nil)
     }
     
-    //# MARK: - Create A Comment
-    func startCreateComment() {
-        let flags = post["flags"] as! Int
-        if flags > 2 {
-            showPostDisabled()
-        } else {
-            let newCommentText = self.newCommentTextField.text
-            if newCommentText == "" {
-                self.showAlert("Comments cannot be blank")
-            } else {
-                newCommentTextField.text = ""
-                createComment(newCommentText!)
+    func reportUser(content: PFObject) {
+        let flag = PFObject(className: "Flag")
+        flag["type"] = "user"
+        flag["user"] = userId
+        flag["content"] = content["creator"]
+        flag.saveInBackgroundWithBlock {
+            (success: Bool, error: NSError?) in
+            if error == nil {
+                self.showReportUserSuccessful(content)
             }
         }
     }
     
-    func showPostDisabled() {
-        let alert = UIAlertController(title: nil, message: "This post has been flagged as inappropriate and commenting has been disabled.", preferredStyle: .Alert)
-        let okButton = UIAlertAction(title: "Ok", style: .Default, handler: { (action) -> Void in
-            self.dismissViewControllerAnimated(true, completion: nil)
+    func showReportUserSuccessful(content: PFObject) {
+        let type = content["type"] as! String
+        if type == "post" {
+            showReportPostCreatorSuccessful()
+        } else {
+            showReportCommentCreatorSuccessful()
+        }
+    }
+    
+    func showReportPostCreatorSuccessful() {
+        let alert = UIAlertController(title: "", message: "User successfully reported. You will no longer see their content.", preferredStyle: .Alert)
+        let okButton = UIAlertAction(title: "Ok", style: .Default, handler: {(action) in
+            self.navigationController?.popViewControllerAnimated(true)
         })
         alert.addAction(okButton)
-        presentViewController(alert, animated: true, completion: nil)
+        self.presentViewController(alert, animated: true, completion: nil)
     }
     
-    func createComment(newCommentText: String) {
-        let comment = PFObject(className: "Content")
-        comment["type"] = "comment"
-        comment["post"] = postId
-        comment["creator"] = userId
-        comment["flags"] = 0
-        comment["text"] = newCommentText
-        comment.saveInBackgroundWithBlock {
-            (success: Bool, error: NSError?) -> Void in
-            if success {
-                self.getComments()
-                self.view.endEditing(true)
-            }
-        }
-    }
-    
-    @IBAction func tapComment(sender: AnyObject) {
-        startCreateComment()
+    func showReportCommentCreatorSuccessful() {
+        showAlert("User successfully reported. You will no longer see their content.")
+        getComments()
     }
     
     //# MARK: - Get Comments
     func getComments() {
-        getFlags()
-    }
-    
-    func getFlags() {
-        let query = PFQuery(className: "Flag")
-        query.whereKey("user", equalTo: userId)
-        query.whereKey("type", containedIn: ["user", "comment"])
-        query.findObjectsInBackgroundWithBlock {
-            (objects: [PFObject]?, error: NSError?) -> Void in
-            if error == nil {
-                for object in objects! {
-                    let flaggedContent = object["content"] as! String
-                    self.flaggedContent.append(flaggedContent)
-                }
-                self.getFilteredComments()
-            }
-        }
-    }
-    
-    func getFilteredComments() {
-        let query = PFQuery(className: "Content")
-        query.whereKey("post", equalTo:postId)
-        query.whereKey("flags", lessThan: 3)
-        query.whereKey("creator", notContainedIn: flaggedContent)
-        query.whereKey("objectId", notContainedIn: flaggedContent)
-        query.orderByAscending("createdAt")
-        query.findObjectsInBackgroundWithBlock {
-            (objects: [PFObject]?, error: NSError?) -> Void in
+        let flagQuery = PFQuery(className: "Flag")
+        flagQuery.whereKey("user", equalTo: userId)
+        flagQuery.whereKey("type", containedIn: ["user", "comment"])
+        
+        let commentQuery = PFQuery(className: "Content")
+        commentQuery.whereKey("post", equalTo:postId)
+        commentQuery.whereKey("flags", lessThan: 3)
+        commentQuery.whereKey("creator", doesNotMatchKey: "content", inQuery: flagQuery)
+        commentQuery.whereKey("objectId", doesNotMatchKey: "content", inQuery: flagQuery)
+        commentQuery.orderByAscending("createdAt")
+        commentQuery.findObjectsInBackgroundWithBlock {
+            (objects: [PFObject]?, error: NSError?) in
             if error == nil {
                 self.comments = objects!
                 self.commentsTableView.reloadData()
@@ -248,6 +272,73 @@ class PostDetailViewController: UIViewController, UITextFieldDelegate, UITableVi
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         let comment = comments[indexPath.row]
         showReportMenu(comment)
+    }
+    
+    //# MARK: - Create A Comment
+    func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
+        let oldString = newCommentTextField.text! as NSString
+        let newString = oldString.stringByReplacingCharactersInRange(range, withString: string) as NSString
+        if newString.length == 0 {
+            disableCommentButton()
+        } else {
+            enableCommentButton()
+        }
+        return true
+    }
+    
+    func enableCommentButton() {
+        commentButton.userInteractionEnabled = true
+        commentButton.alpha = 1
+    }
+    
+    func disableCommentButton() {
+        commentButton.userInteractionEnabled = false
+        commentButton.alpha = 0.5
+    }
+    
+    @IBAction func tapComment(sender: AnyObject) {
+        startCreateComment()
+    }
+    
+    func startCreateComment() {
+        let flags = post["flags"] as! Int
+        if flags > 2 {
+            showPostDisabled()
+        } else {
+            let newCommentText = self.newCommentTextField.text
+            if newCommentText == "" {
+                self.showAlert("Comments cannot be blank.")
+            } else {
+                newCommentTextField.text = ""
+                createComment(newCommentText!)
+            }
+        }
+    }
+    
+    func showPostDisabled() {
+        let alert = UIAlertController(title: nil, message: "This post has been flagged as inappropriate and commenting has been disabled.", preferredStyle: .Alert)
+        let okButton = UIAlertAction(title: "Ok", style: .Default, handler: { (action) in
+            self.navigationController?.popViewControllerAnimated(true)
+        })
+        alert.addAction(okButton)
+        presentViewController(alert, animated: true, completion: nil)
+    }
+    
+    func createComment(newCommentText: String) {
+        let comment = PFObject(className: "Content")
+        comment["type"] = "comment"
+        comment["post"] = postId
+        comment["creator"] = userId
+        comment["flags"] = 0
+        comment["text"] = newCommentText
+        comment.saveInBackgroundWithBlock {
+            (success: Bool, error: NSError?) -> Void in
+            if success {
+                self.disableCommentButton()
+                self.getComments()
+                self.view.endEditing(true)
+            }
+        }
     }
     
     //# MARK: - Keyboard

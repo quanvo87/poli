@@ -26,6 +26,10 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
     }
     
     //# MARK: - Sign Up
+    @IBAction func tapSignUp(sender: AnyObject) {
+        signUp()
+    }
+    
     func signUp() {
         self.messageLabel.text = ""
         let email = emailTextField.text?.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet()).lowercaseString
@@ -93,18 +97,19 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
         newNetwork.saveInBackground()
     }
     
-    func createChannel(channel: String, network: String) {
+    func createChannel(channelName: String, network: String) {
         let newChannel = PFObject(className: "Content")
         newChannel["type"] = "default channel"
-        newChannel["name"] = channel
         newChannel["network"] = network
+        newChannel["name"] = channelName
+        newChannel["creator"] = "default"
         newChannel["flags"] = 0
         newChannel.saveInBackground()
     }
     
-    func createUserChannel(name: String, user: String) {
+    func createUserChannel(userChannelName: String, user: String) {
         let newUserChannel = PFObject(className: "UserChannel")
-        newUserChannel["name"] = name
+        newUserChannel["name"] = userChannelName
         newUserChannel["user"] = user
         newUserChannel.saveInBackground()
     }
@@ -116,10 +121,6 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
         }
         alert.addAction(okButton)
         self.presentViewController(alert, animated: true, completion: nil)
-    }
-    
-    @IBAction func tapSignUp(sender: AnyObject) {
-        signUp()
     }
     
     //# MARK: - Cancel
