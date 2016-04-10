@@ -99,33 +99,7 @@ class PostDetailViewController: UIViewController, UITextFieldDelegate, UITableVi
     }
     
     func reportContent(content: PFObject) {
-        getFlaggedContent(content)
-    }
-    
-    func getFlaggedContent(content: PFObject) {
-        let query = PFQuery(className: "FlaggedContent")
-        query.whereKey("creator", equalTo: content["creator"])
-        query.whereKey("content", equalTo: content.objectId!)
-        query.getFirstObjectInBackgroundWithBlock {
-            (object: PFObject?, error: NSError?) in
-            if object == nil {
-                self.createFlaggedContent(content)
-            } else {
-                self.createFlag(content)
-            }
-        }
-    }
-    
-    func createFlaggedContent(content: PFObject) {
-        let flaggedContent = PFObject(className: "FlaggedContent")
-        flaggedContent["creator"] = content["creator"]
-        flaggedContent["content"] = content.objectId
-        flaggedContent.saveInBackgroundWithBlock {
-            (success: Bool, error: NSError?) in
-            if error == nil {
-                self.createFlag(content)
-            }
-        }
+        createFlag(content)
     }
     
     func createFlag(content: PFObject) {
@@ -161,7 +135,7 @@ class PostDetailViewController: UIViewController, UITextFieldDelegate, UITableVi
     }
     
     func showReportPostSuccessful() {
-        let alert = UIAlertController(title: "", message: "Post successfully reported and will no longer be shown to you.", preferredStyle: .Alert)
+        let alert = UIAlertController(title: "", message: "Post successfully reported.", preferredStyle: .Alert)
         let okButton = UIAlertAction(title: "Ok", style: .Default, handler: {(action) in
             self.navigationController?.popViewControllerAnimated(true)
         })
@@ -170,7 +144,7 @@ class PostDetailViewController: UIViewController, UITextFieldDelegate, UITableVi
     }
     
     func showReportCommentSuccessful() {
-        self.showAlert("Comment successfully reported and will no longer be shown to you.")
+        self.showAlert("Comment successfully reported.")
         getComments()
     }
     
@@ -210,7 +184,7 @@ class PostDetailViewController: UIViewController, UITextFieldDelegate, UITableVi
     }
     
     func showReportPostCreatorSuccessful() {
-        let alert = UIAlertController(title: "", message: "User successfully reported. You will no longer see their content.", preferredStyle: .Alert)
+        let alert = UIAlertController(title: "", message: "User successfully reported.", preferredStyle: .Alert)
         let okButton = UIAlertAction(title: "Ok", style: .Default, handler: {(action) in
             self.navigationController?.popViewControllerAnimated(true)
         })
@@ -219,7 +193,7 @@ class PostDetailViewController: UIViewController, UITextFieldDelegate, UITableVi
     }
     
     func showReportCommentCreatorSuccessful() {
-        showAlert("User successfully reported. You will no longer see their content.")
+        showAlert("User successfully reported.")
         getComments()
     }
     

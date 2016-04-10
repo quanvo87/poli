@@ -61,10 +61,11 @@ extension UIViewController {
     }
     
     func checkFlaggedContent(user: PFUser, userId: String) {
-        let query = PFQuery(className: "FlaggedContent")
+        let query = PFQuery(className: "Content")
         query.whereKey("creator", equalTo: userId)
+        query.whereKey("flags", greaterThan: 2)
         query.findObjectsInBackgroundWithBlock {
-            (objects: [PFObject]?, error: NSError?) -> Void in
+            (objects: [PFObject]?, error: NSError?) in
             if error == nil {
                 if objects?.count > 2 {
                     self.kickUser(user)

@@ -100,7 +100,7 @@ class NewPostViewController: UIViewController, ChannelPickerViewControllerDelega
     
     func getChannel(network: String, channelName: String, userId: String) {
         let channelQuery = PFQuery(className: "Content")
-        channelQuery.whereKey("type", equalTo: "custom channel")
+        channelQuery.whereKey("type", containedIn: ["default channel", "custom channel"])
         channelQuery.whereKey("network", equalTo: network)
         channelQuery.whereKey("name", equalTo: channelName)
         channelQuery.getFirstObjectInBackgroundWithBlock {

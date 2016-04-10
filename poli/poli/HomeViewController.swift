@@ -47,7 +47,6 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     func getPosts() {
         let flagQuery = PFQuery(className: "Flag")
         flagQuery.whereKey("user", equalTo: userId)
-        flagQuery.whereKey("type", containedIn: ["user", "post"])
         
         let userChannelQuery = PFQuery(className: "UserChannel")
         userChannelQuery.whereKey("user", equalTo: userId)
