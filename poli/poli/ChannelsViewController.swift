@@ -16,6 +16,12 @@ class ChannelsViewController: UIViewController, UITableViewDataSource, UITableVi
     var channels = [PFObject]()
     var userChannels = [String]()
     
+    lazy var refreshControl: UIRefreshControl = {
+        let refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: #selector(ChannelsViewController.handleRefresh(_:)), forControlEvents: UIControlEvents.ValueChanged)
+        return refreshControl
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = "Channels"
@@ -43,7 +49,7 @@ class ChannelsViewController: UIViewController, UITableViewDataSource, UITableVi
         let flagQuery = PFQuery(className: "Flag")
         flagQuery.whereKey("type", containedIn: ["user", "channel"])
         flagQuery.whereKey("user", equalTo: userId)
-        
+
         let channelQuery = PFQuery(className: "Content")
         channelQuery.whereKey("type", containedIn: ["default channel", "custom channel"])
         channelQuery.whereKey("network", equalTo: network)
@@ -64,6 +70,7 @@ class ChannelsViewController: UIViewController, UITableViewDataSource, UITableVi
     func setUpTableView() {
         channelsTableView.dataSource = self
         channelsTableView.delegate = self
+        channelsTableView.addSubview(self.refreshControl)
     }
     
     func getUserChannels() {
@@ -74,7 +81,7 @@ class ChannelsViewController: UIViewController, UITableViewDataSource, UITableVi
             (objects: [PFObject]?, error: NSError?) in
             if error == nil {
                 for object in objects! {
-                    newUserChannels.append(object["name"] as! (String))
+                    newUserChannels.append(object["name"] as! String)
                 }
                 self.userChannels = newUserChannels
                 self.channelsTableView.reloadData()
@@ -128,6 +135,11 @@ class ChannelsViewController: UIViewController, UITableViewDataSource, UITableVi
                 }
             }
         }
+    }
+    
+    func handleRefresh(refreshControl: UIRefreshControl) {
+        getChannels()
+        refreshControl.endRefreshing()
     }
     
     //# MARK: - Buttons

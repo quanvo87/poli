@@ -15,6 +15,12 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     var userId = String()
     var network = String()
     
+    lazy var refreshControl: UIRefreshControl = {
+        let refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: #selector(HomeViewController.handleRefresh(_:)), forControlEvents: UIControlEvents.ValueChanged)
+        return refreshControl
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         getUserData()
@@ -84,6 +90,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         homeTableView.dataSource = self
         homeTableView.rowHeight = UITableViewAutomaticDimension
         homeTableView.estimatedRowHeight = 80
+        homeTableView.addSubview(self.refreshControl)
         automaticallyAdjustsScrollViewInsets = false
     }
     
@@ -116,5 +123,10 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
             navigationItem.title = "Home"
             navigationController?.pushViewController(postDetailViewController, animated: true)
         }
+    }
+    
+    func handleRefresh(refreshControl: UIRefreshControl) {
+        getPosts()
+        refreshControl.endRefreshing()
     }
 }

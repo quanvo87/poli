@@ -21,6 +21,12 @@ class PostDetailViewController: UIViewController, UITextFieldDelegate, UITableVi
     var postId = String()
     var comments = [PFObject]()
     
+    lazy var refreshControl: UIRefreshControl = {
+        let refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: #selector(PostDetailViewController.handleRefresh(_:)), forControlEvents: UIControlEvents.ValueChanged)
+        return refreshControl
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -71,13 +77,13 @@ class PostDetailViewController: UIViewController, UITextFieldDelegate, UITableVi
     func showReportMenu(content: PFObject) {
         let contentType = (content["type"] as! String).capitalizedString
         let alert = UIAlertController(title: "Inappropriate content?", message: nil, preferredStyle: .Alert)
-        let reportContentButton = UIAlertAction(title: "Report \(contentType)", style: .Default, handler: { (action) in
+        let reportContentButton = UIAlertAction(title: "Report \(contentType)", style: .Default, handler: { action in
             self.confirmReportContent(content)
         })
-        let reportUserButton = UIAlertAction(title: "Report User", style: .Default, handler: { (action) in
+        let reportUserButton = UIAlertAction(title: "Report User", style: .Default, handler: { action in
             self.confirmReportUser(content)
         })
-        let cancelButton = UIAlertAction(title: "Cancel", style: .Cancel) { (action) in
+        let cancelButton = UIAlertAction(title: "Cancel", style: .Cancel) { action in
         }
         alert.addAction(reportContentButton)
         alert.addAction(reportUserButton)
@@ -136,7 +142,7 @@ class PostDetailViewController: UIViewController, UITextFieldDelegate, UITableVi
     
     func showReportPostSuccessful() {
         let alert = UIAlertController(title: "", message: "Post successfully reported.", preferredStyle: .Alert)
-        let okButton = UIAlertAction(title: "Ok", style: .Default, handler: {(action) in
+        let okButton = UIAlertAction(title: "Ok", style: .Default, handler: { action in
             self.navigationController?.popViewControllerAnimated(true)
         })
         alert.addAction(okButton)
@@ -185,7 +191,7 @@ class PostDetailViewController: UIViewController, UITextFieldDelegate, UITableVi
     
     func showReportPostCreatorSuccessful() {
         let alert = UIAlertController(title: "", message: "User successfully reported.", preferredStyle: .Alert)
-        let okButton = UIAlertAction(title: "Ok", style: .Default, handler: {(action) in
+        let okButton = UIAlertAction(title: "Ok", style: .Default, handler: { action in
             self.navigationController?.popViewControllerAnimated(true)
         })
         alert.addAction(okButton)
@@ -224,6 +230,7 @@ class PostDetailViewController: UIViewController, UITextFieldDelegate, UITableVi
         commentsTableView.delegate = self
         commentsTableView.rowHeight = UITableViewAutomaticDimension
         commentsTableView.estimatedRowHeight = 80
+        commentsTableView.addSubview(self.refreshControl)
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -241,6 +248,11 @@ class PostDetailViewController: UIViewController, UITextFieldDelegate, UITableVi
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         let comment = comments[indexPath.row]
         showReportMenu(comment)
+    }
+    
+    func handleRefresh(refreshControl: UIRefreshControl) {
+        getComments()
+        refreshControl.endRefreshing()
     }
     
     //# MARK: - Create A Comment
@@ -286,7 +298,7 @@ class PostDetailViewController: UIViewController, UITextFieldDelegate, UITableVi
     
     func showPostDisabled() {
         let alert = UIAlertController(title: nil, message: "This post has been flagged as inappropriate and commenting has been disabled.", preferredStyle: .Alert)
-        let okButton = UIAlertAction(title: "Ok", style: .Default, handler: { (action) in
+        let okButton = UIAlertAction(title: "Ok", style: .Default, handler: { action in
             self.navigationController?.popViewControllerAnimated(true)
         })
         alert.addAction(okButton)

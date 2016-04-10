@@ -15,6 +15,12 @@ class ReportChannelTableViewController: UIViewController, UITableViewDataSource,
     var userId = String()
     var network = String()
     
+    lazy var refreshControl: UIRefreshControl = {
+        let refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: #selector(ReportChannelTableViewController.handleRefresh(_:)), forControlEvents: UIControlEvents.ValueChanged)
+        return refreshControl
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         getUserData()
@@ -58,10 +64,10 @@ class ReportChannelTableViewController: UIViewController, UITableViewDataSource,
     //# MARK: - Report
     func showReportMenu(content: PFObject) {
         let alert = UIAlertController(title: "Inappropriate content?", message: nil, preferredStyle: .Alert)
-        let reportContentButton = UIAlertAction(title: "Report Channel", style: .Default, handler: { (action) in
+        let reportContentButton = UIAlertAction(title: "Report Channel", style: .Default, handler: { action in
             self.confirmReportContent(content)
         })
-        let reportUserButton = UIAlertAction(title: "Report User", style: .Default, handler: { (action) in
+        let reportUserButton = UIAlertAction(title: "Report User", style: .Default, handler: { action in
             self.confirmReportUser(content)
         })
         let cancelButton = UIAlertAction(title: "Cancel", style: .Cancel) { (action) in
@@ -115,7 +121,7 @@ class ReportChannelTableViewController: UIViewController, UITableViewDataSource,
     
     func showReportSuccessful() {
         let alert = UIAlertController(title: "", message: "Channel successfully reported.", preferredStyle: .Alert)
-        let okButton = UIAlertAction(title: "Ok", style: .Default, handler: {(action) in
+        let okButton = UIAlertAction(title: "Ok", style: .Default, handler: { action in
             self.navigationController?.popViewControllerAnimated(true)
         })
         alert.addAction(okButton)
@@ -150,7 +156,7 @@ class ReportChannelTableViewController: UIViewController, UITableViewDataSource,
     
     func showReportUserSuccessful() {
         let alert = UIAlertController(title: "", message: "User successfully reported.", preferredStyle: .Alert)
-        let okButton = UIAlertAction(title: "Ok", style: .Default, handler: {(action) in
+        let okButton = UIAlertAction(title: "Ok", style: .Default, handler: { action in
             self.navigationController?.popViewControllerAnimated(true)
         })
         alert.addAction(okButton)
@@ -161,6 +167,7 @@ class ReportChannelTableViewController: UIViewController, UITableViewDataSource,
     func setUpTableView() {
         reportChannelTableView.dataSource = self
         reportChannelTableView.delegate = self
+        reportChannelTableView.addSubview(self.refreshControl)
         automaticallyAdjustsScrollViewInsets = false
     }
     
@@ -177,5 +184,10 @@ class ReportChannelTableViewController: UIViewController, UITableViewDataSource,
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         let channel = channels[indexPath.row]
         showReportMenu(channel)
+    }
+    
+    func handleRefresh(refreshControl: UIRefreshControl) {
+        getChannels()
+        refreshControl.endRefreshing()
     }
 }

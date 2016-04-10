@@ -13,6 +13,12 @@ class MeViewController: UIViewController, UITableViewDataSource, UITableViewDele
     @IBOutlet weak var meTableView: UITableView!
     var posts = [PFObject]()
     
+    lazy var refreshControl: UIRefreshControl = {
+        let refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: #selector(MeViewController.handleRefresh(_:)), forControlEvents: UIControlEvents.ValueChanged)
+        return refreshControl
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = "Me"
@@ -21,7 +27,7 @@ class MeViewController: UIViewController, UITableViewDataSource, UITableViewDele
     
     override func viewDidAppear(animated: Bool) {
         checkIfUserIsBanned()
-        getPosts()
+        getContent()
     }
     
     override func didReceiveMemoryWarning() {
@@ -29,7 +35,7 @@ class MeViewController: UIViewController, UITableViewDataSource, UITableViewDele
     }
     
     //# MARK: - Get Content
-    func getPosts() {
+    func getContent() {
         let user = PFUser.currentUser()
         let userId = user!.objectId as String?
         let query = PFQuery(className: "Content")
@@ -52,6 +58,7 @@ class MeViewController: UIViewController, UITableViewDataSource, UITableViewDele
         meTableView.delegate = self
         meTableView.rowHeight = UITableViewAutomaticDimension
         meTableView.estimatedRowHeight = 80
+        meTableView.addSubview(self.refreshControl)
         automaticallyAdjustsScrollViewInsets = false
     }
     
@@ -106,5 +113,10 @@ class MeViewController: UIViewController, UITableViewDataSource, UITableViewDele
                 }
             }
         }
+    }
+    
+    func handleRefresh(refreshControl: UIRefreshControl) {
+        getContent()
+        refreshControl.endRefreshing()
     }
 }
