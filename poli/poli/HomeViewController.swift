@@ -17,11 +17,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        let user = PFUser.currentUser()
-        userId = (user!.objectId as String?)!
-        network = user!["network"] as! String
-        
+        getUserData()
         setUpTableView()
     }
     
@@ -41,6 +37,13 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
+    }
+    
+    //# MARK: - Get User Data
+    func getUserData() {
+        let user = PFUser.currentUser()
+        userId = (user!.objectId as String?)!
+        network = user!["network"] as! String
     }
     
     //# MARK: - Get Posts
@@ -67,7 +70,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         postQuery.whereKey("objectId", doesNotMatchKey: "content", inQuery: flagQuery)
         postQuery.orderByDescending("createdAt")
         postQuery.findObjectsInBackgroundWithBlock {
-            (objects: [PFObject]?, error: NSError?) -> Void in
+            (objects: [PFObject]?, error: NSError?) in
             if error == nil {
                 self.posts = objects!
                 self.homeTableView.reloadData()
@@ -91,15 +94,9 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("Post", forIndexPath: indexPath) as! HomeTableViewCell
         let post = posts[indexPath.row]
-        
-        let date = post.createdAt! as NSDate
-        cell.timeStampLabel.text = date.toString()
-        
+        cell.timeStampLabel.text = (post.createdAt! as NSDate).toString()
         cell.channelLabel.text = post["channel"] as? String
-        
-        let text = post["text"] as! NSString
-        cell.postTextLabel.text = text.stringByTrimmingCharacters(144)
-
+        cell.postTextLabel.text = (post["text"] as! NSString).stringByTrimmingCharacters(144)
         return cell
     }
     

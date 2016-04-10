@@ -17,17 +17,20 @@ class ReportChannelTableViewController: UIViewController, UITableViewDataSource,
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        let user = PFUser.currentUser()
-        userId = (user?.objectId)!
-        network = user!["network"] as! String
-        
+        getUserData()
         setUpTableView()
         getChannels()
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
+    }
+    
+    //# MARK: - Get User Data
+    func getUserData() {
+        let user = PFUser.currentUser()
+        userId = (user?.objectId)!
+        network = user!["network"] as! String
     }
     
     //# MARK: - Get Channels
@@ -44,7 +47,7 @@ class ReportChannelTableViewController: UIViewController, UITableViewDataSource,
         channelQuery.whereKey("objectId", doesNotMatchKey: "content", inQuery: flagQuery)
         channelQuery.orderByAscending("createdAt")
         channelQuery.findObjectsInBackgroundWithBlock {
-            (objects: [PFObject]?, error: NSError?) -> Void in
+            (objects: [PFObject]?, error: NSError?) in
             if error == nil {
                 self.channels = objects!
                 self.reportChannelTableView.reloadData()
@@ -55,13 +58,13 @@ class ReportChannelTableViewController: UIViewController, UITableViewDataSource,
     //# MARK: - Report
     func showReportMenu(content: PFObject) {
         let alert = UIAlertController(title: "Inappropriate content?", message: nil, preferredStyle: .Alert)
-        let reportContentButton = UIAlertAction(title: "Report Channel", style: .Default, handler: { (action) -> Void in
+        let reportContentButton = UIAlertAction(title: "Report Channel", style: .Default, handler: { (action) in
             self.confirmReportContent(content)
         })
-        let reportUserButton = UIAlertAction(title: "Report User", style: .Default, handler: { (action) -> Void in
+        let reportUserButton = UIAlertAction(title: "Report User", style: .Default, handler: { (action) in
             self.confirmReportUser(content)
         })
-        let cancelButton = UIAlertAction(title: "Cancel", style: .Cancel) { (action) -> Void in
+        let cancelButton = UIAlertAction(title: "Cancel", style: .Cancel) { (action) in
         }
         alert.addAction(reportContentButton)
         alert.addAction(reportUserButton)
@@ -72,9 +75,9 @@ class ReportChannelTableViewController: UIViewController, UITableViewDataSource,
     //# MARK: - Report Channel
     func confirmReportContent(content: PFObject) {
         let alert = UIAlertController(title: "", message: "Really report?", preferredStyle: .Alert)
-        let cancelButton: UIAlertAction = UIAlertAction(title: "Cancel", style: .Cancel) { action -> Void in
+        let cancelButton: UIAlertAction = UIAlertAction(title: "Cancel", style: .Cancel) { action in
         }
-        let yesButton: UIAlertAction = UIAlertAction(title: "Yes", style: .Default) { action -> Void in
+        let yesButton: UIAlertAction = UIAlertAction(title: "Yes", style: .Default) { action in
             self.reportContent(content)
         }
         alert.addAction(cancelButton)

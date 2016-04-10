@@ -15,7 +15,6 @@ class NewPostViewController: UIViewController, ChannelPickerViewControllerDelega
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         navigationItem.title = "New Post"
         selectedChannelLabel.text = ""
     }
@@ -44,14 +43,14 @@ class NewPostViewController: UIViewController, ChannelPickerViewControllerDelega
     @IBAction func tapNewChannel(sender: AnyObject) {
         var inputTextField: UITextField?
         let alert = UIAlertController(title: "", message: "Create a new channel:", preferredStyle: .Alert)
-        let cancelButton = UIAlertAction(title: "Cancel", style: .Cancel) { action -> Void in
+        let cancelButton = UIAlertAction(title: "Cancel", style: .Cancel) { action in
         }
-        let okButton = UIAlertAction(title: "Ok", style: .Default) { action -> Void in
+        let okButton = UIAlertAction(title: "Ok", style: .Default) { action in
             self.selectedChannelLabel.text = inputTextField?.text
         }
         alert.addAction(cancelButton)
         alert.addAction(okButton)
-        alert.addTextFieldWithConfigurationHandler { textField -> Void in
+        alert.addTextFieldWithConfigurationHandler { textField in
             inputTextField = textField
         }
         self.presentViewController(alert, animated: true, completion: nil)
@@ -61,13 +60,10 @@ class NewPostViewController: UIViewController, ChannelPickerViewControllerDelega
     @IBAction func tapPost(sender: AnyObject) {
         let postText = postTextView.text
         let channelName = selectedChannelLabel.text?.capitalizedString
-        
         if postText == "" {
             showAlert("Posts cannot be blank.")
-            
         } else if channelName == "" {
             showAlert("Please select a channel for your post.")
-            
         } else {
             postTextView.text = ""
             selectedChannelLabel.text = ""
@@ -83,12 +79,11 @@ class NewPostViewController: UIViewController, ChannelPickerViewControllerDelega
         post["type"] = "post"
         post["creator"] = userId
         post["channel"] = channelName
-        post["flags"] = 0
         post["text"] = postText
+        post["flags"] = 0
         post.saveInBackgroundWithBlock {
-            (success: Bool, error: NSError?) -> Void in
+            (success: Bool, error: NSError?) in
             if success {
-                print("huh")
                 self.setUpChannelAndUserChannel(network, channelName: channelName, userId: userId!)
             }
         }
@@ -104,7 +99,7 @@ class NewPostViewController: UIViewController, ChannelPickerViewControllerDelega
         channelQuery.whereKey("network", equalTo: network)
         channelQuery.whereKey("name", equalTo: channelName)
         channelQuery.getFirstObjectInBackgroundWithBlock {
-            (object: PFObject?, error: NSError?) -> Void in
+            (object: PFObject?, error: NSError?) in
             if object == nil {
                 self.createNewChannel(network, channelName: channelName, userId: userId)
             } else {
@@ -121,7 +116,7 @@ class NewPostViewController: UIViewController, ChannelPickerViewControllerDelega
         newChannel["name"] = channelName
         newChannel["flags"] = 0
         newChannel.saveInBackgroundWithBlock {
-            (success: Bool, error: NSError?) -> Void in
+            (success: Bool, error: NSError?) in
             if success {
                 self.getUserChannel(network, channelName: channelName, userId: userId)
             }
@@ -133,7 +128,7 @@ class NewPostViewController: UIViewController, ChannelPickerViewControllerDelega
         userChannelQuerry.whereKey("user", equalTo: userId)
         userChannelQuerry.whereKey("name", equalTo: channelName)
         userChannelQuerry.getFirstObjectInBackgroundWithBlock {
-            (object: PFObject?, error: NSError?) -> Void in
+            (object: PFObject?, error: NSError?) in
             if object == nil {
                 self.createUserChannel(network, channelName: channelName, userId: userId)
             } else {
@@ -147,7 +142,7 @@ class NewPostViewController: UIViewController, ChannelPickerViewControllerDelega
         newUserChannel["user"] = userId
         newUserChannel["name"] = channelName
         newUserChannel.saveInBackgroundWithBlock {
-            (success: Bool, error: NSError?) -> Void in
+            (success: Bool, error: NSError?) in
             if success {
                 self.tabBarController?.selectedIndex = 0
             }

@@ -16,7 +16,6 @@ class ChannelPickerViewController: UIViewController, UITableViewDataSource, UITa
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         setUpTableView()
         getChannels()
     }
@@ -25,26 +24,37 @@ class ChannelPickerViewController: UIViewController, UITableViewDataSource, UITa
         super.didReceiveMemoryWarning()
     }
     
-    //# MARK: - Table View
-    func setUpTableView() {
-        channelsTableView.dataSource = self
-        channelsTableView.delegate = self
-        automaticallyAdjustsScrollViewInsets = false
-    }
-    
+    //# MARK: - Get Channels
     func getChannels() {
-        let query = PFQuery(className: "Content")
-        query.whereKey("type", containedIn: ["default channel", "custom channel"])
-        query.whereKey("network", equalTo:PFUser.currentUser()!["network"])
-        query.whereKey("flags", lessThan: 3)
-        query.orderByAscending("createdAt")
-        query.findObjectsInBackgroundWithBlock {
-            (objects: [PFObject]?, error: NSError?) -> Void in
+        let user = PFUser.currentUser()
+        let userId = user?.objectId
+        let network = user!["network"]
+        
+        let flagQuery = PFQuery(className: "Flag")
+        flagQuery.whereKey("type", containedIn: ["user", "channel"])
+        flagQuery.whereKey("user", equalTo: userId!)
+        
+        let channelQuery = PFQuery(className: "Content")
+        channelQuery.whereKey("type", containedIn: ["default channel", "custom channel"])
+        channelQuery.whereKey("network", equalTo: network)
+        channelQuery.whereKey("flags", lessThan: 3)
+        channelQuery.whereKey("creator", doesNotMatchKey: "content", inQuery: flagQuery)
+        channelQuery.whereKey("objectId", doesNotMatchKey: "content", inQuery: flagQuery)
+        channelQuery.orderByAscending("createdAt")
+        channelQuery.findObjectsInBackgroundWithBlock {
+            (objects: [PFObject]?, error: NSError?) in
             if error == nil {
                 self.channels = objects!
                 self.channelsTableView.reloadData()
             }
         }
+    }
+    
+    //# MARK: - Table View
+    func setUpTableView() {
+        channelsTableView.dataSource = self
+        channelsTableView.delegate = self
+        automaticallyAdjustsScrollViewInsets = false
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

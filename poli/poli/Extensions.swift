@@ -32,7 +32,7 @@ extension NSString {
 extension UIViewController {
     func showAlert(message: String) {
         let alert = UIAlertController(title: "", message: message, preferredStyle: .Alert)
-        let alertButton: UIAlertAction = UIAlertAction(title: "Ok", style: .Default) { action -> Void in
+        let alertButton: UIAlertAction = UIAlertAction(title: "Ok", style: .Default) { action in
         }
         alert.addAction(alertButton)
         self.presentViewController(alert, animated: true, completion: nil)
@@ -49,7 +49,7 @@ extension UIViewController {
         let query = PFQuery(className: "Flag")
         query.whereKey("content", equalTo: userId)
         query.findObjectsInBackgroundWithBlock {
-            (objects: [PFObject]?, error: NSError?) -> Void in
+            (objects: [PFObject]?, error: NSError?) in
             if error == nil {
                 if objects?.count > 2 {
                     self.kickUser(user)
@@ -76,7 +76,7 @@ extension UIViewController {
     
     func kickUser(user: PFUser) {
         let alert = UIAlertController(title: "", message: "This accound has been reported too many times for posting inappropriate content and is now banned.", preferredStyle: .Alert)
-        let alertButton: UIAlertAction = UIAlertAction(title: "Ok", style: .Default) { action -> Void in
+        let alertButton: UIAlertAction = UIAlertAction(title: "Ok", style: .Default) { action in
             self.logOut()
         }
         alert.addAction(alertButton)

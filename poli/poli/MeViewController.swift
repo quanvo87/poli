@@ -15,7 +15,6 @@ class MeViewController: UIViewController, UITableViewDataSource, UITableViewDele
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         navigationItem.title = "Me"
         setUpTableView()
     }
@@ -39,7 +38,7 @@ class MeViewController: UIViewController, UITableViewDataSource, UITableViewDele
         query.whereKey("flags", lessThan: 3)
         query.orderByDescending("createdAt")
         query.findObjectsInBackgroundWithBlock {
-            (objects: [PFObject]?, error: NSError?) -> Void in
+            (objects: [PFObject]?, error: NSError?) in
             if error == nil {
                 self.posts = objects!
                 self.meTableView.reloadData()
@@ -64,11 +63,9 @@ class MeViewController: UIViewController, UITableViewDataSource, UITableViewDele
         let cell = tableView.dequeueReusableCellWithIdentifier("Me", forIndexPath: indexPath) as! MeTableViewCell
         let post = posts[indexPath.row]
         
-        let createdAt = post.createdAt as NSDate?
-        cell.timeStampLabel.text = createdAt?.toString()
+        cell.timeStampLabel.text = (post.createdAt! as NSDate).toString()
         
-        let type = post["type"] as? String
-        if type == "post" {
+        if post["type"] as? String == "post" {
             cell.typeLabel.text = "Post"
             cell.detailLabel.text = post["channel"] as? String
             
@@ -77,15 +74,14 @@ class MeViewController: UIViewController, UITableViewDataSource, UITableViewDele
             let query = PFQuery(className: "Content")
             query.whereKey("type", equalTo: "post")
             query.getObjectInBackgroundWithId((post["post"] as? String)!) {
-                (object: PFObject?, error: NSError?) -> Void in
+                (object: PFObject?, error: NSError?) in
                 if error == nil {
                     cell.detailLabel.text = object!["text"] as? String
                 }
             }
         }
         
-        let text = post["text"] as? NSString
-        cell.cellTextLabel.text = text?.stringByTrimmingCharacters(144)
+        cell.cellTextLabel.text = (post["text"] as! NSString).stringByTrimmingCharacters(144)
         
         return cell
     }
@@ -93,9 +89,8 @@ class MeViewController: UIViewController, UITableViewDataSource, UITableViewDele
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         if let postDetailViewController = storyboard?.instantiateViewControllerWithIdentifier("Post Detail") as! PostDetailViewController? {
             let post = posts[indexPath.row]
-            let type = post["type"] as? String
             
-            if type == "post" {
+            if post["type"] as? String == "post" {
                 postDetailViewController.post = post
                 self.navigationController?.pushViewController(postDetailViewController, animated: true)
                 
@@ -103,7 +98,7 @@ class MeViewController: UIViewController, UITableViewDataSource, UITableViewDele
                 let query = PFQuery(className: "Content")
                 query.whereKey("type", equalTo: "post")
                 query.getObjectInBackgroundWithId((post["post"] as? String)!) {
-                    (object: PFObject?, error: NSError?) -> Void in
+                    (object: PFObject?, error: NSError?) in
                     if error == nil {
                         postDetailViewController.post = object!
                         self.navigationController?.pushViewController(postDetailViewController, animated: true)

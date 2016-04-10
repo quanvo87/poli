@@ -24,10 +24,7 @@ class PostDetailViewController: UIViewController, UITextFieldDelegate, UITableVi
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let user = PFUser.currentUser()
-        userId = (user?.objectId)!
-        postId = post.objectId!
-        
+        getUserData()
         setPostValues()
         setUpTableView()
         getComments()
@@ -52,15 +49,18 @@ class PostDetailViewController: UIViewController, UITextFieldDelegate, UITableVi
         super.didReceiveMemoryWarning()
     }
     
+    //# MARK: - Get User Data
+    func getUserData() {
+        let user = PFUser.currentUser()
+        userId = (user?.objectId)!
+        postId = post.objectId!
+    }
+    
     //# MARK: - Set Post Values
     func setPostValues() {
-        let date = post.createdAt! as NSDate
-        timeStampLabel.text = date.toString()
-        
+        timeStampLabel.text = (post.createdAt! as NSDate).toString()
         channelLabel.text = post["channel"] as? String
-        
-        let text = post["text"] as! NSString
-        postTextLabel.text = text.stringByTrimmingCharacters(200)
+        postTextLabel.text = (post["text"] as! NSString).stringByTrimmingCharacters(200)
     }
     
     //# MARK: - Report
@@ -71,13 +71,13 @@ class PostDetailViewController: UIViewController, UITextFieldDelegate, UITableVi
     func showReportMenu(content: PFObject) {
         let contentType = (content["type"] as! String).capitalizedString
         let alert = UIAlertController(title: "Inappropriate content?", message: nil, preferredStyle: .Alert)
-        let reportContentButton = UIAlertAction(title: "Report \(contentType)", style: .Default, handler: { (action) -> Void in
+        let reportContentButton = UIAlertAction(title: "Report \(contentType)", style: .Default, handler: { (action) in
             self.confirmReportContent(content)
         })
-        let reportUserButton = UIAlertAction(title: "Report User", style: .Default, handler: { (action) -> Void in
+        let reportUserButton = UIAlertAction(title: "Report User", style: .Default, handler: { (action) in
             self.confirmReportUser(content)
         })
-        let cancelButton = UIAlertAction(title: "Cancel", style: .Cancel) { (action) -> Void in
+        let cancelButton = UIAlertAction(title: "Cancel", style: .Cancel) { (action) in
         }
         alert.addAction(reportContentButton)
         alert.addAction(reportUserButton)
@@ -88,9 +88,9 @@ class PostDetailViewController: UIViewController, UITextFieldDelegate, UITableVi
     //# MARK: - Report Post/Comment
     func confirmReportContent(content: PFObject) {
         let alert = UIAlertController(title: "", message: "Really report?", preferredStyle: .Alert)
-        let cancelButton: UIAlertAction = UIAlertAction(title: "Cancel", style: .Cancel) { action -> Void in
+        let cancelButton: UIAlertAction = UIAlertAction(title: "Cancel", style: .Cancel) { action in
         }
-        let yesButton: UIAlertAction = UIAlertAction(title: "Yes", style: .Default) { action -> Void in
+        let yesButton: UIAlertAction = UIAlertAction(title: "Yes", style: .Default) { action in
             self.reportContent(content)
         }
         alert.addAction(cancelButton)
@@ -200,8 +200,8 @@ class PostDetailViewController: UIViewController, UITextFieldDelegate, UITableVi
     //# MARK: - Get Comments
     func getComments() {
         let flagQuery = PFQuery(className: "Flag")
-        flagQuery.whereKey("user", equalTo: userId)
         flagQuery.whereKey("type", containedIn: ["user", "comment"])
+        flagQuery.whereKey("user", equalTo: userId)
         
         let commentQuery = PFQuery(className: "Content")
         commentQuery.whereKey("post", equalTo:postId)
@@ -233,13 +233,8 @@ class PostDetailViewController: UIViewController, UITextFieldDelegate, UITableVi
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("Comment", forIndexPath: indexPath) as! CommentsTableViewCell
         let comment = comments[indexPath.row]
-        
-        let date = comment.createdAt! as NSDate
-        cell.timeStampLabel.text = date.toString()
-        
-        let text = comment["text"] as! NSString
-        cell.commentsTextLabel.text = text.stringByTrimmingCharacters(144)
-        
+        cell.timeStampLabel.text = (comment.createdAt! as NSDate).toString()
+        cell.commentsTextLabel.text = (comment["text"] as! NSString).stringByTrimmingCharacters(144)
         return cell
     }
     
@@ -306,7 +301,7 @@ class PostDetailViewController: UIViewController, UITextFieldDelegate, UITableVi
         comment["flags"] = 0
         comment["text"] = newCommentText
         comment.saveInBackgroundWithBlock {
-            (success: Bool, error: NSError?) -> Void in
+            (success: Bool, error: NSError?) in
             if success {
                 self.disableCommentButton()
                 self.getComments()
@@ -322,12 +317,12 @@ class PostDetailViewController: UIViewController, UITextFieldDelegate, UITableVi
         let offset: CGSize = userInfo[UIKeyboardFrameEndUserInfoKey]!.CGRectValue.size
         if keyboardSize.height == offset.height {
             if self.view.frame.origin.y == 0 {
-                UIView.animateWithDuration(0.1, animations: { () -> Void in
+                UIView.animateWithDuration(0.1, animations: { () in
                     self.view.frame.origin.y -= keyboardSize.height
                 })
             }
         } else {
-            UIView.animateWithDuration(0.1, animations: { () -> Void in
+            UIView.animateWithDuration(0.1, animations: { () in
                 self.view.frame.origin.y += keyboardSize.height - offset.height
             })
         }

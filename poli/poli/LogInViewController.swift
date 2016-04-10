@@ -16,7 +16,6 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         messageLabel.text = ""
         passwordTextField.delegate = self
     }
@@ -26,6 +25,10 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
     }
     
     //# MARK: - Log In
+    @IBAction func tapLogIn(sender: AnyObject) {
+        logIn()
+    }
+    
     func logIn() {
         self.messageLabel.text = ""
         let email = emailTextField.text?.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet()).lowercaseString
@@ -37,7 +40,7 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
         } else {
             self.messageLabel.text = ""
             PFUser.logInWithUsernameInBackground(email!, password:password!) {
-                (user: PFUser?, error: NSError?) -> Void in
+                (user: PFUser?, error: NSError?) in
                 if error == nil {
                     if user!["emailVerified"] as! Bool == true {
                         self.logInSuccess()
@@ -59,10 +62,6 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
         let tabBarController = storyboard.instantiateViewControllerWithIdentifier("Tab Bar") as! UITabBarController
         let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         appDelegate.window?.rootViewController = tabBarController
-    }
-    
-    @IBAction func tapLogIn(sender: AnyObject) {
-        logIn()
     }
     
     //# MARK: - Sign up

@@ -16,7 +16,6 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         messageLabel.text = ""
         passwordTextField.delegate = self
     }
@@ -34,7 +33,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
         self.messageLabel.text = ""
         let email = emailTextField.text?.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet()).lowercaseString
         let password = passwordTextField.text
-        var network = String()
+        let network = email!.componentsSeparatedByString("@")[1]
         
         if isValidEmail(email!) == false {
             self.messageLabel.text = "Please enter a valid e-mail."
@@ -43,25 +42,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
             self.messageLabel.text = "Please enter a password."
             
         } else {
-            self.messageLabel.text = ""
-            network = email!.componentsSeparatedByString("@")[1]
-            let user = PFUser()
-            user.username = email
-            user.email = email
-            user.password = password
-            user["network"] = network
-            user.signUpInBackgroundWithBlock {
-                (success: Bool, error: NSError?) -> Void in
-                if success {
-                    let userId = (PFUser.currentUser()?.objectId)!
-                    PFUser.logOut()
-                    self.joinNetworks(network, userId: userId)
-                    self.showSignUpSuccess()
-                    
-                } else {
-                    self.showAlert("Unable to sign up. Please try again.")
-                }
-            }
+            createUser(email!, password: password!, network: network)
         }
     }
     
@@ -72,11 +53,34 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
         return result
     }
     
+    func createUser(email: String, password: String, network: String) {
+        let user = PFUser()
+        user.username = email
+        user.email = email
+        user.password = password
+        user["network"] = network
+        user.signUpInBackgroundWithBlock {
+            (success: Bool, error: NSError?) in
+            if success {
+                self.setUpUser(network)
+            } else {
+                self.showAlert("Unable to sign up. Please try again.")
+            }
+        }
+    }
+    
+    func setUpUser(network: String) {
+        let userId = (PFUser.currentUser()?.objectId)!
+        PFUser.logOut()
+        self.joinNetworks(network, userId: userId)
+        self.showSignUpSuccess()
+    }
+    
     func joinNetworks(network: String, userId: String) {
         let query = PFQuery(className: "Network")
         query.whereKey("name", equalTo: network)
         query.getFirstObjectInBackgroundWithBlock {
-            (object: PFObject?, error: NSError?) -> Void in
+            (object: PFObject?, error: NSError?) in
             if object == nil {
                 self.createNetwork(network)
                 self.createChannel("General", network: network)
@@ -116,7 +120,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
     
     func showSignUpSuccess() {
         let alert: UIAlertController = UIAlertController(title: "Success!", message: "Verification e-mail sent. Please verify to log in!", preferredStyle: .Alert)
-        let okButton: UIAlertAction = UIAlertAction(title: "Ok!", style: .Default) { action -> Void in
+        let okButton: UIAlertAction = UIAlertAction(title: "Ok!", style: .Default) { action in
             self.dismissViewControllerAnimated(true, completion: nil)
         }
         alert.addAction(okButton)
