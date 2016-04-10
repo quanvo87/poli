@@ -13,12 +13,6 @@ class MeViewController: UIViewController, UITableViewDataSource, UITableViewDele
     @IBOutlet weak var meTableView: UITableView!
     var posts = [PFObject]()
     
-    lazy var refreshControl: UIRefreshControl = {
-        let refreshControl = UIRefreshControl()
-        refreshControl.addTarget(self, action: #selector(MeViewController.handleRefresh(_:)), forControlEvents: UIControlEvents.ValueChanged)
-        return refreshControl
-    }()
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = "Me"
@@ -58,7 +52,9 @@ class MeViewController: UIViewController, UITableViewDataSource, UITableViewDele
         meTableView.delegate = self
         meTableView.rowHeight = UITableViewAutomaticDimension
         meTableView.estimatedRowHeight = 80
-        meTableView.addSubview(self.refreshControl)
+        let refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: #selector(MeViewController.handleRefresh(_:)), forControlEvents: UIControlEvents.ValueChanged)
+        meTableView.addSubview(refreshControl)
         automaticallyAdjustsScrollViewInsets = false
     }
     

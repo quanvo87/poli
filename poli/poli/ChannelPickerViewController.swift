@@ -14,12 +14,6 @@ class ChannelPickerViewController: UIViewController, UITableViewDataSource, UITa
     var delegate: ChannelPickerViewControllerDelegate!
     var channels = [PFObject]()
     
-    lazy var refreshControl: UIRefreshControl = {
-        let refreshControl = UIRefreshControl()
-        refreshControl.addTarget(self, action: #selector(ChannelPickerViewController.handleRefresh(_:)), forControlEvents: UIControlEvents.ValueChanged)
-        return refreshControl
-    }()
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpTableView()
@@ -60,7 +54,9 @@ class ChannelPickerViewController: UIViewController, UITableViewDataSource, UITa
     func setUpTableView() {
         channelsTableView.dataSource = self
         channelsTableView.delegate = self
-        channelsTableView.addSubview(self.refreshControl)
+        let refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: #selector(ChannelPickerViewController.handleRefresh(_:)), forControlEvents: UIControlEvents.ValueChanged)
+        channelsTableView.addSubview(refreshControl)
         automaticallyAdjustsScrollViewInsets = false
     }
     

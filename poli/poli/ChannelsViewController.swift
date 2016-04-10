@@ -16,12 +16,6 @@ class ChannelsViewController: UIViewController, UITableViewDataSource, UITableVi
     var channels = [PFObject]()
     var userChannels = [String]()
     
-    lazy var refreshControl: UIRefreshControl = {
-        let refreshControl = UIRefreshControl()
-        refreshControl.addTarget(self, action: #selector(ChannelsViewController.handleRefresh(_:)), forControlEvents: UIControlEvents.ValueChanged)
-        return refreshControl
-    }()
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = "Channels"
@@ -70,7 +64,9 @@ class ChannelsViewController: UIViewController, UITableViewDataSource, UITableVi
     func setUpTableView() {
         channelsTableView.dataSource = self
         channelsTableView.delegate = self
-        channelsTableView.addSubview(self.refreshControl)
+        let refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: #selector(ChannelsViewController.handleRefresh(_:)), forControlEvents: UIControlEvents.ValueChanged)
+        channelsTableView.addSubview(refreshControl)
     }
     
     func getUserChannels() {

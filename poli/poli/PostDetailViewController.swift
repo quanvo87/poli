@@ -21,12 +21,6 @@ class PostDetailViewController: UIViewController, UITextFieldDelegate, UITableVi
     var postId = String()
     var comments = [PFObject]()
     
-    lazy var refreshControl: UIRefreshControl = {
-        let refreshControl = UIRefreshControl()
-        refreshControl.addTarget(self, action: #selector(PostDetailViewController.handleRefresh(_:)), forControlEvents: UIControlEvents.ValueChanged)
-        return refreshControl
-    }()
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -230,7 +224,9 @@ class PostDetailViewController: UIViewController, UITextFieldDelegate, UITableVi
         commentsTableView.delegate = self
         commentsTableView.rowHeight = UITableViewAutomaticDimension
         commentsTableView.estimatedRowHeight = 80
-        commentsTableView.addSubview(self.refreshControl)
+        let refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: #selector(PostDetailViewController.handleRefresh(_:)), forControlEvents: UIControlEvents.ValueChanged)
+        commentsTableView.addSubview(refreshControl)
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

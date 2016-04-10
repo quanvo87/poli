@@ -15,12 +15,6 @@ class ReportChannelTableViewController: UIViewController, UITableViewDataSource,
     var userId = String()
     var network = String()
     
-    lazy var refreshControl: UIRefreshControl = {
-        let refreshControl = UIRefreshControl()
-        refreshControl.addTarget(self, action: #selector(ReportChannelTableViewController.handleRefresh(_:)), forControlEvents: UIControlEvents.ValueChanged)
-        return refreshControl
-    }()
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         getUserData()
@@ -167,7 +161,9 @@ class ReportChannelTableViewController: UIViewController, UITableViewDataSource,
     func setUpTableView() {
         reportChannelTableView.dataSource = self
         reportChannelTableView.delegate = self
-        reportChannelTableView.addSubview(self.refreshControl)
+        let refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: #selector(ReportChannelTableViewController.handleRefresh(_:)), forControlEvents: UIControlEvents.ValueChanged)
+        reportChannelTableView.addSubview(refreshControl)
         automaticallyAdjustsScrollViewInsets = false
     }
     
