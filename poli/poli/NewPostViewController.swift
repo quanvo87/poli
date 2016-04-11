@@ -79,6 +79,7 @@ class NewPostViewController: UIViewController, ChannelPickerViewControllerDelega
         post["type"] = "post"
         post["creator"] = userId
         post["channel"] = channelName
+        post["comments"] = 0
         post["text"] = postText
         post["flags"] = 0
         post.saveInBackgroundWithBlock {

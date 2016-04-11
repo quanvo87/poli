@@ -162,7 +162,7 @@ class ReportChannelTableViewController: UIViewController, UITableViewDataSource,
         reportChannelTableView.dataSource = self
         reportChannelTableView.delegate = self
         let refreshControl = UIRefreshControl()
-        refreshControl.addTarget(self, action: #selector(ReportChannelTableViewController.handleRefresh(_:)), forControlEvents: UIControlEvents.ValueChanged)
+        refreshControl.addTarget(self, action: "handleRefresh:", forControlEvents: UIControlEvents.ValueChanged)
         reportChannelTableView.addSubview(refreshControl)
         automaticallyAdjustsScrollViewInsets = false
     }

@@ -55,7 +55,7 @@ class ChannelPickerViewController: UIViewController, UITableViewDataSource, UITa
         channelsTableView.dataSource = self
         channelsTableView.delegate = self
         let refreshControl = UIRefreshControl()
-        refreshControl.addTarget(self, action: #selector(ChannelPickerViewController.handleRefresh(_:)), forControlEvents: UIControlEvents.ValueChanged)
+        refreshControl.addTarget(self, action: "handleRefresh:", forControlEvents: UIControlEvents.ValueChanged)
         channelsTableView.addSubview(refreshControl)
         automaticallyAdjustsScrollViewInsets = false
     }

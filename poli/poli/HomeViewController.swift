@@ -85,7 +85,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         homeTableView.rowHeight = UITableViewAutomaticDimension
         homeTableView.estimatedRowHeight = 80
         let refreshControl = UIRefreshControl()
-        refreshControl.addTarget(self, action: #selector(HomeViewController.handleRefresh(_:)), forControlEvents: UIControlEvents.ValueChanged)
+        refreshControl.addTarget(self, action: "handleRefresh:", forControlEvents: UIControlEvents.ValueChanged)
         homeTableView.addSubview(refreshControl)
         automaticallyAdjustsScrollViewInsets = false
     }
@@ -97,9 +97,19 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("Post", forIndexPath: indexPath) as! HomeTableViewCell
         let post = posts[indexPath.row]
-        cell.timeStampLabel.text = (post.createdAt! as NSDate).toString()
         cell.channelLabel.text = post["channel"] as? String
+        cell.timeStampLabel.text = (post.createdAt! as NSDate).toString()
         cell.postTextLabel.text = (post["text"] as! NSString).stringByTrimmingCharacters(144)
+        
+        let commentsCount = String((post["comments"] as! Int))
+        var commentsLabel = String()
+        if commentsCount == "1" {
+            commentsLabel = commentsCount + " comment"
+        } else {
+            commentsLabel = commentsCount + " comments"
+        }
+        cell.commentsCountLabel.text = commentsLabel
+        
         return cell
     }
     

@@ -10,9 +10,10 @@ import UIKit
 
 class PostDetailViewController: UIViewController, UITextFieldDelegate, UITableViewDataSource, UITableViewDelegate {
     
-    @IBOutlet weak var postTextLabel: UILabel!
-    @IBOutlet weak var timeStampLabel: UILabel!
     @IBOutlet weak var channelLabel: UILabel!
+    @IBOutlet weak var timeStampLabel: UILabel!
+    @IBOutlet weak var commentsCountLabel: UILabel!
+    @IBOutlet weak var postTextLabel: UILabel!
     @IBOutlet weak var commentsTableView: UITableView!
     @IBOutlet weak var newCommentTextField: UITextField!
     @IBOutlet weak var commentButton: UIButton!
@@ -32,8 +33,8 @@ class PostDetailViewController: UIViewController, UITextFieldDelegate, UITableVi
         newCommentTextField.delegate = self
         disableCommentButton()
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(PostDetailViewController.keyboardWillShow(_:)), name:UIKeyboardWillShowNotification, object: self.view.window)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(PostDetailViewController.keyboardWillHide(_:)), name:UIKeyboardWillHideNotification, object: self.view.window)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("keyboardWillShow:"), name:UIKeyboardWillShowNotification, object: self.view.window)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("keyboardWillHide:"), name:UIKeyboardWillHideNotification, object: self.view.window)
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -61,6 +62,15 @@ class PostDetailViewController: UIViewController, UITextFieldDelegate, UITableVi
         timeStampLabel.text = (post.createdAt! as NSDate).toString()
         channelLabel.text = post["channel"] as? String
         postTextLabel.text = (post["text"] as! NSString).stringByTrimmingCharacters(200)
+        
+        let comments = String((post["comments"] as! Int))
+        var commentsLabel = String()
+        if comments == "1" {
+            commentsLabel = comments + " comment"
+        } else {
+            commentsLabel = comments + " comments"
+        }
+        commentsCountLabel.text = commentsLabel
     }
     
     //# MARK: - Report
@@ -225,7 +235,7 @@ class PostDetailViewController: UIViewController, UITextFieldDelegate, UITableVi
         commentsTableView.rowHeight = UITableViewAutomaticDimension
         commentsTableView.estimatedRowHeight = 80
         let refreshControl = UIRefreshControl()
-        refreshControl.addTarget(self, action: #selector(PostDetailViewController.handleRefresh(_:)), forControlEvents: UIControlEvents.ValueChanged)
+        refreshControl.addTarget(self, action: "handleRefresh:", forControlEvents: UIControlEvents.ValueChanged)
         commentsTableView.addSubview(refreshControl)
     }
     
@@ -313,9 +323,15 @@ class PostDetailViewController: UIViewController, UITextFieldDelegate, UITableVi
             if success {
                 self.disableCommentButton()
                 self.getComments()
+                self.incrementComments()
                 self.view.endEditing(true)
             }
         }
+    }
+    
+    func incrementComments() {
+        post.incrementKey("comments")
+        post.saveInBackground()
     }
     
     //# MARK: - Keyboard
