@@ -893,7 +893,7 @@
         <!--Home-->
         <scene sceneID="kef-hM-u8V">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="YgV-Ab-Pe0" sceneMemberID="viewController">
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="YgV-Ab-Pe0" customClass="MyNavigationController" customModule="poli" customModuleProvider="target" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Home" id="acW-dT-cKf"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="JiQ-5u-Zo8">

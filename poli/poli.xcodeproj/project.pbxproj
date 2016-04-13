@@ -42,6 +42,7 @@
 		7FBDB2801C853AF200B98292 /* HomeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FBDB27F1C853AF200B98292 /* HomeTableViewCell.swift */; };
 		7FC2807C1C84A40F0072B218 /* NewPostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FC2807B1C84A40F0072B218 /* NewPostViewController.swift */; };
 		7FCAADE71C989F61006CBA68 /* MeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FCAADE61C989F61006CBA68 /* MeTableViewCell.swift */; };
+		7FD34F871CBEA568009E3AC6 /* MyNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FD34F861CBEA568009E3AC6 /* MyNavigationController.swift */; settings = {ASSET_TAGS = (); }; };
 		7FDE86301C7E9EFF003D797D /* MoreViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FDE862F1C7E9EFF003D797D /* MoreViewController.swift */; };
 		7FEA8A271C7BE15900141D15 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FEA8A261C7BE15900141D15 /* AppDelegate.swift */; };
 		7FEA8A2E1C7BE15900141D15 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7FEA8A2C1C7BE15900141D15 /* Main.storyboard */; };
@@ -87,6 +88,7 @@
 		7FBDB27F1C853AF200B98292 /* HomeTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeTableViewCell.swift; sourceTree = "<group>"; };
 		7FC2807B1C84A40F0072B218 /* NewPostViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewPostViewController.swift; sourceTree = "<group>"; };
 		7FCAADE61C989F61006CBA68 /* MeTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MeTableViewCell.swift; sourceTree = "<group>"; };
+		7FD34F861CBEA568009E3AC6 /* MyNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyNavigationController.swift; sourceTree = "<group>"; };
 		7FDE862F1C7E9EFF003D797D /* MoreViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MoreViewController.swift; sourceTree = "<group>"; };
 		7FEA8A231C7BE15900141D15 /* poli.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = poli.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7FEA8A261C7BE15900141D15 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -174,6 +176,7 @@
 			children = (
 				7FEA8A2C1C7BE15900141D15 /* Main.storyboard */,
 				7FEA8A261C7BE15900141D15 /* AppDelegate.swift */,
+				7FD34F861CBEA568009E3AC6 /* MyNavigationController.swift */,
 				7F5691531C8490A40072D6B8 /* LogInViewController.swift */,
 				7F45ECBB1C7E032A00580C00 /* SignUpViewController.swift */,
 				7F45ECBD1C7E18F200580C00 /* HomeViewController.swift */,
@@ -307,6 +310,7 @@
 				7F5208E81C8FB6960090F433 /* ChannelPickerViewControllerDelegate.swift in Sources */,
 				7FC2807C1C84A40F0072B218 /* NewPostViewController.swift in Sources */,
 				7F523DC21C9245F300761464 /* ChannelsViewController.swift in Sources */,
+				7FD34F871CBEA568009E3AC6 /* MyNavigationController.swift in Sources */,
 				7F3F795B1CACC0F4007C89A9 /* ReportChannelTableViewCell.swift in Sources */,
 				7F5691541C8490A40072D6B8 /* LogInViewController.swift in Sources */,
 				7F5208EC1C8FC1B90090F433 /* ChannelPickerTableViewCell.swift in Sources */,
