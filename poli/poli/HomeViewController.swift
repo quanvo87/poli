@@ -100,16 +100,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         cell.channelLabel.text = post["channel"] as? String
         cell.timeStampLabel.text = (post.createdAt! as NSDate).toString()
         cell.postTextLabel.text = (post["text"] as! NSString).stringByTrimmingCharacters(144)
-        
-        let commentsCount = String((post["comments"] as! Int))
-        var commentsLabel = String()
-        if commentsCount == "1" {
-            commentsLabel = commentsCount + " comment"
-        } else {
-            commentsLabel = commentsCount + " comments"
-        }
-        cell.commentsCountLabel.text = commentsLabel
-        
+        cell.commentsCountLabel.text = (post["comments"] as! Int).stringNumberOfContents("comment")
         return cell
     }
     

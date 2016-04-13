@@ -18,14 +18,26 @@ extension NSDate {
 }
 
 extension NSString {
-    func stringByTrimmingCharacters(l: Int) -> String {
+    func stringByTrimmingCharacters(trimTo: Int) -> String {
         var result = String()
-        if self.length > l {
-            result = "\(self.substringToIndex(l))..."
+        if self.length > trimTo {
+            result = "\(self.substringToIndex(trimTo))..."
         } else {
             result = self as String
         }
         return result
+    }
+}
+
+extension Int {
+    func stringNumberOfContents(content: String) -> String {
+        var text = String(self)
+        if text == "1" {
+            text += " " + content
+        } else {
+            text += " " + content + "s"
+        }
+    return text
     }
 }
 
