@@ -11,6 +11,7 @@ import UIKit
 class ChannelsTableViewCell: UITableViewCell {
 
     @IBOutlet weak var channelNameLabel: UILabel!
+    @IBOutlet weak var postsCountLabel: UILabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()

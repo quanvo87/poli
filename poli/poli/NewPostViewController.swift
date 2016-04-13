@@ -104,7 +104,7 @@ class NewPostViewController: UIViewController, ChannelPickerViewControllerDelega
             if object == nil {
                 self.createNewChannel(network, channelName: channelName, userId: userId)
             } else {
-                self.getUserChannel(network, channelName: channelName, userId: userId)
+                self.incrementPosts(object!, network: network, channelName: channelName, userId: userId)
             }
         }
     }
@@ -115,8 +115,19 @@ class NewPostViewController: UIViewController, ChannelPickerViewControllerDelega
         newChannel["network"] = network
         newChannel["creator"] = userId
         newChannel["name"] = channelName
+        newChannel["posts"] = 1
         newChannel["flags"] = 0
         newChannel.saveInBackgroundWithBlock {
+            (success: Bool, error: NSError?) in
+            if success {
+                self.getUserChannel(network, channelName: channelName, userId: userId)
+            }
+        }
+    }
+    
+    func incrementPosts(channel: PFObject, network: String, channelName: String, userId: String) {
+        channel.incrementKey("posts")
+        channel.saveInBackgroundWithBlock {
             (success: Bool, error: NSError?) in
             if success {
                 self.getUserChannel(network, channelName: channelName, userId: userId)

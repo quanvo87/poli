@@ -107,6 +107,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
         newChannel["network"] = network
         newChannel["name"] = channelName
         newChannel["creator"] = "default"
+        newChannel["posts"] = 0
         newChannel["flags"] = 0
         newChannel.saveInBackground()
     }

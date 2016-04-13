@@ -347,20 +347,28 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text="Channel Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MP5-4d-cQG">
-                                                    <rect key="frame" x="8" y="8" width="272" height="20"/>
+                                                    <rect key="frame" x="8" y="8" width="107" height="20"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Posts Count" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mqH-x9-rvu">
+                                                    <rect key="frame" x="125" y="12" width="69" height="15"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                    <color key="textColor" red="0.40000000596046448" green="0.40000000596046448" blue="0.40000000596046448" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="MP5-4d-cQG" firstAttribute="top" secondItem="piI-Ca-Yhh" secondAttribute="topMargin" id="738-Jc-tBG"/>
-                                                <constraint firstAttribute="trailingMargin" secondItem="MP5-4d-cQG" secondAttribute="trailing" id="lLS-DA-QA5"/>
+                                                <constraint firstItem="mqH-x9-rvu" firstAttribute="leading" secondItem="MP5-4d-cQG" secondAttribute="trailing" constant="10" id="Nod-Qw-Ml3"/>
+                                                <constraint firstItem="mqH-x9-rvu" firstAttribute="baseline" secondItem="MP5-4d-cQG" secondAttribute="baseline" id="Sj6-Is-HAK"/>
                                                 <constraint firstItem="MP5-4d-cQG" firstAttribute="leading" secondItem="piI-Ca-Yhh" secondAttribute="leadingMargin" id="xkJ-Ca-U9p"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="channelNameLabel" destination="MP5-4d-cQG" id="vrz-df-uri"/>
+                                            <outlet property="postsCountLabel" destination="mqH-x9-rvu" id="u1P-kl-OUD"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>

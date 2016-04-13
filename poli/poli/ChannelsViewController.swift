@@ -43,7 +43,7 @@ class ChannelsViewController: UIViewController, UITableViewDataSource, UITableVi
         let flagQuery = PFQuery(className: "Flag")
         flagQuery.whereKey("type", containedIn: ["user", "channel"])
         flagQuery.whereKey("user", equalTo: userId)
-
+        
         let channelQuery = PFQuery(className: "Content")
         channelQuery.whereKey("type", containedIn: ["default channel", "custom channel"])
         channelQuery.whereKey("network", equalTo: network)
@@ -93,8 +93,9 @@ class ChannelsViewController: UIViewController, UITableViewDataSource, UITableVi
         let cell = tableView.dequeueReusableCellWithIdentifier("Channel Cell", forIndexPath: indexPath) as! ChannelsTableViewCell
         let channel = self.channels[indexPath.row]
         let channelName = channel["name"] as? String
-        
         cell.channelNameLabel.text = channelName
+        cell.postsCountLabel.text = "(" + String((channel["posts"] as! Int)) + ")"
+        
         if userChannels.contains(channelName!) {
             cell.accessoryType = .Checkmark
         }
