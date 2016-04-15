@@ -52,9 +52,11 @@ class MeViewController: UIViewController, UITableViewDataSource, UITableViewDele
         meTableView.delegate = self
         meTableView.rowHeight = UITableViewAutomaticDimension
         meTableView.estimatedRowHeight = 80
+        
         let refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: "handleRefresh:", forControlEvents: UIControlEvents.ValueChanged)
         meTableView.addSubview(refreshControl)
+        
         automaticallyAdjustsScrollViewInsets = false
     }
     
@@ -84,7 +86,7 @@ class MeViewController: UIViewController, UITableViewDataSource, UITableViewDele
             }
         }
         
-        cell.cellTextLabel.text = (post["text"] as! NSString).stringByTrimmingCharacters(144)
+        cell.cellTextLabel.text = (post["text"] as! NSString).stringByTrimmingCharacters(140)
         
         return cell
     }
@@ -92,11 +94,9 @@ class MeViewController: UIViewController, UITableViewDataSource, UITableViewDele
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         if let postDetailViewController = storyboard?.instantiateViewControllerWithIdentifier("Post Detail") as! PostDetailViewController? {
             let post = posts[indexPath.row]
-            
             if post["type"] as? String == "post" {
                 postDetailViewController.post = post
                 self.navigationController?.pushViewController(postDetailViewController, animated: true)
-                
             } else {
                 let query = PFQuery(className: "Content")
                 query.whereKey("type", equalTo: "post")

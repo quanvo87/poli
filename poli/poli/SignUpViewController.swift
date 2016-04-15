@@ -25,10 +25,6 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
     }
     
     //# MARK: - Sign Up
-    @IBAction func tapSignUp(sender: AnyObject) {
-        signUp()
-    }
-    
     func signUp() {
         self.messageLabel.text = ""
         let email = emailTextField.text?.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet()).lowercaseString
@@ -128,6 +124,16 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
         self.presentViewController(alert, animated: true, completion: nil)
     }
     
+    @IBAction func tapSignUp(sender: AnyObject) {
+        signUp()
+    }
+    
+    func textFieldShouldReturn(textField: UITextField) -> Bool {
+        self.passwordTextField.resignFirstResponder()
+        signUp()
+        return true
+    }
+    
     //# MARK: - Cancel
     @IBAction func tapCancel(sender: AnyObject) {
         dismissViewControllerAnimated(true, completion: nil)
@@ -136,11 +142,5 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
     //# MARK: - Keyboard
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         self.view.endEditing(true)
-    }
-    
-    func textFieldShouldReturn(textField: UITextField) -> Bool {
-        self.passwordTextField.resignFirstResponder()
-        signUp()
-        return true
     }
 }

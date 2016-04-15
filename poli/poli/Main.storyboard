@@ -912,7 +912,7 @@
         <!--Channels-->
         <scene sceneID="n45-bV-O9a">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="xpB-Qp-Rnf" sceneMemberID="viewController">
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="xpB-Qp-Rnf" customClass="MyNavigationController" customModule="poli" customModuleProvider="target" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Channels" id="cPa-gy-q4n"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="lVx-xn-Amh">
@@ -931,7 +931,7 @@
         <!--New Post-->
         <scene sceneID="XNm-0g-EYj">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="1og-IK-lm0" sceneMemberID="viewController">
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="1og-IK-lm0" customClass="MyNavigationController" customModule="poli" customModuleProvider="target" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="New Post" id="SpJ-9M-9JM"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="GSc-8k-Hsz">
@@ -950,7 +950,7 @@
         <!--Me-->
         <scene sceneID="sED-sU-0fh">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="c7Y-Ac-0Cw" sceneMemberID="viewController">
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="c7Y-Ac-0Cw" customClass="MyNavigationController" customModule="poli" customModuleProvider="target" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Me" id="Moo-H5-nlE"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="n5m-JZ-jNf">
@@ -969,7 +969,7 @@
         <!--More-->
         <scene sceneID="iEe-1a-ZIn">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="jmY-Hx-f3n" sceneMemberID="viewController">
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="jmY-Hx-f3n" customClass="MyNavigationController" customModule="poli" customModuleProvider="target" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="More" id="XgC-vb-mPy"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="XhH-x7-Znp">
@@ -986,4 +986,5 @@
             <point key="canvasLocation" x="585" y="557"/>
         </scene>
     </scenes>
+    <color key="tintColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
 </document>

@@ -84,9 +84,11 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         homeTableView.dataSource = self
         homeTableView.rowHeight = UITableViewAutomaticDimension
         homeTableView.estimatedRowHeight = 80
+        
         let refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: "handleRefresh:", forControlEvents: UIControlEvents.ValueChanged)
         homeTableView.addSubview(refreshControl)
+        
         automaticallyAdjustsScrollViewInsets = false
     }
     
@@ -99,7 +101,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         let post = posts[indexPath.row]
         cell.channelLabel.text = post["channel"] as? String
         cell.timeStampLabel.text = (post.createdAt! as NSDate).toString()
-        cell.postTextLabel.text = (post["text"] as! NSString).stringByTrimmingCharacters(144)
+        cell.postTextLabel.text = (post["text"] as! NSString).stringByTrimmingCharacters(140)
         cell.commentsCountLabel.text = (post["comments"] as! Int).stringNumberOfContents("comment")
         return cell
     }
@@ -111,6 +113,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
             showPostDetail(post)
         } else {
             self.showAlert("This post has been flagged as inappropriate and is now closed.")
+            getPosts()
         }
     }
     

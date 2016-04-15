@@ -161,9 +161,11 @@ class ReportChannelTableViewController: UIViewController, UITableViewDataSource,
     func setUpTableView() {
         reportChannelTableView.dataSource = self
         reportChannelTableView.delegate = self
+        
         let refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: "handleRefresh:", forControlEvents: UIControlEvents.ValueChanged)
         reportChannelTableView.addSubview(refreshControl)
+        
         automaticallyAdjustsScrollViewInsets = false
     }
     

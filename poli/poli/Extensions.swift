@@ -37,7 +37,7 @@ extension Int {
         } else {
             text += " " + content + "s"
         }
-    return text
+        return text
     }
 }
 

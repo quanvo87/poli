@@ -29,9 +29,7 @@ class PostDetailViewController: UIViewController, UITextFieldDelegate, UITableVi
         setPostValues()
         setUpTableView()
         getComments()
-        
-        newCommentTextField.delegate = self
-        disableCommentButton()
+        setUpComments()
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("keyboardWillShow:"), name:UIKeyboardWillShowNotification, object: self.view.window)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("keyboardWillHide:"), name:UIKeyboardWillHideNotification, object: self.view.window)
@@ -226,6 +224,7 @@ class PostDetailViewController: UIViewController, UITextFieldDelegate, UITableVi
         commentsTableView.delegate = self
         commentsTableView.rowHeight = UITableViewAutomaticDimension
         commentsTableView.estimatedRowHeight = 80
+        
         let refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: "handleRefresh:", forControlEvents: UIControlEvents.ValueChanged)
         commentsTableView.addSubview(refreshControl)
@@ -239,7 +238,7 @@ class PostDetailViewController: UIViewController, UITextFieldDelegate, UITableVi
         let cell = tableView.dequeueReusableCellWithIdentifier("Comment", forIndexPath: indexPath) as! CommentsTableViewCell
         let comment = comments[indexPath.row]
         cell.timeStampLabel.text = (comment.createdAt! as NSDate).toString()
-        cell.commentsTextLabel.text = (comment["text"] as! NSString).stringByTrimmingCharacters(144)
+        cell.commentsTextLabel.text = (comment["text"] as! NSString).stringByTrimmingCharacters(140)
         return cell
     }
     
@@ -253,44 +252,21 @@ class PostDetailViewController: UIViewController, UITextFieldDelegate, UITableVi
         refreshControl.endRefreshing()
     }
     
+    //# MARK: - Set Up Comments
+    func setUpComments() {
+        newCommentTextField.delegate = self
+        //        commentButton.titleLabel?.textColor = UIColor(red: 109, green: 215, blue: 196, alpha: 1.0)
+        disableCommentButton()
+    }
+    
     //# MARK: - Create A Comment
-    func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
-        let oldString = newCommentTextField.text! as NSString
-        let newString = oldString.stringByReplacingCharactersInRange(range, withString: string) as NSString
-        if newString.length == 0 {
-            disableCommentButton()
-        } else {
-            enableCommentButton()
-        }
-        return true
-    }
-    
-    func enableCommentButton() {
-        commentButton.userInteractionEnabled = true
-        commentButton.alpha = 1
-    }
-    
-    func disableCommentButton() {
-        commentButton.userInteractionEnabled = false
-        commentButton.alpha = 0.5
-    }
-    
-    @IBAction func tapComment(sender: AnyObject) {
-        startCreateComment()
-    }
-    
     func startCreateComment() {
         let flags = post["flags"] as! Int
         if flags > 2 {
             showPostDisabled()
         } else {
-            let newCommentText = self.newCommentTextField.text
-            if newCommentText == "" {
-                self.showAlert("Comments cannot be blank.")
-            } else {
-                newCommentTextField.text = ""
-                createComment(newCommentText!)
-            }
+            createComment(self.newCommentTextField.text!)
+            newCommentTextField.text = ""
         }
     }
     
@@ -316,6 +292,7 @@ class PostDetailViewController: UIViewController, UITextFieldDelegate, UITableVi
                 self.disableCommentButton()
                 self.getComments()
                 self.incrementComments()
+                self.commentsCountLabel.text = (self.post["comments"] as! Int).stringNumberOfContents("comment")
                 self.view.endEditing(true)
             }
         }
@@ -324,6 +301,37 @@ class PostDetailViewController: UIViewController, UITextFieldDelegate, UITableVi
     func incrementComments() {
         post.incrementKey("comments")
         post.saveInBackground()
+    }
+    
+    func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
+        let oldString = newCommentTextField.text! as NSString
+        let newString = oldString.stringByReplacingCharactersInRange(range, withString: string) as NSString
+        if newString.length == 0 {
+            disableCommentButton()
+        } else {
+            enableCommentButton()
+        }
+        return true
+    }
+    
+    func enableCommentButton() {
+        commentButton.userInteractionEnabled = true
+        commentButton.alpha = 1
+    }
+    
+    func disableCommentButton() {
+        commentButton.userInteractionEnabled = false
+        commentButton.alpha = 0.5
+    }
+    
+    @IBAction func tapComment(sender: AnyObject) {
+        startCreateComment()
+    }
+    
+    func textFieldShouldReturn(textField: UITextField) -> Bool {
+        self.newCommentTextField.resignFirstResponder()
+        startCreateComment()
+        return true
     }
     
     //# MARK: - Keyboard
@@ -352,11 +360,5 @@ class PostDetailViewController: UIViewController, UITextFieldDelegate, UITableVi
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         self.view.endEditing(true)
-    }
-    
-    func textFieldShouldReturn(textField: UITextField) -> Bool {
-        self.newCommentTextField.resignFirstResponder()
-        startCreateComment()
-        return true
     }
 }

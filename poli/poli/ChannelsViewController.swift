@@ -50,7 +50,7 @@ class ChannelsViewController: UIViewController, UITableViewDataSource, UITableVi
         channelQuery.whereKey("flags", lessThan: 3)
         channelQuery.whereKey("creator", doesNotMatchKey: "content", inQuery: flagQuery)
         channelQuery.whereKey("objectId", doesNotMatchKey: "content", inQuery: flagQuery)
-        channelQuery.orderByAscending("createdAt")
+        channelQuery.orderByDescending("posts")
         channelQuery.findObjectsInBackgroundWithBlock {
             (objects: [PFObject]?, error: NSError?) in
             if error == nil {
@@ -64,6 +64,7 @@ class ChannelsViewController: UIViewController, UITableViewDataSource, UITableVi
     func setUpTableView() {
         channelsTableView.dataSource = self
         channelsTableView.delegate = self
+        
         let refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: "handleRefresh:", forControlEvents: UIControlEvents.ValueChanged)
         channelsTableView.addSubview(refreshControl)

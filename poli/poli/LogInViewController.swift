@@ -25,10 +25,6 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
     }
     
     //# MARK: - Log In
-    @IBAction func tapLogIn(sender: AnyObject) {
-        logIn()
-    }
-    
     func logIn() {
         self.messageLabel.text = ""
         let email = emailTextField.text?.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet()).lowercaseString
@@ -64,6 +60,16 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
         appDelegate.window?.rootViewController = tabBarController
     }
     
+    @IBAction func tapLogIn(sender: AnyObject) {
+        logIn()
+    }
+    
+    func textFieldShouldReturn(textField: UITextField) -> Bool {
+        self.passwordTextField.resignFirstResponder()
+        logIn()
+        return true
+    }
+    
     //# MARK: - Sign up
     @IBAction func tapSignUp(sender: AnyObject) {
         if let signUpViewController = storyboard?.instantiateViewControllerWithIdentifier("Sign Up") as! SignUpViewController? {
@@ -74,11 +80,5 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
     //# MARK: - Keyboard
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         self.view.endEditing(true)
-    }
-    
-    func textFieldShouldReturn(textField: UITextField) -> Bool {
-        self.passwordTextField.resignFirstResponder()
-        logIn()
-        return true
     }
 }
