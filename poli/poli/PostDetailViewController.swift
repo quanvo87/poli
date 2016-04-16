@@ -17,6 +17,8 @@ class PostDetailViewController: UIViewController, UITextFieldDelegate, UITableVi
     @IBOutlet weak var commentsTableView: UITableView!
     @IBOutlet weak var newCommentTextField: UITextField!
     @IBOutlet weak var commentButton: UIButton!
+    @IBOutlet weak var newCommentTextFieldBottomConstraint: NSLayoutConstraint!
+    @IBOutlet weak var commentButtonBottomContraint: NSLayoutConstraint!
     var userId = String()
     var post = PFObject(className: "Post")
     var postId = String()
@@ -335,28 +337,42 @@ class PostDetailViewController: UIViewController, UITextFieldDelegate, UITableVi
     }
     
     //# MARK: - Keyboard
-    func keyboardWillShow(sender: NSNotification) {
-        let userInfo: [NSObject : AnyObject] = sender.userInfo!
-        let keyboardSize: CGSize = userInfo[UIKeyboardFrameBeginUserInfoKey]!.CGRectValue.size
-        let offset: CGSize = userInfo[UIKeyboardFrameEndUserInfoKey]!.CGRectValue.size
-        if keyboardSize.height == offset.height {
-            if self.view.frame.origin.y == 0 {
-                UIView.animateWithDuration(0.1, animations: { () in
-                    self.view.frame.origin.y -= keyboardSize.height
-                })
-            }
-        } else {
-            UIView.animateWithDuration(0.1, animations: { () in
-                self.view.frame.origin.y += keyboardSize.height - offset.height
-            })
-        }
+//    func keyboardWillShow(sender: NSNotification) {
+//        let userInfo: [NSObject : AnyObject] = sender.userInfo!
+//        let keyboardSize: CGSize = userInfo[UIKeyboardFrameBeginUserInfoKey]!.CGRectValue.size
+//        let offset: CGSize = userInfo[UIKeyboardFrameEndUserInfoKey]!.CGRectValue.size
+//        if keyboardSize.height == offset.height {
+//            if self.view.frame.origin.y == 0 {
+//                UIView.animateWithDuration(0.1, animations: { () in
+//                    self.view.frame.origin.y -= keyboardSize.height
+//                })
+//            }
+//        } else {
+//            UIView.animateWithDuration(0.1, animations: { () in
+//                self.view.frame.origin.y += keyboardSize.height - offset.height
+//            })
+//        }
+//    }
+    
+    func keyboardWillShow(notification: NSNotification) {
+        let info = notification.userInfo!
+        let keyboardFrame: CGRect = (info[UIKeyboardFrameEndUserInfoKey] as! NSValue).CGRectValue()
+        UIView.animateWithDuration(0.1, animations: { () -> Void in
+            self.commentButtonBottomContraint.constant = keyboardFrame.size.height
+            self.newCommentTextFieldBottomConstraint.constant = keyboardFrame.size.height
+        })
     }
     
     func keyboardWillHide(sender: NSNotification) {
-        let userInfo: [NSObject : AnyObject] = sender.userInfo!
-        let keyboardSize: CGSize = userInfo[UIKeyboardFrameBeginUserInfoKey]!.CGRectValue.size
-        self.view.frame.origin.y += keyboardSize.height
+        commentButtonBottomContraint.constant = 8
+        newCommentTextFieldBottomConstraint.constant = 8
     }
+    
+//    func keyboardWillHide(sender: NSNotification) {
+//        let userInfo: [NSObject : AnyObject] = sender.userInfo!
+//        let keyboardSize: CGSize = userInfo[UIKeyboardFrameBeginUserInfoKey]!.CGRectValue.size
+//        self.view.frame.origin.y += keyboardSize.height
+//    }
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         self.view.endEditing(true)

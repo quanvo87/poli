@@ -12,7 +12,6 @@ class MyNavigationController: UINavigationController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         setUpNavigationBar()
     }
 
@@ -24,6 +23,7 @@ class MyNavigationController: UINavigationController {
         let navBackgroundImage:UIImage! = UIImage(named: "BackgroundImage.png")
         UINavigationBar.appearance().setBackgroundImage(navBackgroundImage, forBarMetrics: .Default)
         UINavigationBar.appearance().titleTextAttributes = [NSForegroundColorAttributeName : UIColor.whiteColor()]
+        navigationBar.tintColor = UIColor.whiteColor()
     }
 
 }

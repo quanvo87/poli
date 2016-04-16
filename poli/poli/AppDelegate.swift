@@ -36,13 +36,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if (PFUser.currentUser() == nil) {
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let logInViewController = storyboard.instantiateViewControllerWithIdentifier("Log In") as! LogInViewController
-            self.window?.rootViewController = logInViewController
+            window?.rootViewController = logInViewController
         }
     }
     
     func setUpUI() {
         UIApplication.sharedApplication().statusBarStyle = .LightContent
-        self.window!.tintColor = UIColor(red: 109/255, green: 215/255, blue: 196/255, alpha: 1.0)
+        window!.tintColor = UIColor(red: 122/255, green: 119/255, blue: 240/255, alpha: 1.0)
+//        self.window!.tintColor = UIColor(red: 109/255, green: 215/255, blue: 196/255, alpha: 1.0)
     }
     
     func applicationWillResignActive(application: UIApplication) {
