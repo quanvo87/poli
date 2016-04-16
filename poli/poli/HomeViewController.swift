@@ -84,6 +84,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         homeTableView.dataSource = self
         homeTableView.rowHeight = UITableViewAutomaticDimension
         homeTableView.estimatedRowHeight = 80
+        homeTableView.separatorStyle = .None
         
         let refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: "handleRefresh:", forControlEvents: UIControlEvents.ValueChanged)
@@ -92,22 +93,32 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         automaticallyAdjustsScrollViewInsets = false
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return posts.count
+    }
+    
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 1
+    }
+    
+    func tableView(tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return 5
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("Post", forIndexPath: indexPath) as! HomeTableViewCell
-        let post = posts[indexPath.row]
+        let post = posts[indexPath.section]
         cell.channelLabel.text = post["channel"] as? String
         cell.timeStampLabel.text = (post.createdAt! as NSDate).toString()
-        cell.postTextLabel.text = (post["text"] as! NSString).stringByTrimmingCharacters(140)
+        cell.postTextLabel.text = post["text"] as? String
+
         cell.commentsCountLabel.text = (post["comments"] as! Int).stringNumberOfContents("comment")
+        cell.accessoryType = .None
         return cell
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        let post = posts[indexPath.row]
+        let post = posts[indexPath.section]
         let flags = post["flags"] as! Int
         if flags < 3 {
             showPostDetail(post)

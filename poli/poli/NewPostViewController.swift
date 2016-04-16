@@ -58,7 +58,7 @@ class NewPostViewController: UIViewController, ChannelPickerViewControllerDelega
     
     //# MARK: - Create New Post
     @IBAction func tapPost(sender: AnyObject) {
-        let postText = postTextView.text
+        let postText = (postTextView.text as NSString).stringByTrimmingCharacters(200)
         let channelName = selectedChannelLabel.text?.capitalizedString
         if postText == "" {
             showAlert("Posts cannot be blank.")

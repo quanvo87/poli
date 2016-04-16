@@ -336,24 +336,6 @@ class PostDetailViewController: UIViewController, UITextFieldDelegate, UITableVi
         return true
     }
     
-    //# MARK: - Keyboard
-//    func keyboardWillShow(sender: NSNotification) {
-//        let userInfo: [NSObject : AnyObject] = sender.userInfo!
-//        let keyboardSize: CGSize = userInfo[UIKeyboardFrameBeginUserInfoKey]!.CGRectValue.size
-//        let offset: CGSize = userInfo[UIKeyboardFrameEndUserInfoKey]!.CGRectValue.size
-//        if keyboardSize.height == offset.height {
-//            if self.view.frame.origin.y == 0 {
-//                UIView.animateWithDuration(0.1, animations: { () in
-//                    self.view.frame.origin.y -= keyboardSize.height
-//                })
-//            }
-//        } else {
-//            UIView.animateWithDuration(0.1, animations: { () in
-//                self.view.frame.origin.y += keyboardSize.height - offset.height
-//            })
-//        }
-//    }
-    
     func keyboardWillShow(notification: NSNotification) {
         let info = notification.userInfo!
         let keyboardFrame: CGRect = (info[UIKeyboardFrameEndUserInfoKey] as! NSValue).CGRectValue()
@@ -367,12 +349,6 @@ class PostDetailViewController: UIViewController, UITextFieldDelegate, UITableVi
         commentButtonBottomContraint.constant = 8
         newCommentTextFieldBottomConstraint.constant = 8
     }
-    
-//    func keyboardWillHide(sender: NSNotification) {
-//        let userInfo: [NSObject : AnyObject] = sender.userInfo!
-//        let keyboardSize: CGSize = userInfo[UIKeyboardFrameBeginUserInfoKey]!.CGRectValue.size
-//        self.view.frame.origin.y += keyboardSize.height
-//    }
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         self.view.endEditing(true)
