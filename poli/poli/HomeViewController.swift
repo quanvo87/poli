@@ -88,6 +88,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     func setUpTableView() {
         homeTableView.delegate = self
         homeTableView.dataSource = self
+        homeTableView.backgroundColor = UIColor(red: 236/255, green: 236/255, blue: 241/255, alpha: 1)
         homeTableView.rowHeight = UITableViewAutomaticDimension
         homeTableView.estimatedRowHeight = 80
         homeTableView.separatorStyle = .None
