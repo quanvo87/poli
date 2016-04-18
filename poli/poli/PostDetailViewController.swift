@@ -27,8 +27,10 @@ class PostDetailViewController: UIViewController, UITextFieldDelegate, UITableVi
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        setUpUI()
         getUserData()
         setPostValues()
+        addReportButton()
         setUpTableView()
         getComments()
         setUpComments()
@@ -50,6 +52,11 @@ class PostDetailViewController: UIViewController, UITextFieldDelegate, UITableVi
         super.didReceiveMemoryWarning()
     }
     
+    //# MARK: - Set Up UI
+    func setUpUI() {
+        self.view.backgroundColor = UIColor(red: 236/255, green: 236/255, blue: 241/255, alpha: 1)
+    }
+    
     //# MARK: - Get User Data
     func getUserData() {
         let user = PFUser.currentUser()
@@ -66,6 +73,10 @@ class PostDetailViewController: UIViewController, UITextFieldDelegate, UITableVi
     }
     
     //# MARK: - Report
+    func addReportButton() {
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Report", style: .Plain, target: self, action: Selector("tapReport:"))
+    }
+    
     @IBAction func tapReport(sender: AnyObject) {
         showReportMenu(post)
     }
@@ -224,28 +235,43 @@ class PostDetailViewController: UIViewController, UITextFieldDelegate, UITableVi
     func setUpTableView() {
         commentsTableView.dataSource = self
         commentsTableView.delegate = self
+        commentsTableView.backgroundColor = UIColor(red: 236/255, green: 236/255, blue: 241/255, alpha: 1)
         commentsTableView.rowHeight = UITableViewAutomaticDimension
         commentsTableView.estimatedRowHeight = 80
+        commentsTableView.separatorStyle = .None
         
         let refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: "handleRefresh:", forControlEvents: UIControlEvents.ValueChanged)
         commentsTableView.addSubview(refreshControl)
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return comments.count
+    }
+    
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 1
+    }
+    
+    func tableView(tableView: UITableView, willDisplayFooterView view: UIView, forSection section: Int) {
+        let footer = view as! UITableViewHeaderFooterView
+        footer.contentView.backgroundColor = UIColor(red: 236/255, green: 236/255, blue: 241/255, alpha: 1)
+    }
+    
+    func tableView(tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return 5
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("Comment", forIndexPath: indexPath) as! CommentsTableViewCell
-        let comment = comments[indexPath.row]
+        let comment = comments[indexPath.section]
         cell.timeStampLabel.text = (comment.createdAt! as NSDate).toString()
-        cell.commentsTextLabel.text = (comment["text"] as! NSString).stringByTrimmingCharacters(140)
+        cell.commentsTextLabel.text = (comment["text"] as! NSString).stringByTrimmingCharacters(200)
         return cell
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        let comment = comments[indexPath.row]
+        let comment = comments[indexPath.section]
         showReportMenu(comment)
     }
     
@@ -257,7 +283,6 @@ class PostDetailViewController: UIViewController, UITextFieldDelegate, UITableVi
     //# MARK: - Set Up Comments
     func setUpComments() {
         newCommentTextField.delegate = self
-        //        commentButton.titleLabel?.textColor = UIColor(red: 109, green: 215, blue: 196, alpha: 1.0)
         disableCommentButton()
     }
     

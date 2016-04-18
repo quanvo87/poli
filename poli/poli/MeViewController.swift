@@ -86,7 +86,7 @@ class MeViewController: UIViewController, UITableViewDataSource, UITableViewDele
             }
         }
         
-        cell.cellTextLabel.text = (post["text"] as! NSString).stringByTrimmingCharacters(140)
+        cell.cellTextLabel.text = (post["text"] as! NSString).stringByTrimmingCharacters(200)
         
         return cell
     }

@@ -17,17 +17,18 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        setUpUI()
         getUserData()
         setUpTableView()
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        navigationItem.title = ""
     }
     
     override func viewDidAppear(animated: Bool) {
         checkIfUserIsBanned()
         getPosts()
-    }
-    
-    override func viewWillAppear(animated: Bool) {
-        navigationItem.title = "poli - " + network
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -37,6 +38,11 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
+    }
+    
+    //# MARK: - Set Up UI
+    func setUpUI() {
+        self.view.backgroundColor = UIColor(red: 236/255, green: 236/255, blue: 241/255, alpha: 1)
     }
     
     //# MARK: - Get User Data
@@ -101,8 +107,13 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         return 1
     }
     
+    func tableView(tableView: UITableView, willDisplayFooterView view: UIView, forSection section: Int) {
+        let footer = view as! UITableViewHeaderFooterView
+        footer.contentView.backgroundColor = UIColor(red: 236/255, green: 236/255, blue: 241/255, alpha: 1)
+    }
+    
     func tableView(tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return 5
+        return 10
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
@@ -111,7 +122,6 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         cell.channelLabel.text = post["channel"] as? String
         cell.timeStampLabel.text = (post.createdAt! as NSDate).toString()
         cell.postTextLabel.text = post["text"] as? String
-
         cell.commentsCountLabel.text = (post["comments"] as! Int).stringNumberOfContents("comment")
         cell.accessoryType = .None
         return cell

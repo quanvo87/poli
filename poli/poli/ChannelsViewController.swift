@@ -18,8 +18,8 @@ class ChannelsViewController: UIViewController, UITableViewDataSource, UITableVi
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationItem.title = "Channels"
         getUserData()
+        navigationItem.title = "Channels - " + network
         setUpTableView()
     }
     
