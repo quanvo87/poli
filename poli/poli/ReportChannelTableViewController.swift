@@ -17,6 +17,8 @@ class ReportChannelTableViewController: UIViewController, UITableViewDataSource,
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationItem.title = "Report A Channel"
+        setUpUI()
         getUserData()
         setUpTableView()
         getChannels()
@@ -24,6 +26,11 @@ class ReportChannelTableViewController: UIViewController, UITableViewDataSource,
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
+    }
+    
+    //# MARK: - Set Up UI
+    func setUpUI() {
+        self.view.backgroundColor = UIColor(red: 236/255, green: 236/255, blue: 241/255, alpha: 1)
     }
     
     //# MARK: - Get User Data
@@ -161,6 +168,8 @@ class ReportChannelTableViewController: UIViewController, UITableViewDataSource,
     func setUpTableView() {
         reportChannelTableView.dataSource = self
         reportChannelTableView.delegate = self
+        reportChannelTableView.backgroundColor = UIColor(red: 236/255, green: 236/255, blue: 241/255, alpha: 1)
+        reportChannelTableView.separatorStyle = .None
         
         let refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: "handleRefresh:", forControlEvents: UIControlEvents.ValueChanged)
@@ -169,18 +178,31 @@ class ReportChannelTableViewController: UIViewController, UITableViewDataSource,
         automaticallyAdjustsScrollViewInsets = false
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return channels.count
+    }
+    
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 1
+    }
+    
+    func tableView(tableView: UITableView, willDisplayFooterView view: UIView, forSection section: Int) {
+        let footer = view as! UITableViewHeaderFooterView
+        footer.contentView.backgroundColor = UIColor(red: 236/255, green: 236/255, blue: 241/255, alpha: 1)
+    }
+    
+    func tableView(tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return 10
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("Report Channel Cell", forIndexPath: indexPath) as! ReportChannelTableViewCell
-        cell.channelNameLabel.text = channels[indexPath.row]["name"] as? String
+        cell.channelNameLabel.text = channels[indexPath.section]["name"] as? String
         return cell
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        let channel = channels[indexPath.row]
+        let channel = channels[indexPath.section]
         showReportMenu(channel)
     }
     

@@ -43,6 +43,10 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     //# MARK: - Set Up UI
     func setUpUI() {
         self.view.backgroundColor = UIColor(red: 236/255, green: 236/255, blue: 241/255, alpha: 1)
+        
+        let logo = UIImage(named: "NavBarLogo.png")
+        let imageView = UIImageView(image:logo)
+        self.navigationItem.titleView = imageView
     }
     
     //# MARK: - Get User Data

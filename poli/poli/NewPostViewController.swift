@@ -15,12 +15,19 @@ class NewPostViewController: UIViewController, ChannelPickerViewControllerDelega
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationItem.title = "New Post"
         selectedChannelLabel.text = ""
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        navigationItem.title = "New Post"
     }
     
     override func viewDidAppear(animated: Bool) {
         checkIfUserIsBanned()
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        navigationItem.title = ""
     }
     
     override func didReceiveMemoryWarning() {
