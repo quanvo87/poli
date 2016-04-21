@@ -910,7 +910,7 @@
         <scene sceneID="kef-hM-u8V">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="YgV-Ab-Pe0" customClass="MyNavigationController" customModule="poli" customModuleProvider="target" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Home" id="acW-dT-cKf"/>
+                    <tabBarItem key="tabBarItem" title="Home" image="HomeIcon" id="acW-dT-cKf"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="JiQ-5u-Zo8">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -929,7 +929,7 @@
         <scene sceneID="n45-bV-O9a">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="xpB-Qp-Rnf" customClass="MyNavigationController" customModule="poli" customModuleProvider="target" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Channels" id="cPa-gy-q4n"/>
+                    <tabBarItem key="tabBarItem" title="Channels" image="ChannelIcon" id="cPa-gy-q4n"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="lVx-xn-Amh">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -948,7 +948,7 @@
         <scene sceneID="XNm-0g-EYj">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="1og-IK-lm0" customClass="MyNavigationController" customModule="poli" customModuleProvider="target" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="New Post" id="SpJ-9M-9JM"/>
+                    <tabBarItem key="tabBarItem" title="New Post" image="NewPostIcon" id="SpJ-9M-9JM"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="GSc-8k-Hsz">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -967,7 +967,7 @@
         <scene sceneID="sED-sU-0fh">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="c7Y-Ac-0Cw" customClass="MyNavigationController" customModule="poli" customModuleProvider="target" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Me" id="Moo-H5-nlE"/>
+                    <tabBarItem key="tabBarItem" title="Me" image="MeIcon" id="Moo-H5-nlE"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="n5m-JZ-jNf">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -982,11 +982,11 @@
             </objects>
             <point key="canvasLocation" x="133" y="552"/>
         </scene>
-        <!--More-->
+        <!--My Navigation Controller-->
         <scene sceneID="iEe-1a-ZIn">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="jmY-Hx-f3n" customClass="MyNavigationController" customModule="poli" customModuleProvider="target" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="More" id="XgC-vb-mPy"/>
+                    <tabBarItem key="tabBarItem" systemItem="more" id="XgC-vb-mPy"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="XhH-x7-Znp">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -1002,4 +1002,10 @@
             <point key="canvasLocation" x="585" y="557"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="ChannelIcon" width="26" height="24"/>
+        <image name="HomeIcon" width="25" height="23"/>
+        <image name="MeIcon" width="25" height="29"/>
+        <image name="NewPostIcon" width="25" height="25"/>
+    </resources>
 </document>
