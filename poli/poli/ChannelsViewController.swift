@@ -20,12 +20,19 @@ class ChannelsViewController: UIViewController, UITableViewDataSource, UITableVi
         super.viewDidLoad()
         setUpUI()
         getUserData()
-        navigationItem.title = "Channels - " + network
         setUpTableView()
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        navigationItem.title = "Channels - " + network
     }
     
     override func viewDidAppear(animated: Bool) {
         getChannels()
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        navigationItem.title = ""
     }
     
     override func didReceiveMemoryWarning() {

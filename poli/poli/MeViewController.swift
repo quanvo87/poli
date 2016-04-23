@@ -11,11 +11,12 @@ import UIKit
 class MeViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     @IBOutlet weak var meTableView: UITableView!
-    var posts = [PFObject]()
+    var contents = [PFObject]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = "Me"
+        setUpUI()
         setUpTableView()
     }
     
@@ -26,6 +27,11 @@ class MeViewController: UIViewController, UITableViewDataSource, UITableViewDele
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
+    }
+    
+    //# MARK: - Set Up UI
+    func setUpUI() {
+        self.view.backgroundColor = UIColor(red: 236/255, green: 236/255, blue: 241/255, alpha: 1)
     }
     
     //# MARK: - Get Content
@@ -40,7 +46,7 @@ class MeViewController: UIViewController, UITableViewDataSource, UITableViewDele
         query.findObjectsInBackgroundWithBlock {
             (objects: [PFObject]?, error: NSError?) in
             if error == nil {
-                self.posts = objects!
+                self.contents = objects!
                 self.meTableView.reloadData()
             }
         }
@@ -50,8 +56,10 @@ class MeViewController: UIViewController, UITableViewDataSource, UITableViewDele
     func setUpTableView() {
         meTableView.dataSource = self
         meTableView.delegate = self
+        meTableView.backgroundColor = UIColor(red: 236/255, green: 236/255, blue: 241/255, alpha: 1)
         meTableView.rowHeight = UITableViewAutomaticDimension
         meTableView.estimatedRowHeight = 80
+        meTableView.separatorStyle = .None
         
         let refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: "handleRefresh:", forControlEvents: UIControlEvents.ValueChanged)
@@ -60,25 +68,38 @@ class MeViewController: UIViewController, UITableViewDataSource, UITableViewDele
         automaticallyAdjustsScrollViewInsets = false
     }
     
+    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+        return contents.count
+    }
+    
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return posts.count
+        return 1
+    }
+    
+    func tableView(tableView: UITableView, willDisplayFooterView view: UIView, forSection section: Int) {
+        let footer = view as! UITableViewHeaderFooterView
+        footer.contentView.backgroundColor = UIColor(red: 236/255, green: 236/255, blue: 241/255, alpha: 1)
+    }
+    
+    func tableView(tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return 10
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("Me", forIndexPath: indexPath) as! MeTableViewCell
-        let post = posts[indexPath.row]
+        let content = contents[indexPath.section]
         
-        cell.timeStampLabel.text = (post.createdAt! as NSDate).toString()
+        cell.timeStampLabel.text = (content.createdAt! as NSDate).toString()
         
-        if post["type"] as? String == "post" {
+        if content["type"] as? String == "post" {
             cell.typeLabel.text = "Post"
-            cell.detailLabel.text = post["channel"] as? String
+            cell.detailLabel.text = content["channel"] as? String
             
         } else {
             cell.typeLabel.text = "Comment"
             let query = PFQuery(className: "Content")
             query.whereKey("type", equalTo: "post")
-            query.getObjectInBackgroundWithId((post["post"] as? String)!) {
+            query.getObjectInBackgroundWithId((content["post"] as? String)!) {
                 (object: PFObject?, error: NSError?) in
                 if error == nil {
                     cell.detailLabel.text = object!["text"] as? String
@@ -86,21 +107,21 @@ class MeViewController: UIViewController, UITableViewDataSource, UITableViewDele
             }
         }
         
-        cell.cellTextLabel.text = (post["text"] as! NSString).stringByTrimmingCharacters(200)
+        cell.cellTextLabel.text = (content["text"] as! NSString).stringByTrimmingCharacters(200)
         
         return cell
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         if let postDetailViewController = storyboard?.instantiateViewControllerWithIdentifier("Post Detail") as! PostDetailViewController? {
-            let post = posts[indexPath.row]
-            if post["type"] as? String == "post" {
-                postDetailViewController.post = post
+            let content = contents[indexPath.section]
+            if content["type"] as? String == "post" {
+                postDetailViewController.post = content
                 self.navigationController?.pushViewController(postDetailViewController, animated: true)
             } else {
                 let query = PFQuery(className: "Content")
                 query.whereKey("type", equalTo: "post")
-                query.getObjectInBackgroundWithId((post["post"] as? String)!) {
+                query.getObjectInBackgroundWithId((content["post"] as? String)!) {
                     (object: PFObject?, error: NSError?) in
                     if error == nil {
                         postDetailViewController.post = object!

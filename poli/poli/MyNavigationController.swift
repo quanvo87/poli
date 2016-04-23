@@ -12,18 +12,17 @@ class MyNavigationController: UINavigationController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        setUpNavigationBar()
+        setUpUI()
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
 
-    func setUpNavigationBar() {
-        let navBackgroundImage:UIImage! = UIImage(named: "BackgroundImage.png")
+    func setUpUI() {
+        let navBackgroundImage:UIImage! = UIImage(named: "NavBarBackground.png")
         UINavigationBar.appearance().setBackgroundImage(navBackgroundImage, forBarMetrics: .Default)
         UINavigationBar.appearance().titleTextAttributes = [NSForegroundColorAttributeName : UIColor.whiteColor()]
         navigationBar.tintColor = UIColor.whiteColor()
     }
-
 }

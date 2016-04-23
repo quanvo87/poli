@@ -16,12 +16,19 @@ class ChannelPickerViewController: UIViewController, UITableViewDataSource, UITa
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationItem.title = "Select A Channel"
+        setUpUI()
         setUpTableView()
         getChannels()
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
+    }
+    
+    //# MARK: - Set Up UI
+    func setUpUI() {
+        self.view.backgroundColor = UIColor(red: 236/255, green: 236/255, blue: 241/255, alpha: 1)
     }
     
     //# MARK: - Get Channels
@@ -54,6 +61,8 @@ class ChannelPickerViewController: UIViewController, UITableViewDataSource, UITa
     func setUpTableView() {
         channelsTableView.dataSource = self
         channelsTableView.delegate = self
+        channelsTableView.backgroundColor = UIColor(red: 236/255, green: 236/255, blue: 241/255, alpha: 1)
+        channelsTableView.separatorStyle = .None
         
         let refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: "handleRefresh:", forControlEvents: UIControlEvents.ValueChanged)
@@ -62,18 +71,31 @@ class ChannelPickerViewController: UIViewController, UITableViewDataSource, UITa
         automaticallyAdjustsScrollViewInsets = false
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return channels.count
+    }
+    
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 1
+    }
+    
+    func tableView(tableView: UITableView, willDisplayFooterView view: UIView, forSection section: Int) {
+        let footer = view as! UITableViewHeaderFooterView
+        footer.contentView.backgroundColor = UIColor(red: 236/255, green: 236/255, blue: 241/255, alpha: 1)
+    }
+    
+    func tableView(tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return 10
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("Channel Picker Cell", forIndexPath: indexPath) as! ChannelPickerTableViewCell
-        cell.channelNameLabel.text = channels[indexPath.row]["name"] as? String
+        cell.channelNameLabel.text = channels[indexPath.section]["name"] as? String
         return cell
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        delegate.setChannel(channels[indexPath.row]["name"] as! String)
+        delegate.setChannel(channels[indexPath.section]["name"] as! String)
         navigationController?.popViewControllerAnimated(true)
     }
     
