@@ -127,7 +127,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         cell.channelLabel.text = post["channel"] as? String
         cell.timeStampLabel.text = (post.createdAt! as NSDate).toString()
         cell.postTextLabel.text = post["text"] as? String
-        cell.commentsCountLabel.text = (post["comments"] as! Int).stringNumberOfContents("comment")
+//        cell.commentsCountLabel.text = (post["comments"] as! Int).stringNumberOfContents("comment")
         cell.accessoryType = .None
         return cell
     }

@@ -69,7 +69,7 @@ class PostDetailViewController: UIViewController, UITextFieldDelegate, UITableVi
         timeStampLabel.text = (post.createdAt! as NSDate).toString()
         channelLabel.text = post["channel"] as? String
         postTextLabel.text = (post["text"] as! NSString).stringByTrimmingCharacters(200)
-        commentsCountLabel.text = (post["comments"] as! Int).stringNumberOfContents("comment")
+//        commentsCountLabel.text = (post["comments"] as! Int).stringNumberOfContents("comment")
     }
     
     //# MARK: - Report

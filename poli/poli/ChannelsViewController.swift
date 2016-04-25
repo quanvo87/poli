@@ -123,7 +123,7 @@ class ChannelsViewController: UIViewController, UITableViewDataSource, UITableVi
         let channel = self.channels[indexPath.section]
         let channelName = channel["name"] as? String
         cell.channelNameLabel.text = channelName
-        cell.postsCountLabel.text = "(" + String((channel["posts"] as! Int)) + ")"
+//        cell.postsCountLabel.text = "(" + String((channel["posts"] as! Int)) + ")"
         
         if userChannels.contains(channelName!) {
             cell.accessoryType = .Checkmark
