@@ -1,3 +1,3 @@
 # poli
 
-Join networks based on your e-mail domain and participate in anonymous discussions. Focus your discussions with content filters.
+Join networks based on your e-mail domain and participate in anonymous discussions. Utilize channels to further focus your discussions.
