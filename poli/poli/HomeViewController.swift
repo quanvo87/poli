@@ -74,6 +74,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         
         let postQuery = PFQuery(className: "Content")
         postQuery.whereKey("type", equalTo: "post")
+        postQuery.whereKey("network", equalTo: network)
         postQuery.whereKey("channel", matchesKey: "name", inQuery: channelQuery)
         postQuery.whereKey("flags", lessThan: 3)
         postQuery.whereKey("creator", doesNotMatchKey: "content", inQuery: flagQuery)

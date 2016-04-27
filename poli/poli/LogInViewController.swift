@@ -16,7 +16,7 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // setUpUI()
+        setUpUI()
         messageLabel.text = ""
         passwordTextField.delegate = self
     }
@@ -27,7 +27,7 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
     
     //# MARK: - Set Up UI
     func setUpUI() {
-        self.view.backgroundColor = UIColor(patternImage: UIImage(named: "Background.png")!)
+        self.view.backgroundColor = UIColor(patternImage: UIImage(named: "LogInScreen.png")!)
     }
     
     //# MARK: - Log In

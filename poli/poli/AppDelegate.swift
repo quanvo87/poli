@@ -41,8 +41,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func setUpUI() {
+        UIApplication.sharedApplication().statusBarHidden = false
+        UIApplication.sharedApplication().statusBarStyle = .LightContent
         window!.tintColor = UIColor(red: 122/255, green: 119/255, blue: 240/255, alpha: 1.0)
-        
+
     }
     
     func applicationWillResignActive(application: UIApplication) {

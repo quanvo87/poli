@@ -16,12 +16,18 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        messageLabel.text = ""
-        passwordTextField.delegate = self
+        setUpUI()
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
+    }
+    
+    //# MARK: - Set Up UI
+    func setUpUI() {
+        self.view.backgroundColor = UIColor(patternImage: UIImage(named: "LogInScreen.png")!)
+        messageLabel.text = ""
+        passwordTextField.delegate = self
     }
     
     //# MARK: - Sign Up
