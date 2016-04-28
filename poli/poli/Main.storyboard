@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="8191" systemVersion="14F1713" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="49e-Tb-3d3">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10116" systemVersion="15D21" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="49e-Tb-3d3">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8154"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
@@ -821,13 +821,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="c05-r9-Pg9">
-                                <rect key="frame" x="256" y="28" width="48" height="30"/>
-                                <state key="normal" title="Cancel"/>
-                                <connections>
-                                    <action selector="tapCancel:" destination="axE-we-A27" eventType="touchUpInside" id="7i3-Wz-0Qh"/>
-                                </connections>
-                            </button>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="E-mail" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="1U0-oE-SFe">
                                 <rect key="frame" x="16" y="231" width="288" height="30"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -839,8 +832,10 @@
                                 <textInputTraits key="textInputTraits" secureTextEntry="YES"/>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="X2E-rS-1rv">
-                                <rect key="frame" x="131" y="307" width="59" height="30"/>
-                                <state key="normal" title="Sign Up!"/>
+                                <rect key="frame" x="195" y="307" width="59" height="30"/>
+                                <state key="normal" title="Sign Up!">
+                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
                                 <connections>
                                     <action selector="tapSignUp:" destination="axE-we-A27" eventType="touchUpInside" id="ntV-Xc-bz0"/>
                                 </connections>
@@ -848,15 +843,24 @@
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Message" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="boB-2s-DdG">
                                 <rect key="frame" x="16" y="345" width="288" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sign Up" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="542-jz-xNN">
                                 <rect key="frame" x="16" y="202" width="61" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="c05-r9-Pg9">
+                                <rect key="frame" x="66" y="307" width="48" height="30"/>
+                                <state key="normal" title="Cancel">
+                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="tapCancel:" destination="axE-we-A27" eventType="touchUpInside" id="7i3-Wz-0Qh"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -866,14 +870,14 @@
                             <constraint firstItem="boB-2s-DdG" firstAttribute="top" secondItem="X2E-rS-1rv" secondAttribute="bottom" constant="8" id="Gq0-zK-1OW"/>
                             <constraint firstItem="1U0-oE-SFe" firstAttribute="leading" secondItem="V4q-bc-H7B" secondAttribute="leadingMargin" id="Hjd-uE-W9e"/>
                             <constraint firstItem="e9h-h6-EnH" firstAttribute="leading" secondItem="V4q-bc-H7B" secondAttribute="leadingMargin" id="Lko-WZ-vS7"/>
+                            <constraint firstItem="c05-r9-Pg9" firstAttribute="leading" secondItem="V4q-bc-H7B" secondAttribute="leadingMargin" constant="50" id="NNf-l4-Qxe"/>
                             <constraint firstAttribute="trailingMargin" secondItem="e9h-h6-EnH" secondAttribute="trailing" id="Pah-Y0-bSP"/>
                             <constraint firstItem="542-jz-xNN" firstAttribute="leading" secondItem="V4q-bc-H7B" secondAttribute="leadingMargin" id="bdj-hP-1s5"/>
-                            <constraint firstItem="c05-r9-Pg9" firstAttribute="top" secondItem="j1N-aQ-GVa" secondAttribute="bottom" constant="8" id="gI0-H9-Vzw"/>
                             <constraint firstItem="e9h-h6-EnH" firstAttribute="top" secondItem="1U0-oE-SFe" secondAttribute="bottom" constant="8" id="gQX-mR-6Rb"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="c05-r9-Pg9" secondAttribute="trailing" id="gRY-bD-zHo"/>
                             <constraint firstAttribute="trailingMargin" secondItem="boB-2s-DdG" secondAttribute="trailing" id="hO7-Md-lr6"/>
+                            <constraint firstItem="c05-r9-Pg9" firstAttribute="baseline" secondItem="X2E-rS-1rv" secondAttribute="baseline" id="k4a-DP-prc"/>
                             <constraint firstItem="X2E-rS-1rv" firstAttribute="top" secondItem="e9h-h6-EnH" secondAttribute="bottom" constant="8" id="kQx-JI-VKz"/>
-                            <constraint firstItem="X2E-rS-1rv" firstAttribute="centerX" secondItem="V4q-bc-H7B" secondAttribute="centerX" id="pl2-Vg-5Iq"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="X2E-rS-1rv" secondAttribute="trailing" constant="50" id="tx2-92-89p"/>
                             <constraint firstItem="e9h-h6-EnH" firstAttribute="centerY" secondItem="V4q-bc-H7B" secondAttribute="centerY" id="wUl-0T-URp"/>
                         </constraints>
                     </view>

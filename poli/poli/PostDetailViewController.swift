@@ -35,8 +35,8 @@ class PostDetailViewController: UIViewController, UITextFieldDelegate, UITableVi
         getComments()
         setUpComments()
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("keyboardWillShow:"), name:UIKeyboardWillShowNotification, object: self.view.window)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("keyboardWillHide:"), name:UIKeyboardWillHideNotification, object: self.view.window)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(PostDetailViewController.keyboardWillShow(_:)), name:UIKeyboardWillShowNotification, object: self.view.window)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(PostDetailViewController.keyboardWillHide(_:)), name:UIKeyboardWillHideNotification, object: self.view.window)
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -74,7 +74,7 @@ class PostDetailViewController: UIViewController, UITextFieldDelegate, UITableVi
     
     //# MARK: - Report
     func addReportButton() {
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Report", style: .Plain, target: self, action: Selector("tapReport:"))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Report", style: .Plain, target: self, action: #selector(PostDetailViewController.tapReport(_:)))
     }
     
     @IBAction func tapReport(sender: AnyObject) {
@@ -241,7 +241,7 @@ class PostDetailViewController: UIViewController, UITextFieldDelegate, UITableVi
         commentsTableView.separatorStyle = .None
         
         let refreshControl = UIRefreshControl()
-        refreshControl.addTarget(self, action: "handleRefresh:", forControlEvents: UIControlEvents.ValueChanged)
+        refreshControl.addTarget(self, action: #selector(PostDetailViewController.handleRefresh(_:)), forControlEvents: UIControlEvents.ValueChanged)
         commentsTableView.addSubview(refreshControl)
     }
     

@@ -81,7 +81,7 @@ class ChannelsViewController: UIViewController, UITableViewDataSource, UITableVi
         channelsTableView.separatorStyle = .None
         
         let refreshControl = UIRefreshControl()
-        refreshControl.addTarget(self, action: "handleRefresh:", forControlEvents: UIControlEvents.ValueChanged)
+        refreshControl.addTarget(self, action: #selector(ChannelsViewController.handleRefresh(_:)), forControlEvents: UIControlEvents.ValueChanged)
         channelsTableView.addSubview(refreshControl)
     }
     

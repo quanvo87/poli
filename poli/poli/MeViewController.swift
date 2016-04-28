@@ -62,7 +62,7 @@ class MeViewController: UIViewController, UITableViewDataSource, UITableViewDele
         meTableView.separatorStyle = .None
         
         let refreshControl = UIRefreshControl()
-        refreshControl.addTarget(self, action: "handleRefresh:", forControlEvents: UIControlEvents.ValueChanged)
+        refreshControl.addTarget(self, action: #selector(MeViewController.handleRefresh(_:)), forControlEvents: UIControlEvents.ValueChanged)
         meTableView.addSubview(refreshControl)
         
         automaticallyAdjustsScrollViewInsets = false
