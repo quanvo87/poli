@@ -41,6 +41,21 @@ extension Int {
     }
 }
 
+extension UIView {
+    func addLogInScreenBackground() {
+        let width = UIScreen.mainScreen().bounds.size.width
+        let height = UIScreen.mainScreen().bounds.size.height
+        
+        let imageViewBackground = UIImageView(frame: CGRectMake(0, 0, width, height))
+        imageViewBackground.image = UIImage(named: "LogInScreen.png")
+        
+        imageViewBackground.contentMode = UIViewContentMode.ScaleAspectFill
+        
+        self.addSubview(imageViewBackground)
+        self.sendSubviewToBack(imageViewBackground)
+    }
+}
+
 extension UIViewController {
     func showAlert(message: String) {
         let alert = UIAlertController(title: "", message: message, preferredStyle: .Alert)

@@ -25,7 +25,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
     
     //# MARK: - Set Up UI
     func setUpUI() {
-        self.view.backgroundColor = UIColor(patternImage: UIImage(named: "LogInScreen.png")!)
+        self.view.addLogInScreenBackground()
         messageLabel.text = ""
         passwordTextField.delegate = self
     }
